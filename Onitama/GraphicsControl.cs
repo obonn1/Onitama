@@ -2,7 +2,7 @@ namespace Othello;
 
 public abstract class GraphicsControl : Control
 {
-    protected SizeF ViewSize { get; set; } = new(1, 1);
+    protected SizeF ViewSize { get; set; } = new(10, 10);
 
     protected float ViewScale { get; private set; }
     protected bool IsLeftMouseDown { get; private set; }
