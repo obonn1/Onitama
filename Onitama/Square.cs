@@ -8,13 +8,11 @@ namespace Onitama
 {
     internal class Square
     {
-        public HasPiece? Team { get; set; }
+        public Team? Team { get; set; }
         public bool IsMaster { get; set; }
-        public Square(HasPiece? team = null)
+        public Square(Team? team = null)
         {
             Team = team;
         }
     }
-
-    public enum HasPiece { Red, Blue }
 }
