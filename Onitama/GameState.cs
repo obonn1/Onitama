@@ -21,7 +21,5 @@ namespace Onitama
             Grid[0, 2].IsMaster = true;
             Grid[4, 2].IsMaster = true;
         }
-        
-        public 
     }
 }
