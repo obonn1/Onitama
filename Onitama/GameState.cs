@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Onitama
 {
-    internal class OniGrid
+    internal class GameState
     {
     }
 }
