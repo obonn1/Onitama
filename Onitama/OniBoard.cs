@@ -11,8 +11,8 @@ namespace Onitama
     {
         public GameState GameState { get; set; } = new GameState();
         public GameVisuals Visuals { get; set; } = new GameVisuals();
-        public Color MatColor { get; set; } = Color.Orange;
-        public override Color BackColor { get; set; } = Color.Gray;
+        public Color MatColor { get; set; } = Color.Goldenrod;
+        public override Color BackColor { get; set; } = Color.DarkGray;
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
 
@@ -21,13 +21,13 @@ namespace Onitama
             ViewSize = new SizeF(10, 7);
         }
 
-        public PointF ViewToGrid(PointF value)
+        public PointF ViewToGrid(float x, float y)
         {
-            return new PointF(value.X - GridOrigin.X, value.Y - GridOrigin.Y);
+            return new PointF(x - GridOrigin.X, y - GridOrigin.Y);
         }
-        public PointF GridToView(PointF value)
+        public PointF GridToView(float x, float y)
         {
-            return new PointF(value.X + GridOrigin.X, value.Y + GridOrigin.Y);
+            return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
         }
 
         protected override void ViewDraw(Graphics g)
@@ -40,10 +40,15 @@ namespace Onitama
                 GridOrigin = new PointF(grid.X, grid.Y);
 
                 g.DrawRectangle(pen, board.X, board.Y, board.Width, board.Height);
-                g.FillRectangle(new SolidBrush(Color.Blue), board);
+                g.FillRectangle(new SolidBrush(Color.DarkGreen), board);
                 g.FillRoundedRectangleF(new SolidBrush(MatColor), mat, .1f);
-                g.FillRectangle(new SolidBrush(Color.Black), grid);
+                g.FillRectangle(new SolidBrush(Color.Olive), grid);
                 g.DrawRectangle(pen, grid.X, grid.Y, grid.Width, grid.Height);
+                for (int y = 0; y < 5; y++)
+                    for (int x = 0; x < 5; x++)
+                    {
+                        g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x,y).X + 0.1f, GridToView(x,y).Y + 0.1f, 0.8f, 0.8f);
+                    }
             }
         }
 
