@@ -15,11 +15,12 @@ namespace Onitama
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
 
-        public GameVisuals Visuals { get; set; } = new GameVisuals();
+        public GameVisuals Visuals { get; set; }
 
         public OniBoard()
         {
             ViewSize = new SizeF(10, 7);
+            Visuals = new GameVisuals(GridOrigin);
         }
 
         public PointF ViewToGrid(float x, float y)

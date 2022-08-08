@@ -34,8 +34,11 @@ namespace Onitama
                     {
                         Grid[i, j] = new Square(Team.Red);
                         redStudents.Add(((float)i, (float)j));
-                    };
-                    else Grid[i, j] = new Square();
+                    }
+                    else
+                    {
+                        Grid[i, j] = new Square();
+                    }
                 };
             }
 
