@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Onitama
 {
-    internal class GameState
+    public class GameState
     {
         public Square[,] Grid { get; set; } = new Square[5, 5];
         public Card? ActiveCard { get; set; }

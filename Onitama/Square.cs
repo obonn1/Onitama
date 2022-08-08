@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Onitama
 {
-    internal class Square
+    public class Square
     {
         public Team? Team { get; set; }
         public bool IsMaster { get; set; }
