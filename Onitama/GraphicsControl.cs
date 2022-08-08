@@ -21,10 +21,16 @@ public abstract class GraphicsControl : Control
         e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
         ViewScale = ScaleGraphics(e.Graphics, ViewSize.Width, ViewSize.Height);
         ViewDraw(e.Graphics);
+        VisualsDraw(e.Graphics);
     }
 
     protected virtual void ViewDraw(Graphics g)
     {
+    }
+
+    protected virtual void VisualsDraw(Graphics g)
+    {
+
     }
 
     protected override void OnMouseDown(MouseEventArgs e)

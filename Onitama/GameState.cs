@@ -16,6 +16,8 @@ namespace Onitama
         public Card[] BlueCards { get; set; }
         public Card[] RedCards { get; set; }
         public Card? NeutralCard { get; set; }
+        public List<(float, float)> blueStudents { get; set; } = new List<(float, float)>();
+        public List<(float, float)> redStudents { get; set; } = new List<(float, float)>();
         public GameState()
         {
             Random random = new Random();
@@ -23,8 +25,16 @@ namespace Onitama
             {
                 for (int j = 0; j < Grid.GetLength(1); j++)
                 {
-                    if (i == 0) Grid[i, j] = new Square(Team.Blue);
-                    else if (i == 4) Grid[i, j] = new Square(Team.Red);
+                    if (i == 0)
+                    {
+                        Grid[i, j] = new Square(Team.Blue);
+                        blueStudents.Add(((float)i, (float)j));
+                    }
+                    else if (i == 4)
+                    {
+                        Grid[i, j] = new Square(Team.Red);
+                        redStudents.Add(((float)i, (float)j));
+                    };
                     else Grid[i, j] = new Square();
                 };
             }

@@ -10,11 +10,12 @@ namespace Onitama
     internal class OniBoard : GraphicsControl
     {
         public GameState GameState { get; set; } = new GameState();
-        public GameVisuals Visuals { get; set; } = new GameVisuals();
         public Color MatColor { get; set; } = Color.Goldenrod;
         public override Color BackColor { get; set; } = Color.DarkGray;
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
+
+        public GameVisuals Visuals { get; set; } = new GameVisuals();
 
         public OniBoard()
         {
@@ -50,6 +51,19 @@ namespace Onitama
                         g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x,y).X + 0.1f, GridToView(x,y).Y + 0.1f, 0.8f, 0.8f);
                     }
             }
+        }
+
+        protected override void VisualsDraw(Graphics g)
+        {
+            for (int y = 0; y < 5; y++)
+                for (int x = 0; x < 5; x++)
+                {
+                    if (GameState.Grid[x, y].Team == Team.Blue && !GameState.Grid[x, y].IsMaster) Visuals.blueStudents.Add(((float)x, (float)y));
+                    if (GameState.Grid[x, y].Team == Team.Red && !GameState.Grid[x, y].IsMaster) Visuals.redStudents.Add(((float)x, (float)y));
+                    if (GameState.Grid[x, y].Team == Team.Blue && GameState.Grid[x, y].IsMaster) Visuals.blueMaster = ((float)x, (float)y);
+                    if (GameState.Grid[x, y].Team == Team.Red && GameState.Grid[x, y].IsMaster) Visuals.redMaster = ((float)x, (float)y);
+                }
+            Visuals.DrawState(g);
         }
 
         
