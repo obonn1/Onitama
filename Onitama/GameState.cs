@@ -12,7 +12,7 @@ namespace Onitama
         public Card? ActiveCard { get; set; }
         public Team CurrentTeam { get; set; }
         public bool IsGameOver { get; set; }
-        public List<Card> Cards { get; set; }
+        public List<Card> Cards { get; set; } = new List<Card>(5);
         public Card[] BlueCards { get; set; }
         public Card[] RedCards { get; set; }
         public Card? NeutralCard { get; set; }
@@ -39,9 +39,9 @@ namespace Onitama
                     Cards.Add(randomCard);
             }
 
-            BlueCards = new Card[2] { Cards[1], Cards[2] };
-            RedCards = new Card[2] { Cards[3], Cards[4] };
-            NeutralCard = Cards[5];
+            BlueCards = new Card[2] { Cards[0], Cards[1] };
+            RedCards = new Card[2] { Cards[2], Cards[3] };
+            NeutralCard = Cards[4];
         }
 
         public void Move(Square origin, Square target)
@@ -59,11 +59,12 @@ namespace Onitama
 
         public List<(int X, int Y, bool)> CanMoveSquares(int x, int y)
         {
+            if (x < 0 || y < 0) throw new ArgumentOutOfRangeException();
             List<(int X, int Y, bool)> result = new List<(int X, int Y, bool)>();
             for (var i = 0; i < 5; i++)
                 for (var j = 0; j < 5; j++)
                 {
-                    if (ActiveCard.Moves.Contains((i - x, j - y)))
+                    if (ActiveCard is not null && ActiveCard.Moves.Contains((i - x, j - y)))
                     {
                         if (Grid[i, j].Team != Grid[x, y].Team) result.Add((i, j, true));
                         else result.Add((i, j, false));

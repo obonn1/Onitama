@@ -6,6 +6,10 @@ namespace Onitama
 {
 	public class Card : Control
 	{
+		public Card()
+        {
+        }
+
 		public ImmutableArray<(int X, int Y)> Moves { get; private set; }
 		public static ImmutableArray<Card> Deck { get; } = ImmutableArray.Create<Card>(
 		new Card("Monkey", ImmutableArray.Create((-1, -1), (-1, 1), (+1, 1), (+1, -1))),

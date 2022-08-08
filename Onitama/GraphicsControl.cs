@@ -2,11 +2,12 @@ namespace Onitama;
 
 public abstract class GraphicsControl : Control
 {
-    protected SizeF ViewSize { get; set; } = new(10, 10);
+    protected SizeF ViewSize { get; set; } = new(10, 5);
 
     protected float ViewScale { get; private set; }
     protected bool IsLeftMouseDown { get; private set; }
     protected PointF MouseView { get; private set; }
+
 
     public GraphicsControl()
     {

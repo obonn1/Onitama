@@ -28,12 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            Onitama.GameState gameState1 = new Onitama.GameState();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            GameVisuals gameVisuals1 = new GameVisuals();
+            this.oniBoard1 = new Onitama.OniBoard();
+            this.SuspendLayout();
+            // 
+            // oniBoard1
+            // 
+            this.oniBoard1.Dock = System.Windows.Forms.DockStyle.Fill;
+            gameState1.ActiveCard = null;
+            gameState1.CurrentTeam = Onitama.Team.Red;
+            gameState1.IsGameOver = false;
+            this.oniBoard1.GameState = gameState1;
+            this.oniBoard1.GridColor = System.Drawing.Color.Green;
+            this.oniBoard1.Location = new System.Drawing.Point(0, 0);
+            this.oniBoard1.Margin = new System.Windows.Forms.Padding(0);
+            this.oniBoard1.MatColor = System.Drawing.Color.Orange;
+            this.oniBoard1.MinimumSize = new System.Drawing.Size(300, 300);
+            this.oniBoard1.Name = "oniBoard1";
+            this.oniBoard1.Size = new System.Drawing.Size(700, 700);
+            this.oniBoard1.TabIndex = 0;
+            this.oniBoard1.Text = "oniBoard1";
+            this.oniBoard1.Visuals = gameVisuals1;
+            this.oniBoard1.Click += new System.EventHandler(this.oniBoard1_Click);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(800, 480);
+            this.Controls.Add(this.oniBoard1);
+            this.MinimumSize = new System.Drawing.Size(300, 180);
+            this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private OniBoard oniBoard1;
     }
 }
