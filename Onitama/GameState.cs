@@ -9,10 +9,13 @@ namespace Onitama
     internal class GameState
     {
         public Square[,] Grid { get; set; } = new Square[5, 5];
-        public Card ActiveCard { get; set; }
+        public Card? ActiveCard { get; set; }
         public Team CurrentTeam { get; set; }
         public bool IsGameOver { get; set; }
         public List<Card> Cards { get; set; }
+        public Card[] BlueCards { get; set; }
+        public Card[] RedCards { get; set; }
+        public Card? NeutralCard { get; set; }
         public GameState()
         {
             Random random = new Random();
@@ -35,6 +38,10 @@ namespace Onitama
                 if (!Cards.Contains(randomCard))
                     Cards.Add(randomCard);
             }
+
+            BlueCards = new Card[2] { Cards[1], Cards[2] };
+            RedCards = new Card[2] { Cards[3], Cards[4] };
+            NeutralCard = Cards[5];
         }
 
         public void Move(Square origin, Square target)

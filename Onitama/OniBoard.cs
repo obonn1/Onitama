@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Onitama
 {
-    internal class OniBoard
+    public 
+    internal class OniBoard : GraphicsControl
     {
+        public void ViewDraw()
+        {
+
+        }
     }
 }

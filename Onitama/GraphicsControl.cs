@@ -1,4 +1,4 @@
-namespace Othello;
+namespace Onitama;
 
 public abstract class GraphicsControl : Control
 {
