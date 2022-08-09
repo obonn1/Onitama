@@ -7,6 +7,19 @@ namespace Onitama
 {
 	public class Card : Control
 	{
+		public ImmutableArray<Size> Moves { get; set; }
+		public Card(string name, ImmutableArray<Size> moves)
+		{
+			Name = name;
+			Moves = moves;
+		}
+
+		public Card(Card card)
+		{
+			Name = card.Name;
+			Moves = card.Moves;
+		}
+
 		public bool IsInverted { get; set; } = false;
 		public void CardGrid(Graphics g, PointF location, float length)
         {
@@ -24,15 +37,14 @@ namespace Onitama
 			ImmutableArray<Size> invertedMoves = ImmutableArray.Create<Size>(
 				new Size(card.Moves[0].Width * -1, card.Moves[0].Height),
 				new Size(card.Moves[1].Width * -1, card.Moves[1].Height));
-			if (card.Moves.Count() > 2) invertedMoves = invertedMoves.Add(new Size(card.Moves[2].Width * -1, card.Moves[2].Height));
-			if (card.Moves.Count() == 4) invertedMoves = invertedMoves.Add(new Size(card.Moves[3].Width * -1, card.Moves[3].Height));
+			if (card.Moves.Length > 2) invertedMoves = invertedMoves.Add(new Size(card.Moves[2].Width * -1, card.Moves[2].Height));
+			if (card.Moves.Length == 4) invertedMoves = invertedMoves.Add(new Size(card.Moves[3].Width * -1, card.Moves[3].Height));
 			Card inverted = card;
 			inverted.Moves = invertedMoves;
 			inverted.IsInverted = card.IsInverted == true ? false : true;
 			return inverted;
         }
 
-		public ImmutableArray<Size> Moves { get; set; }
 		public static ImmutableArray<Card> Deck { get; } = ImmutableArray.Create<Card>(
 		new Card("Monkey", ImmutableArray.Create(new Size(-1, -1), new Size(-1, 1), new Size(+1, 1), new Size(+1, -1))),
 		new Card("Rooster", ImmutableArray.Create(new Size(-1, -1), new Size(0, -1), new Size(0, 1), new Size(1, 1))),
@@ -50,10 +62,6 @@ namespace Onitama
 		new Card("Elephant", ImmutableArray.Create(new Size(0, -1), new Size(0, 1), new Size(1, -1), new Size(1, 1))),
 		new Card("Cobra", ImmutableArray.Create(new Size(-1, 1), new Size(0, -1), new Size(1, 1))),
 		new Card("Crane", ImmutableArray.Create(new Size(-1, -1), new Size(-1, 1), new Size(1, 0))));
-		public Card(string name, ImmutableArray<Size> moves)
-		{
-			Name = name;
-			Moves = moves;
-		}
-	}
+
+    }
 }

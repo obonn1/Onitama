@@ -34,9 +34,36 @@ namespace Onitama
             return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
         }
 
+        public (BoardItem, (int, int))? FindItem(PointF point)
+        {
+            int squareX = 7;
+            int squareY = 7;
+            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.BlueCard1, (0, 0));
+            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, (0, 0));
+            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, (0, 0));
+            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard1, (0, 0));
+
+            for (int i = 0; i < 4; i++)
+            {
+                if ((point.X > GridToView(i, 0).X + 0.1f) && (point.X < GridToView(i, 0).X + 0.9f)) squareX = i;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                if ((point.Y > GridToView(i, 0).Y + 0.1f) && (point.Y < GridToView(i, 0).Y + 0.9f)) squareX = i;
+            }
+            if ((((point.X > GridToView(point.X / 5, 0).X + 0.1f) && (point.X < GridToView(point.X / 5, 0).X + 0.9f)))
+                &&
+               (((point.Y > GridToView(0, point.Y / 5).Y + 0.1f) && (point.Y < GridToView(0, point.Y / 5).Y + 0.9f))))
+                {
+                return (BoardItem.Square, (squareX, squareY));
+            }
+            return null;
+        }
+
         protected override void ViewDraw(Graphics g)
         {
             Visuals.GridOrigin = GridOrigin;
+            GameState.GridOrigin = GridOrigin;
             using var pen = new Pen(Color.Black, 0.05f);
             RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
             RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
@@ -60,10 +87,10 @@ namespace Onitama
             for (int y = 0; y < 5; y++)
                 for (int x = 0; x < 5; x++)
                 {
-                    if (GameState.Grid[x, y].Team == Team.Blue && !GameState.Grid[x, y].IsMaster) Visuals.blueStudents.Add(((float)x, (float)y));
-                    if (GameState.Grid[x, y].Team == Team.Red && !GameState.Grid[x, y].IsMaster) Visuals.redStudents.Add(((float)x, (float)y));
-                    if (GameState.Grid[x, y].Team == Team.Blue && GameState.Grid[x, y].IsMaster) Visuals.blueMaster = ((float)x, (float)y);
-                    if (GameState.Grid[x, y].Team == Team.Red && GameState.Grid[x, y].IsMaster) Visuals.redMaster = ((float)x, (float)y);
+                    if (GameState.Grid[x, y].Team == Team.Blue && !GameState.Grid[x, y].IsMaster) Visuals.BlueStudents.Add((x, y));
+                    if (GameState.Grid[x, y].Team == Team.Red && !GameState.Grid[x, y].IsMaster) Visuals.RedStudents.Add((x, y));
+                    if (GameState.Grid[x, y].Team == Team.Blue && GameState.Grid[x, y].IsMaster) Visuals.blueMaster = (x, y);
+                    if (GameState.Grid[x, y].Team == Team.Red && GameState.Grid[x, y].IsMaster) Visuals.redMaster = (x, y);
                 }
             Visuals.BlueCards = GameState.BlueCards;
             Visuals.RedCards = GameState.RedCards;
@@ -71,6 +98,31 @@ namespace Onitama
             Visuals.DrawState(g);
         }
 
-        
+        protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
+        {
+            if (buttons == MouseButtons.Left)
+            {
+                GameState.mouseLocation = new PointF(x, y);
+                Invalidate();
+            }
+        }
+
+        protected override void ViewMouseDown(float x, float y, MouseButtons buttons)
+        {
+            if (buttons == MouseButtons.Left)
+            {
+                GameState.mouseDownLocation = new PointF(x, y);
+                Invalidate();
+            }
+        }
+
+        protected override void ViewMouseUp(float x, float y, MouseButtons buttons)
+        {
+            if (buttons == MouseButtons.Left)
+            {
+                GameState.MouseUp(x, y);
+                Invalidate();
+            }
+        }
     }
 }

@@ -6,10 +6,12 @@ namespace Onitama
 {
     public class GameVisuals
     {
-        public List<(float, float)> blueStudents = new();
-        public List<(float, float)> redStudents = new();
+        public List<(float, float)> BlueStudents { get; set; } = new();
+        public List<(float, float)> RedStudents { get; set; } = new();
         public (float, float) blueMaster;
         public (float, float) redMaster;
+        public List<(float, float)> possibleMoves = new();
+        public (float x, float y) activeStudent = (1,0);
         public Card[]? BlueCards { get; set; }
         public Font Font { get; set; } = new Font("Arial", 0.2f);
         public Card[]? RedCards { get; set; }
@@ -23,13 +25,22 @@ namespace Onitama
 
         public void DrawState(Graphics g)
         {
-           foreach (var piece in blueStudents)
+           foreach (var piece in BlueStudents)
             {
                 g.FillRectangle(Brushes.Blue, piece.Item1 + GridOrigin.X + 0.1f, piece.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             }
-            foreach (var piece in redStudents)
+            foreach (var piece in RedStudents)
             {
                 g.FillRectangle(Brushes.Red, piece.Item1 + GridOrigin.X + 0.1f, piece.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            }
+
+            g.FillRectangle(Brushes.DarkBlue, blueMaster.Item1 + GridOrigin.X + 0.1f, blueMaster.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            g.FillRectangle(Brushes.DarkRed, redMaster.Item1 + GridOrigin.X + 0.1f, blueMaster.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            g.DrawRectangle(new Pen(Color.DarkOrange, 0.05f), activeStudent.x + GridOrigin.X + 0.05f, activeStudent.y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+
+            foreach (var square in possibleMoves)
+            {
+                g.DrawRectangle(new Pen(Color.White, 0.05f), square.Item1 + activeStudent.x + GridOrigin.X + 0.05f, square.Item2 + activeStudent.y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
             }
             RectangleF blueCard1BG = new(.425f, 1.88f, 1.8f, 2.25f);
             RectangleF blueCard2BG = new(.425f, 4.36f, 1.8f, 2.25f);
@@ -51,8 +62,9 @@ namespace Onitama
             g.DrawString(RedCards[0].Name, Font, Brushes.Black, (float)(7.78f + ((1.6f - (RedCards[0].Name.Length* (Font.Size * 0.75))) / 2)), 3.7f);
             RedCards[1].CardGrid(g, new PointF(7.75f, 4.41f), 1.6f);
             g.DrawString(RedCards[1].Name, Font, Brushes.Black, (float)(7.78f + ((1.6f - (RedCards[1].Name.Length* (Font.Size * 0.75))) / 2)), 6.18f);
-            NeutralCard!.CardGrid(g, new PointF(3.05f, 0.2f), 1.35f);
-            Card.Invert(NeutralCard).CardGrid(g, new PointF(5.6f, 0.2f), 1.35f);
+            NeutralCard!.CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
+            (Card.Invert(new Card(NeutralCard))).CardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
+            g.DrawString(NeutralCard.Name, Font, Brushes.Black, (float)(4.2f + ((1.6f - (NeutralCard.Name.Length * (Font.Size * 0.75))) / 2)), 0.73f);
         }
     }
 }
