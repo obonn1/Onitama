@@ -33,29 +33,28 @@ namespace Onitama
         {
             return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
         }
-
-        public (BoardItem, (int, int))? FindItem(PointF point)
+        public (BoardItem, Point)? FindItem(PointF point)
         {
             int squareX = 7;
             int squareY = 7;
-            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.BlueCard1, (0, 0));
-            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, (0, 0));
-            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, (0, 0));
-            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard1, (0, 0));
+            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.BlueCard1, new Point(0, 0));
+            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, new Point(0, 0));
+            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
+            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
 
             for (int i = 0; i < 4; i++)
             {
-                if ((point.X > GridToView(i, 0).X + 0.1f) && (point.X < GridToView(i, 0).X + 0.9f)) squareX = i;
+                if ((point.X > GridOrigin.X + i + 0.1f) && (point.X < GridOrigin.X + i + 0.9f)) squareX = i;
             }
             for (int i = 0; i < 4; i++)
             {
-                if ((point.Y > GridToView(i, 0).Y + 0.1f) && (point.Y < GridToView(i, 0).Y + 0.9f)) squareX = i;
+                if ((point.Y > GridOrigin.Y + i + 0.1f) && (point.Y < GridOrigin.Y + i + 0.9f)) squareX = i;
             }
-            if ((((point.X > GridToView(point.X / 5, 0).X + 0.1f) && (point.X < GridToView(point.X / 5, 0).X + 0.9f)))
+            if ((point.X > GridOrigin.X / 5 + 0.1f) && (point.X < GridOrigin.X / 5 + 0.9f)
                 &&
-               (((point.Y > GridToView(0, point.Y / 5).Y + 0.1f) && (point.Y < GridToView(0, point.Y / 5).Y + 0.9f))))
-                {
-                return (BoardItem.Square, (squareX, squareY));
+               (point.Y > GridOrigin.Y / 5 + 0.1f) && (point.Y < GridOrigin.Y / 5 + 0.9f))
+            {
+                return (BoardItem.Square, new Point(squareX, squareY));
             }
             return null;
         }
@@ -109,20 +108,28 @@ namespace Onitama
 
         protected override void ViewMouseDown(float x, float y, MouseButtons buttons)
         {
-            if (buttons == MouseButtons.Left)
+            (BoardItem, Point)? location = FindItem(new PointF(x, y));
+            if (buttons == MouseButtons.Left && location != null)
             {
-                GameState.mouseDownLocation = new PointF(x, y);
-                Invalidate();
+                if (buttons == MouseButtons.Left)
+                {
+                    GameState.mouseDownLocation = location;
+                    Invalidate();
+                }
+
             }
         }
 
         protected override void ViewMouseUp(float x, float y, MouseButtons buttons)
         {
-            if (buttons == MouseButtons.Left)
+            (BoardItem, Point)? location = FindItem(new PointF(x, y));
+            if (location != null && buttons == MouseButtons.Left && location == GameState.mouseDownLocation)
             {
-                GameState.MouseUp(x, y);
+                GameState.MouseUp(location.Value.Item1, location.Value.Item2);
+                Visuals.MouseUp(location.Value.Item1, location.Value.Item2);
                 Invalidate();
             }
+            GameState.mouseDownLocation = null;
         }
     }
 }

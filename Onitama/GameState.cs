@@ -12,7 +12,7 @@ namespace Onitama
         public Card? ActiveCard { get; set; } = null;
 
         public BoardItem? activeCardLocation = null;
-        public (int X, int Y)? ActiveSquare { get; set; }
+        public Point? ActiveSquare { get; set; }
         public Team CurrentTeam { get; set; }
         public bool IsGameOver { get; set; }
         public List<Card> Cards { get; set; } = new List<Card>(5);
@@ -21,8 +21,8 @@ namespace Onitama
         public Card? NeutralCard { get; set; }
         public List<(float, float)> BlueStudents { get; set; } = new List<(float, float)>();
         public List<(float, float)> RedStudents { get; set; } = new List<(float, float)>();
-        public PointF mouseDownLocation { get; set; }
-        public PointF mouseLocation { get; set; }
+        public (BoardItem, Point)? mouseDownLocation { get; set; }
+        public PointF? mouseLocation { get; set; }
         public PointF GridOrigin { get; set; }
 
         public GameState()
@@ -64,57 +64,24 @@ namespace Onitama
             NeutralCard = Cards[4];
         }
 
-        public void MouseUp(float x, float y)
+        public void MouseUp(BoardItem item, Point point)
         {
-            (BoardItem, (int X, int Y))? item = FindItem(new PointF(x, y));
-            Square? clickedSquare = null;
-            if (FindItem(new PointF(x, y)) != null)
+            //activate Cards
+            if ((item != BoardItem.Square) && (activeCardLocation == null)) activeCardLocation = item;
+            //deactivate Cards
+            if (item == activeCardLocation) ActiveCard = null;
+            //activate square
+            if (item == BoardItem.Square
+                && (ActiveSquare == null)
+                && (Grid[point.X, point.Y].Team == CurrentTeam))
             {
-                //activate Cards
-                if ((item.Value.Item1 != BoardItem.Square) && (activeCardLocation == null)) activeCardLocation = item.Value.Item1;
-                //deactivate Cards
-                if (item.Value.Item1 == activeCardLocation) ActiveCard = null;
-                //
-                if (item.Value.Item1 == BoardItem.Square) clickedSquare = Grid[item.Value.Item2.X, item.Value.Item2.Y];
-                //activate square
-                if ((clickedSquare != null)
-                    && (ActiveSquare == null) 
-                    && (clickedSquare.Team == CurrentTeam))
-                {
-                    ActiveSquare = item.Value.Item2;
-                }
-                //deactivate square
-                if (ActiveSquare == item.Value.Item2) ActiveSquare = null;
-                //move
-                if (ActiveSquare != null
-                    && CanMoveSquares(ActiveSquare.Value.X, ActiveSquare.Value.Y).Contains(FindItem(new PointF(item.Value.Item2.X, item.Value.Item2.Y))!.Value.Item2)) Move(Grid[ActiveSquare.Value.X, ActiveSquare.Value.Y], Grid[item.Value.Item2.X, item.Value.Item2.Y]);
+                ActiveSquare = point;
             }
-        }
-
-        public (BoardItem, (int X, int Y))? FindItem(PointF point)
-        {
-            int squareX = 7;
-            int squareY = 7;
-            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.BlueCard1, (0, 0));
-            if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, (0, 0));
-            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, (0, 0));
-            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard1, (0, 0));
-
-            for (int i = 0; i < 4; i++)
-            {
-                if ((point.X > GridOrigin.X + i + 0.1f) && (point.X < GridOrigin.X + i + 0.9f)) squareX = i;
-            }
-            for (int i = 0; i < 4; i++)
-            {
-                if ((point.Y > GridOrigin.Y + i + 0.1f) && (point.Y < GridOrigin.Y + i + 0.9f)) squareX = i;
-            }
-            if ((point.X > GridOrigin.X/5 + 0.1f) && (point.X < GridOrigin.X / 5 + 0.9f)
-                &&
-               (point.Y > GridOrigin.Y/5 + 0.1f) && (point.Y < GridOrigin.Y/5 + 0.9f))
-            {
-                return (BoardItem.Square, (squareX, squareY));
-            }
-            return null;
+            //deactivate square
+            if (ActiveSquare == point) ActiveSquare = null;
+            //move
+            if (ActiveSquare != null
+                && CanMoveSquares(ActiveSquare.Value).Contains(point)) Move(Grid[ActiveSquare.Value.X, ActiveSquare.Value.Y], Grid[point.X, point.Y]);
         }
 
         public void Move(Square origin, Square target)
@@ -130,16 +97,16 @@ namespace Onitama
             origin = new Square();
         }
 
-        public List<(int X, int Y)> CanMoveSquares(int x, int y)
+        public List<Point> CanMoveSquares(Point point)
         {
-            if (x < 0 || y < 0) throw new ArgumentOutOfRangeException();
-            List<(int X, int Y)> result = new List<(int X, int Y)>();
+            if (point.X < 0 || point.Y < 0) throw new ArgumentOutOfRangeException();
+            List<Point> result = new();
             for (var i = 0; i < 5; i++)
                 for (var j = 0; j < 5; j++)
                 {
-                    if (ActiveCard is not null && ActiveCard.Moves.Contains(new Size(i - x, j - y)))
+                    if (ActiveCard is not null && ActiveCard.Moves.Contains(new Size(i - point.X, j - point.Y)))
                     {
-                        result.Add((i, j));
+                        result.Add(new Point(i, j));
                     }
                 }
             return result;

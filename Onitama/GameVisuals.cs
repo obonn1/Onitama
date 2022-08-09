@@ -6,49 +6,87 @@ namespace Onitama
 {
     public class GameVisuals
     {
-        public List<(float, float)> BlueStudents { get; set; } = new();
-        public List<(float, float)> RedStudents { get; set; } = new();
-        public (float, float) blueMaster;
-        public (float, float) redMaster;
-        public List<(float, float)> possibleMoves = new();
-        public (float x, float y) activeStudent = (1,0);
+        public List<Point> BlueStudents { get; set; } = new();
+        public List<Point> RedStudents { get; set; } = new();
+        public Point blueMaster;
+        public Point redMaster;
+        public List<Point> possibleMoves = new();
+        public Point? activeStudent;
+        public BoardItem? ActiveCard { get; set; }
         public Card[]? BlueCards { get; set; }
         public Font Font { get; set; } = new Font("Arial", 0.2f);
         public Card[]? RedCards { get; set; }
         public Card? NeutralCard { get; set; }
         public PointF GridOrigin { get; set; }
 
+        PointF? mouseDownLocation;
+
         public GameVisuals(PointF gridOrigin)
         {
             GridOrigin = gridOrigin;
+        }
+
+        public void MouseDown(PointF location)
+        {
+            mouseDownLocation = location;
+        }
+
+        public void MouseUp(BoardItem item, Point point)
+        {
+            if (item == BoardItem.Square && ActiveCard != null)
+            {
+                if (activeStudent == null)
+                {
+                    activeStudent = point;
+                    for (var i = 0; i < 5; i++)
+                        for (var j = 0; j < 5; j++)
+                        {
+                            if (ActiveCard is not null && BlueCards![0].Moves.Contains(new Size(i - point.X, j - point.Y)))
+                            {
+                                possibleMoves.Add(new Point(i, j));
+                            }
+                        }
+                }
+                if (activeStudent == point)
+                {
+                    activeStudent = null;
+                }
+
+            }
+            if (ActiveCard == null && item != BoardItem.Square) ActiveCard = item;
+            if (ActiveCard != null && item != BoardItem.Square) ActiveCard = null;
         }
 
         public void DrawState(Graphics g)
         {
            foreach (var piece in BlueStudents)
             {
-                g.FillRectangle(Brushes.Blue, piece.Item1 + GridOrigin.X + 0.1f, piece.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                g.FillRectangle(Brushes.Blue, piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             }
             foreach (var piece in RedStudents)
             {
-                g.FillRectangle(Brushes.Red, piece.Item1 + GridOrigin.X + 0.1f, piece.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                g.FillRectangle(Brushes.Red, piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             }
 
-            g.FillRectangle(Brushes.DarkBlue, blueMaster.Item1 + GridOrigin.X + 0.1f, blueMaster.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            g.FillRectangle(Brushes.DarkRed, redMaster.Item1 + GridOrigin.X + 0.1f, blueMaster.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            g.DrawRectangle(new Pen(Color.DarkOrange, 0.05f), activeStudent.x + GridOrigin.X + 0.05f, activeStudent.y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
-
-            foreach (var square in possibleMoves)
+            g.FillRectangle(Brushes.DarkBlue, blueMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            g.FillRectangle(Brushes.DarkRed, redMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            if (activeStudent != null)
             {
-                g.DrawRectangle(new Pen(Color.White, 0.05f), square.Item1 + activeStudent.x + GridOrigin.X + 0.05f, square.Item2 + activeStudent.y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                g.DrawRectangle(new Pen(Color.DarkOrange, 0.05f), activeStudent.Value.X + GridOrigin.X + 0.05f, activeStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+
+                foreach (var square in possibleMoves)
+                {
+                    g.DrawRectangle(new Pen(Color.White, 0.05f), square.X + activeStudent.Value.X + GridOrigin.X + 0.05f, square.Y + activeStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                }
             }
+
             RectangleF blueCard1BG = new(.425f, 1.88f, 1.8f, 2.25f);
             RectangleF blueCard2BG = new(.425f, 4.36f, 1.8f, 2.25f);
             RectangleF redCard1BG = new(7.7f, 1.88f, 1.8f, 2.25f);
             RectangleF redCard2BG = new(7.7f, 4.36f, 1.8f, 2.25f);
             RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
-            g.FillRectangle(Brushes.DarkBlue, blueMaster.Item1 + GridOrigin.X + 0.1f, blueMaster.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            g.FillRectangle(Brushes.DarkRed, redMaster.Item1 + GridOrigin.X + 0.1f, blueMaster.Item2 + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            g.FillRectangle(Brushes.DarkBlue, blueMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            g.FillRectangle(Brushes.DarkRed, redMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             g.FillRoundedRectangleF(Brushes.Moccasin, blueCard1BG, .1f);
             g.FillRoundedRectangleF(Brushes.Moccasin, blueCard2BG, .1f);
             g.FillRoundedRectangleF(Brushes.Moccasin, redCard1BG, .1f);
