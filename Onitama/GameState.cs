@@ -53,7 +53,7 @@ namespace Onitama
             }
 
             BlueCards = new Card[2] { Cards[0], Cards[1] };
-            RedCards = new Card[2] { Cards[2], Cards[3] };
+            RedCards = new Card[2] { Cards[2].Invert(Cards[2]), Cards[3].Invert(Cards[3]) };
             NeutralCard = Cards[4];
         }
 
@@ -77,7 +77,7 @@ namespace Onitama
             for (var i = 0; i < 5; i++)
                 for (var j = 0; j < 5; j++)
                 {
-                    if (ActiveCard is not null && ActiveCard.Moves.Contains((i - x, j - y)))
+                    if (ActiveCard is not null && ActiveCard.Moves.Contains(new Size(i - x, j - y)))
                     {
                         if (Grid[i, j].Team != Grid[x, y].Team) result.Add((i, j, true));
                         else result.Add((i, j, false));

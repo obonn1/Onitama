@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Onitama
 {
-    internal static class SquareExtension
+    internal static class RectExtension
     {
         public static GraphicsPath RoundedRectF(RectangleF bounds, float radius)
         {
