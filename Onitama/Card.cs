@@ -19,7 +19,7 @@ namespace Onitama
 		}
 		}
 
-		public Card Invert(Card card)
+		public static Card Invert(Card card)
         {
 			ImmutableArray<Size> invertedMoves = ImmutableArray.Create<Size>(
 				new Size(card.Moves[0].Width * -1, card.Moves[0].Height),

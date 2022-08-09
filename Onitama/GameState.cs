@@ -53,7 +53,7 @@ namespace Onitama
             }
 
             BlueCards = new Card[2] { Cards[0], Cards[1] };
-            RedCards = new Card[2] { Cards[2].Invert(Cards[2]), Cards[3].Invert(Cards[3]) };
+            RedCards = new Card[2] { Card.Invert(Cards[2]), Card.Invert(Cards[3]) };
             NeutralCard = Cards[4];
         }
 
