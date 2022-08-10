@@ -83,14 +83,17 @@ namespace Onitama
 
         public void MouseUp(BoardItem item, Point point)
         {
-
+            if (IsGameOver && item == BoardItem.TryAgain)
+            {
+                Application.Restart();
+            }
             //deactivate Cards
             if (item == activeCardLocation)
             {
                 ResetActive();
             }
             //activate Cards
-            else if ((item != BoardItem.Square) && (activeCardLocation != item))
+            else if ((item.ToString().Contains("Card")) && (activeCardLocation != item))
             {
                 if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
                 {
@@ -224,5 +227,6 @@ namespace Onitama
         RedCard1,
         RedCard2,
         Square,
+        TryAgain
     }
 }

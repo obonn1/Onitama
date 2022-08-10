@@ -26,7 +26,7 @@ namespace Onitama
 			for (int y = 0; y < 5; y++)
 				for (int x = 0; x < 5; x++)
 				{
-					if ((x, y) == (2, 2)) g.FillRectangle(new SolidBrush(Color.Black), (float)(location.X + (.21 * x * length) + 0.05f), (float)(location.Y + (.21 * y * length) + 0.05f), length * 0.16f, length * 0.16f);
+					if ((x, y) == (2, 2)) g.FillRectangle(DrawTools.BlackBrush, (float)(location.X + (.21 * x * length) + 0.05f), (float)(location.Y + (.21 * y * length) + 0.05f), length * 0.16f, length * 0.16f);
 					else if (Moves.Any(s => new Point(x, y) == new Point(2 + s.Width, 2 + s.Height))) g.FillRectangle(new SolidBrush(Color.Gray), (float)(location.X + (.21 * x * length) + 0.05f), (float)(location.Y + (.21 * y * length) + 0.05f), length * 0.16f, length * 0.16f);
 					else g.FillRectangle(new SolidBrush(Color.White), (float)(location.X + (.21 * x * length) + 0.05f), (float)(location.Y + (.21 * y * length) + 0.05f), length * 0.16f, length * 0.16f);
 		}

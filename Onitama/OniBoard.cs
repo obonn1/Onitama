@@ -49,6 +49,7 @@ namespace Onitama
             if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, new Point(0, 0));
             if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
             if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard2, new Point(0, 0));
+            if (((point.X - 4.41f) * (5.91f - point.X)) > 0 && (((point.Y - 3.88f) * (4.38f - point.Y)) > 0)) return (BoardItem.TryAgain, new Point(0, 0));
 
             for (int i = 0; i < 5; i++)
             {
@@ -97,8 +98,8 @@ namespace Onitama
 
             RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
             RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkGreen, 0.08f), templeBlue, 0.1f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkGreen, 0.08f), templeRed, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.08f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.08f), templeRed, 0.1f);
         }
 
         protected override void VisualsDraw(Graphics g)
@@ -133,8 +134,9 @@ namespace Onitama
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
             if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
             {
+                Visuals.IsGameOver = GameState.IsGameOver;
+                if (GameState.IsGameOver && location.Value.Item1 != BoardItem.TryAgain) return;
                 GameState.MouseUp(location.Value.Item1, location.Value.Item2);
-
                 Visuals.CurrentTeam = GameState.CurrentTeam;
                 Visuals.ActiveCard = GameState.activeCardLocation;
                 Visuals.activeStudent = GameState.ActiveSquare;
@@ -143,7 +145,6 @@ namespace Onitama
                 Visuals.RedMaster = GameState.RedMaster;
                 Visuals.BlueMaster = GameState.BlueMaster;
                 Visuals.possibleMoves = GameState.PossibleMoves;
-                Visuals.IsGameOver = GameState.IsGameOver;
                 Visuals.MouseUp(location.Value.Item1, location.Value.Item2);
                 Invalidate();
             }
