@@ -25,10 +25,6 @@ namespace Onitama
             new Point(0, 1),
             new Point(0, 3),
             new Point(0, 4),
-            new Point(4, 0),
-            new Point(4, 1),
-            new Point(4, 3),
-            new Point(4, 4)
         };
         public List<Point> RedStudents { get; set; } = new List<Point>()
         {
@@ -149,8 +145,8 @@ namespace Onitama
         {
 
             if ((Grid[target.X, target.Y].IsMaster == true) 
-                || (Grid[active.X, active.Y].Team == Team.Red && target == new Point(0,2)) 
-                || (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))
+                || Grid[active.X, active.Y].IsMaster && (Grid[active.X, active.Y].Team == Team.Red && target == new Point(0,2)) 
+                || Grid[active.X, active.Y].IsMaster && (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))
             {
                 IsGameOver = true;
                 return;
