@@ -14,7 +14,7 @@ namespace Onitama
         public Point? activeStudent;
         public BoardItem? ActiveCard { get; set; }
         public Card[]? BlueCards { get; set; }
-        public Font Font { get; set; } = new Font("Arial", 0.2f);
+        public Font Font { get; set; } = new("Arial", 0.2f);
         public Card[]? RedCards { get; set; }
         public Card? NeutralCard { get; set; }
         public PointF GridOrigin { get; set; }

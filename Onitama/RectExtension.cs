@@ -12,9 +12,9 @@ namespace Onitama
         public static GraphicsPath RoundedRectF(RectangleF bounds, float radius)
         {
             float diameter = radius * 2;
-            SizeF size = new SizeF(diameter, diameter);
-            RectangleF arc = new RectangleF(bounds.Location, size);
-            GraphicsPath path = new GraphicsPath();
+            SizeF size = new(diameter, diameter);
+            RectangleF arc = new(bounds.Location, size);
+            GraphicsPath path = new();
 
             if (radius == 0)
             {

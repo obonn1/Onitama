@@ -94,6 +94,11 @@ namespace Onitama
                 {
                     g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x, y).X + 0.1f, GridToView(x, y).Y + 0.1f, 0.8f, 0.8f);
                 }
+
+            RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkGreen, 0.08f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkGreen, 0.08f), templeRed, 0.1f);
         }
 
         protected override void VisualsDraw(Graphics g)
