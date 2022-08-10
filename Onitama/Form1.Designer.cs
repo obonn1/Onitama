@@ -37,7 +37,6 @@
             // 
             this.oniBoard1.Dock = System.Windows.Forms.DockStyle.Fill;
             gameState1.ActiveCard = null;
-            gameState1.CurrentTeam = Onitama.Team.Red;
             gameState1.IsGameOver = false;
             this.oniBoard1.GameState = gameState1;
             this.oniBoard1.GridColor = System.Drawing.Color.Green;

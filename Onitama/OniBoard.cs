@@ -22,7 +22,15 @@ namespace Onitama
         public OniBoard()
         {
             ViewSize = new SizeF(10, 7);
-            Visuals = new GameVisuals(GridOrigin);
+            Visuals = new(GridOrigin);
+            Visuals.CurrentTeam = GameState.CurrentTeam;
+            Visuals.ActiveCard = GameState.activeCardLocation;
+            Visuals.activeStudent = GameState.ActiveSquare;
+            Visuals.BlueStudents = GameState.BlueStudents;
+            Visuals.RedStudents = GameState.RedStudents;
+            Visuals.RedMaster = GameState.RedMaster;
+            Visuals.BlueMaster = GameState.BlueMaster;
+            Visuals.possibleMoves = GameState.PossibleMoves;
         }
 
         public PointF ViewToGrid(float x, float y)
@@ -90,14 +98,6 @@ namespace Onitama
 
         protected override void VisualsDraw(Graphics g)
         {
-            for (int y = 0; y < 5; y++)
-                for (int x = 0; x < 5; x++)
-                {
-                    if (GameState.Grid[x, y].Team == Team.Blue && !GameState.Grid[x, y].IsMaster) Visuals.BlueStudents.Add(new Point(x, y));
-                    if (GameState.Grid[x, y].Team == Team.Red && !GameState.Grid[x, y].IsMaster) Visuals.RedStudents.Add(new Point(x, y));
-                    if (GameState.Grid[x, y].Team == Team.Blue && GameState.Grid[x, y].IsMaster) Visuals.blueMaster = new Point(x, y);
-                    if (GameState.Grid[x, y].Team == Team.Red && GameState.Grid[x, y].IsMaster) Visuals.redMaster = new Point(x, y);
-                }
             Visuals.BlueCards = GameState.BlueCards;
             Visuals.RedCards = GameState.RedCards;
             Visuals.NeutralCard = GameState.NeutralCard;
@@ -108,7 +108,7 @@ namespace Onitama
         {
             if (buttons == MouseButtons.Left)
             {
-                GameState.mouseLocation = new PointF(x, y);
+                GameState.MouseLocation = new PointF(x, y);
                 Invalidate();
             }
         }
@@ -118,7 +118,7 @@ namespace Onitama
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
             if (buttons == MouseButtons.Left && location != null)
             {
-                GameState.mouseDownLocation = location;
+                GameState.MouseDownLocation = location;
                 Invalidate();
             }
         }
@@ -126,17 +126,23 @@ namespace Onitama
         protected override void ViewMouseUp(float x, float y, MouseButtons buttons)
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
-            if (location != null && buttons == MouseButtons.Left && location == GameState.mouseDownLocation)
+            if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
             {
                 GameState.MouseUp(location.Value.Item1, location.Value.Item2);
 
                 Visuals.CurrentTeam = GameState.CurrentTeam;
                 Visuals.ActiveCard = GameState.activeCardLocation;
                 Visuals.activeStudent = GameState.ActiveSquare;
+                Visuals.BlueStudents = GameState.BlueStudents;
+                Visuals.RedStudents = GameState.RedStudents;
+                Visuals.RedMaster = GameState.RedMaster;
+                Visuals.BlueMaster = GameState.BlueMaster;
+                Visuals.possibleMoves = GameState.PossibleMoves;
+                Visuals.IsGameOver = GameState.IsGameOver;
                 Visuals.MouseUp(location.Value.Item1, location.Value.Item2);
                 Invalidate();
             }
-            GameState.mouseDownLocation = null;
+            GameState.MouseDownLocation = null;
         }
     }
 }
