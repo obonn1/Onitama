@@ -24,6 +24,7 @@ namespace Onitama
         public (BoardItem, Point)? mouseDownLocation { get; set; }
         public PointF? mouseLocation { get; set; }
         public PointF GridOrigin { get; set; }
+        public List<Point> PossibleMoves { get; private set; } = new();
 
         public GameState()
         {
@@ -66,10 +67,39 @@ namespace Onitama
 
         public void MouseUp(BoardItem item, Point point)
         {
-            //activate Cards
-            if ((item != BoardItem.Square) && (activeCardLocation == null)) activeCardLocation = item;
+
             //deactivate Cards
-            if (item == activeCardLocation) ActiveCard = null;
+            if (item == activeCardLocation)
+            {
+                ResetActive();
+            }
+            //activate Cards
+            else if ((item != BoardItem.Square) && (activeCardLocation == item))
+            {
+                if((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
+                {
+                    ResetActive();
+                    activeCardLocation = item;
+                    ActiveCard = item switch
+                    {
+                        BoardItem.BlueCard1 => BlueCards[0],
+                        BoardItem.BlueCard2 => BlueCards[1],
+                        _ => null
+                    };
+                }
+                if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && CurrentTeam == Team.Red)
+                {
+                    ResetActive();
+                    activeCardLocation = item;
+                    ActiveCard = item switch
+                    {
+                        BoardItem.RedCard1 => RedCards[0],
+                        BoardItem.RedCard2 => RedCards[1],
+                        _ => null
+                    };
+                }
+                
+            }
             //activate square
             if (item == BoardItem.Square
                 && (ActiveSquare == null)
@@ -78,31 +108,55 @@ namespace Onitama
                 ActiveSquare = point;
             }
             //deactivate square
-            if (ActiveSquare == point) ActiveSquare = null;
+            else if (ActiveSquare == point)
+            {
+                ActiveSquare = null;
+                PossibleMoves = new();
+            }
             //move
-            if (ActiveSquare != null
-                && CanMoveSquares(ActiveSquare.Value).Contains(point)) Move(Grid[ActiveSquare.Value.X, ActiveSquare.Value.Y], Grid[point.X, point.Y]);
+            if (ActiveSquare != null && CanMoveSquares(ActiveSquare.Value).Contains(point)) Move((Point)ActiveSquare, point);
+            if (ActiveSquare != null)
+            {
+                ActiveSquare = point;
+                for (var i = 0; i < 5; i++)
+                    for (var j = 0; j < 5; j++)
+                    {
+                        if (ActiveCard is not null && BlueCards![0].Moves.Contains(new Size(i - point.X, j - point.Y)))
+                        {
+                            PossibleMoves.Add(new Point(i, j));
+                        }
+                    }
+
+            }
         }
 
-        public void Move(Square origin, Square target)
+        public void Move(Point active, Point target)
         {
 
-            if (target.IsMaster == true 
-                || (origin.Team == Team.Red && target == Grid[0, 2]) 
-                || (origin.Team == Team.Blue && target == Grid[4, 2]))
+            if ((Grid[target.X, target.Y].IsMaster == true) 
+                || (Grid[active.X, active.Y].Team == Team.Red && target == new Point(0,2)) 
+                || (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))
             {
                 IsGameOver = true;
             }
-            target = origin;
-            origin = new Square();
+            Grid[target.X, target.Y] = Grid[active.X, active.Y];
+            Grid[active.X, active.Y] = new Square(null);
+            CurrentTeam = CurrentTeam == Team.Red ? Team.Blue : Team.Red;
+            ResetActive();
         }
 
+        public void ResetActive()
+        {
+            ActiveCard = null;
+            ActiveSquare = null;
+            activeCardLocation = null;
+            PossibleMoves = new();
+        }
         public List<Point> CanMoveSquares(Point point)
         {
-            if (point.X < 0 || point.Y < 0) throw new ArgumentOutOfRangeException();
             List<Point> result = new();
-            for (var i = 0; i < 5; i++)
-                for (var j = 0; j < 5; j++)
+            for (var j = 0; j < 5; j++)
+                for (var i = 0; i < 5; i++)
                 {
                     if (ActiveCard is not null && ActiveCard.Moves.Contains(new Size(i - point.X, j - point.Y)))
                     {

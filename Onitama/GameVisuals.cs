@@ -18,8 +18,7 @@ namespace Onitama
         public Card[]? RedCards { get; set; }
         public Card? NeutralCard { get; set; }
         public PointF GridOrigin { get; set; }
-
-        PointF? mouseDownLocation;
+        public Team CurrentTeam { get; internal set; }
 
         public GameVisuals(PointF gridOrigin)
         {
@@ -28,38 +27,28 @@ namespace Onitama
 
         public void MouseDown(PointF location)
         {
-            mouseDownLocation = location;
         }
 
         public void MouseUp(BoardItem item, Point point)
         {
-            if (item == BoardItem.Square && ActiveCard != null)
+            if (activeStudent != null)
             {
-                if (activeStudent == null)
-                {
-                    activeStudent = point;
-                    for (var i = 0; i < 5; i++)
-                        for (var j = 0; j < 5; j++)
+                activeStudent = point;
+                for (var i = 0; i < 5; i++)
+                    for (var j = 0; j < 5; j++)
+                    {
+                        if (ActiveCard is not null && BlueCards![0].Moves.Contains(new Size(i - point.X, j - point.Y)))
                         {
-                            if (ActiveCard is not null && BlueCards![0].Moves.Contains(new Size(i - point.X, j - point.Y)))
-                            {
-                                possibleMoves.Add(new Point(i, j));
-                            }
+                            possibleMoves.Add(new Point(i, j));
                         }
-                }
-                if (activeStudent == point)
-                {
-                    activeStudent = null;
-                }
+                    }
 
             }
-            if (ActiveCard == null && item != BoardItem.Square) ActiveCard = item;
-            if (ActiveCard != null && item != BoardItem.Square) ActiveCard = null;
         }
 
         public void DrawState(Graphics g)
         {
-           foreach (var piece in BlueStudents)
+            foreach (var piece in BlueStudents)
             {
                 g.FillRectangle(Brushes.Blue, piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             }
@@ -72,7 +61,7 @@ namespace Onitama
             g.FillRectangle(Brushes.DarkRed, redMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             if (activeStudent != null)
             {
-                g.DrawRectangle(new Pen(Color.DarkOrange, 0.05f), activeStudent.Value.X + GridOrigin.X + 0.05f, activeStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                g.DrawRectangle(new Pen(Color.DarkOrange, 0.1f), activeStudent.Value.X + GridOrigin.X + 0.05f, activeStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
 
                 foreach (var square in possibleMoves)
                 {
@@ -85,6 +74,14 @@ namespace Onitama
             RectangleF redCard1BG = new(7.7f, 1.88f, 1.8f, 2.25f);
             RectangleF redCard2BG = new(7.7f, 4.36f, 1.8f, 2.25f);
             RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
+            RectangleF? highlightRect = ActiveCard switch
+            {
+                BoardItem.BlueCard1 => blueCard1BG,
+                BoardItem.BlueCard2 => blueCard2BG,
+                BoardItem.RedCard1 => redCard1BG,
+                BoardItem.RedCard2 => redCard2BG,
+                _ => null
+            };
             g.FillRectangle(Brushes.DarkBlue, blueMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             g.FillRectangle(Brushes.DarkRed, redMaster.X + GridOrigin.X + 0.1f, blueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             g.FillRoundedRectangleF(Brushes.Moccasin, blueCard1BG, .1f);
@@ -93,16 +90,18 @@ namespace Onitama
             g.FillRoundedRectangleF(Brushes.Moccasin, redCard2BG, .1f);
             g.FillRoundedRectangleF(Brushes.Moccasin, neutralCardBG, .1f);
             BlueCards![0].CardGrid(g, new PointF(0.475f, 1.93f), 1.6f);
-            g.DrawString(BlueCards[0].Name, Font, Brushes.Black, (float)(0.5f + ((1.6f - (BlueCards[0].Name.Length* (Font.Size*0.75))) /2)), 3.7f);
+            g.DrawString(BlueCards[0].Name, Font, Brushes.Black, (float)(0.5f + ((1.6f - (BlueCards[0].Name.Length * (Font.Size * 0.75))) / 2)), 3.7f);
             BlueCards[1].CardGrid(g, new PointF(0.475f, 4.41f), 1.6f);
-            g.DrawString(BlueCards[1].Name, Font, Brushes.Black, (float)(0.5f + ((1.6f - (BlueCards[1].Name.Length* (Font.Size * 0.75))) / 2)), 6.18f);
+            g.DrawString(BlueCards[1].Name, Font, Brushes.Black, (float)(0.5f + ((1.6f - (BlueCards[1].Name.Length * (Font.Size * 0.75))) / 2)), 6.18f);
             RedCards![0].CardGrid(g, new PointF(7.75f, 1.93f), 1.6f);
-            g.DrawString(RedCards[0].Name, Font, Brushes.Black, (float)(7.78f + ((1.6f - (RedCards[0].Name.Length* (Font.Size * 0.75))) / 2)), 3.7f);
+            g.DrawString(RedCards[0].Name, Font, Brushes.Black, (float)(7.78f + ((1.6f - (RedCards[0].Name.Length * (Font.Size * 0.75))) / 2)), 3.7f);
             RedCards[1].CardGrid(g, new PointF(7.75f, 4.41f), 1.6f);
-            g.DrawString(RedCards[1].Name, Font, Brushes.Black, (float)(7.78f + ((1.6f - (RedCards[1].Name.Length* (Font.Size * 0.75))) / 2)), 6.18f);
+            g.DrawString(RedCards[1].Name, Font, Brushes.Black, (float)(7.78f + ((1.6f - (RedCards[1].Name.Length * (Font.Size * 0.75))) / 2)), 6.18f);
             NeutralCard!.CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
             (Card.Invert(new Card(NeutralCard))).CardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
             g.DrawString(NeutralCard.Name, Font, Brushes.Black, (float)(4.2f + ((1.6f - (NeutralCard.Name.Length * (Font.Size * 0.75))) / 2)), 0.73f);
+            if (ActiveCard != null) g.DrawRoundedRectangleF(new Pen(Color.White, 0.1f), (RectangleF)highlightRect!, 0.1f);
+            g.DrawString("TURN", Font, Brushes.Black, CurrentTeam == Team.Blue ? 1f : 8f, 1f);
         }
     }
 }

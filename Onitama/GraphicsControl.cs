@@ -43,9 +43,9 @@ public abstract class GraphicsControl : Control
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        MouseView = ClientToView(e.Location);
-        ViewMouseMove(MouseView.X, MouseView.Y, e.Button);
-        base.OnMouseMove(e);
+        //MouseView = ClientToView(e.Location);
+        //ViewMouseMove(MouseView.X, MouseView.Y, e.Button);
+        //base.OnMouseMove(e);
     }
 
     protected override void OnMouseUp(MouseEventArgs e)

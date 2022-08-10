@@ -50,7 +50,6 @@
             this.oniBoard1.Size = new System.Drawing.Size(700, 360);
             this.oniBoard1.TabIndex = 0;
             this.oniBoard1.Text = "oniBoard1";
-            this.oniBoard1.Click += new System.EventHandler(this.oniBoard1_Click);
             // 
             // Form1
             // 

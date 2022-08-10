@@ -40,19 +40,25 @@ namespace Onitama
             if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.BlueCard1, new Point(0, 0));
             if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, new Point(0, 0));
             if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
-            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
+            if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard2, new Point(0, 0));
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
-                if ((point.X > GridOrigin.X + i + 0.1f) && (point.X < GridOrigin.X + i + 0.9f)) squareX = i;
+                if ((point.X > GridOrigin.X + i + 0.1f) && (point.X < GridOrigin.X + i + 0.9f))
+                {
+                    squareX = i;
+                    break;
+                }
             }
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
-                if ((point.Y > GridOrigin.Y + i + 0.1f) && (point.Y < GridOrigin.Y + i + 0.9f)) squareX = i;
+                if ((point.Y > GridOrigin.Y + i + 0.1f) && (point.Y < GridOrigin.Y + i + 0.9f))
+                {
+                    squareY = i;
+                    break;
+                }
             }
-            if ((point.X > GridOrigin.X / 5 + 0.1f) && (point.X < GridOrigin.X / 5 + 0.9f)
-                &&
-               (point.Y > GridOrigin.Y / 5 + 0.1f) && (point.Y < GridOrigin.Y / 5 + 0.9f))
+            if (squareX != 7 && squareY != 7)
             {
                 return (BoardItem.Square, new Point(squareX, squareY));
             }
@@ -62,6 +68,7 @@ namespace Onitama
         protected override void ViewDraw(Graphics g)
         {
             Visuals.GridOrigin = GridOrigin;
+            Visuals.CurrentTeam = GameState.CurrentTeam;
             GameState.GridOrigin = GridOrigin;
             using var pen = new Pen(Color.Black, 0.05f);
             RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
@@ -86,10 +93,10 @@ namespace Onitama
             for (int y = 0; y < 5; y++)
                 for (int x = 0; x < 5; x++)
                 {
-                    if (GameState.Grid[x, y].Team == Team.Blue && !GameState.Grid[x, y].IsMaster) Visuals.BlueStudents.Add((x, y));
-                    if (GameState.Grid[x, y].Team == Team.Red && !GameState.Grid[x, y].IsMaster) Visuals.RedStudents.Add((x, y));
-                    if (GameState.Grid[x, y].Team == Team.Blue && GameState.Grid[x, y].IsMaster) Visuals.blueMaster = (x, y);
-                    if (GameState.Grid[x, y].Team == Team.Red && GameState.Grid[x, y].IsMaster) Visuals.redMaster = (x, y);
+                    if (GameState.Grid[x, y].Team == Team.Blue && !GameState.Grid[x, y].IsMaster) Visuals.BlueStudents.Add(new Point(x, y));
+                    if (GameState.Grid[x, y].Team == Team.Red && !GameState.Grid[x, y].IsMaster) Visuals.RedStudents.Add(new Point(x, y));
+                    if (GameState.Grid[x, y].Team == Team.Blue && GameState.Grid[x, y].IsMaster) Visuals.blueMaster = new Point(x, y);
+                    if (GameState.Grid[x, y].Team == Team.Red && GameState.Grid[x, y].IsMaster) Visuals.redMaster = new Point(x, y);
                 }
             Visuals.BlueCards = GameState.BlueCards;
             Visuals.RedCards = GameState.RedCards;
@@ -111,12 +118,8 @@ namespace Onitama
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
             if (buttons == MouseButtons.Left && location != null)
             {
-                if (buttons == MouseButtons.Left)
-                {
-                    GameState.mouseDownLocation = location;
-                    Invalidate();
-                }
-
+                GameState.mouseDownLocation = location;
+                Invalidate();
             }
         }
 
@@ -126,6 +129,10 @@ namespace Onitama
             if (location != null && buttons == MouseButtons.Left && location == GameState.mouseDownLocation)
             {
                 GameState.MouseUp(location.Value.Item1, location.Value.Item2);
+
+                Visuals.CurrentTeam = GameState.CurrentTeam;
+                Visuals.ActiveCard = GameState.activeCardLocation;
+                Visuals.activeStudent = GameState.ActiveSquare;
                 Visuals.MouseUp(location.Value.Item1, location.Value.Item2);
                 Invalidate();
             }

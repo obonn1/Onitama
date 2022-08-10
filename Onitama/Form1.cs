@@ -12,9 +12,5 @@ namespace Onitama
 
         }
 
-        private void oniBoard1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
