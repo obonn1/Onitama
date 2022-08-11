@@ -34,7 +34,6 @@ namespace Onitama
             new Point(4, 4)
         };
         public (BoardItem, Point)? MouseDownLocation { get; set; }
-        public PointF? MouseLocation { get; set; }
         public PointF GridOrigin { get; set; }
         public List<Point> PossibleMoves { get; private set; } = new();
         public Point RedMaster { get; set; } = new Point(4, 2);

@@ -10,8 +10,9 @@ namespace Onitama
         public List<Point> RedStudents { get; set; } = new();
         public Point BlueMaster { get; set; }
         public Point RedMaster { get; set; }
-        public List<Point> possibleMoves = new();
-        public Point? activeStudent;
+        public List<Point> PossibleMoves { get; set; } = new();
+        public PointF MouseOver { get; set; }
+        public Point? ActiveStudent { get; set; }
         public BoardItem? ActiveCard { get; set; }
         public Card[]? BlueCards { get; set; }
         public Font Font { get; set; } = new("Arial", 0.2f);
@@ -20,20 +21,25 @@ namespace Onitama
         public PointF GridOrigin { get; set; }
         public Team CurrentTeam { get; internal set; }
         public bool IsGameOver { get; set; }
+        public BoardItem MouseOverItem { get; set; }
+        public Point MouseOverXY { get; set; }
+
+        RectangleF blueCard1BG = new(.425f, 1.88f, 1.8f, 2.25f);
+        RectangleF blueCard2BG = new(.425f, 4.36f, 1.8f, 2.25f);
+        RectangleF redCard1BG = new(7.7f, 1.88f, 1.8f, 2.25f);
+        RectangleF redCard2BG = new(7.7f, 4.36f, 1.8f, 2.25f);
+        RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
+        RectangleF? highlightRect;
 
         public GameVisuals(PointF gridOrigin)
         {
             GridOrigin = gridOrigin;
         }
 
-        public void MouseDown(PointF location)
+        
+        public void DrawHover(Graphics g)
         {
         }
-
-        public void MouseUp(BoardItem item, Point point)
-        {
-        }
-
         public void DrawState(Graphics g)
         {
             foreach (var piece in BlueStudents)
@@ -45,13 +51,13 @@ namespace Onitama
                 g.FillRectangle(RedBrush, piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             }
 
-            g.FillRectangle(DarkBlueBrush, BlueMaster.X + GridOrigin.X + 0.1f, BlueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            g.FillRectangle(DarkRedBrush, RedMaster.X + GridOrigin.X + 0.1f, RedMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            if (activeStudent != null)
+            g.FillRectangle(Brushes.DarkBlue, BlueMaster.X + GridOrigin.X + 0.1f, BlueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            g.FillRectangle(Brushes.DarkRed, RedMaster.X + GridOrigin.X + 0.1f, RedMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            if (ActiveStudent != null)
             {
-                g.DrawRectangle(new Pen(Color.DarkOrange, 0.1f), activeStudent.Value.X + GridOrigin.X + 0.05f, activeStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                g.DrawRectangle(new Pen(Color.DarkOrange, 0.1f), ActiveStudent.Value.X + GridOrigin.X + 0.05f, ActiveStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
 
-                foreach (var square in possibleMoves)
+                foreach (var square in PossibleMoves)
                 {
                     g.DrawRectangle(new Pen(Color.White, 0.05f), square.X + GridOrigin.X + 0.05f, square.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
                 }
@@ -62,14 +68,13 @@ namespace Onitama
             RectangleF redCard1BG = new(7.7f, 1.88f, 1.8f, 2.25f);
             RectangleF redCard2BG = new(7.7f, 4.36f, 1.8f, 2.25f);
             RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
-            RectangleF turnBG = new(CurrentTeam==Team.Blue?0.2f:7.4f, 0.95f, 2.3f, 0.5f);
             RectangleF? highlightRect = ActiveCard switch
             {
                 BoardItem.BlueCard1 => blueCard1BG,
                 BoardItem.BlueCard2 => blueCard2BG,
                 BoardItem.RedCard1 => redCard1BG,
                 BoardItem.RedCard2 => redCard2BG,
-                _ => null
+                _ => null,
             };
             g.FillRoundedRectangleF(MoccasinBrush, blueCard1BG, .1f);
             g.FillRoundedRectangleF(MoccasinBrush, blueCard2BG, .1f);
@@ -104,6 +109,7 @@ namespace Onitama
                 g.DrawString("Play Again", new Font("Arial", 0.15f, FontStyle.Bold), BlackBrush, 4.5f, 4f);
 
             }
+
         }
     }
 }

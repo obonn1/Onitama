@@ -22,15 +22,17 @@ namespace Onitama
         public OniBoard()
         {
             ViewSize = new SizeF(10, 7);
-            Visuals = new(GridOrigin);
-            Visuals.CurrentTeam = GameState.CurrentTeam;
-            Visuals.ActiveCard = GameState.activeCardLocation;
-            Visuals.activeStudent = GameState.ActiveSquare;
-            Visuals.BlueStudents = GameState.BlueStudents;
-            Visuals.RedStudents = GameState.RedStudents;
-            Visuals.RedMaster = GameState.RedMaster;
-            Visuals.BlueMaster = GameState.BlueMaster;
-            Visuals.possibleMoves = GameState.PossibleMoves;
+            Visuals = new(GridOrigin)
+            {
+                CurrentTeam = GameState.CurrentTeam,
+                ActiveCard = GameState.activeCardLocation,
+                ActiveStudent = GameState.ActiveSquare,
+                BlueStudents = GameState.BlueStudents,
+                RedStudents = GameState.RedStudents,
+                RedMaster = GameState.RedMaster,
+                BlueMaster = GameState.BlueMaster,
+                PossibleMoves = GameState.PossibleMoves
+            };
         }
 
         public PointF ViewToGrid(float x, float y)
@@ -112,10 +114,11 @@ namespace Onitama
 
         protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
         {
-            if (buttons == MouseButtons.Left)
+            (BoardItem, Point)? location = FindItem(new PointF(x, y));
+            if (buttons == MouseButtons.Left && location is not null)
             {
-                GameState.MouseLocation = new PointF(x, y);
-                Invalidate();
+                Visuals.MouseOverItem = location.Value.Item1;
+                Visuals.MouseOverXY = location.Value.Item2;
             }
         }
 
@@ -139,13 +142,13 @@ namespace Onitama
                 GameState.MouseUp(location.Value.Item1, location.Value.Item2);
                 Visuals.CurrentTeam = GameState.CurrentTeam;
                 Visuals.ActiveCard = GameState.activeCardLocation;
-                Visuals.activeStudent = GameState.ActiveSquare;
+                Visuals.ActiveStudent = GameState.ActiveSquare;
                 Visuals.BlueStudents = GameState.BlueStudents;
                 Visuals.RedStudents = GameState.RedStudents;
                 Visuals.RedMaster = GameState.RedMaster;
                 Visuals.BlueMaster = GameState.BlueMaster;
-                Visuals.possibleMoves = GameState.PossibleMoves;
-                Visuals.MouseUp(location.Value.Item1, location.Value.Item2);
+                Visuals.PossibleMoves = GameState.PossibleMoves;
+                Visuals.IsGameOver = GameState.IsGameOver;
                 Invalidate();
             }
             GameState.MouseDownLocation = null;
