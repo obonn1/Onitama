@@ -20,7 +20,6 @@ namespace Onitama
 			Moves = card.Moves;
 		}
 
-		public bool IsInverted { get; set; } = false;
 		public void CardGrid(Graphics g, PointF location, float length)
         {
 			for (int y = 0; y < 5; y++)

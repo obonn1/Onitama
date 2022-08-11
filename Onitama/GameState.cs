@@ -180,7 +180,7 @@ namespace Onitama
                     if (card != ActiveCard) c.Add(card);
                 }
                 RedCards = c.ToArray();
-                NeutralCard = ActiveCard!;
+                NeutralCard = Card.Invert(ActiveCard!);
             }
             if (Grid[active.X, active.Y].Team == Team.Red && Grid[target.X, target.Y].Team == Team.Blue)
             {
