@@ -4,6 +4,12 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+ // TODO Round pieces
+ // TODO Instructions
+ // TODO Start game button
+ // TODO Freeze game on end and start
+ // TODO Your Turn background
+ // TODO Make card highlight colorful
 
 namespace Onitama
 {

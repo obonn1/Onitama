@@ -44,22 +44,30 @@ namespace Onitama
         {
             foreach (var piece in BlueStudents)
             {
-                g.FillRectangle(BlueBrush, piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                RectangleF pawn = new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                g.FillRoundedRectangleF(BlueBrush, pawn, 0.1f);
             }
             foreach (var piece in RedStudents)
             {
-                g.FillRectangle(RedBrush, piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                RectangleF pawn = new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                g.FillRoundedRectangleF(RedBrush, pawn, 0.1f);
             }
 
-            g.FillRectangle(Brushes.DarkBlue, BlueMaster.X + GridOrigin.X + 0.1f, BlueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            g.FillRectangle(Brushes.DarkRed, RedMaster.X + GridOrigin.X + 0.1f, RedMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+            RectangleF BlueMasterPiece = new(BlueMaster.X + GridOrigin.X + 0.1f, BlueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+
+            RectangleF RedMasterPiece = new(RedMaster.X + GridOrigin.X + 0.1f, RedMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+
+            g.FillRoundedRectangleF(Brushes.DarkBlue, BlueMasterPiece, 0.1f);
+            g.FillRoundedRectangleF(Brushes.DarkRed, RedMasterPiece, 0.1f);
             if (ActiveStudent != null)
             {
-                g.DrawRectangle(new Pen(Color.DarkOrange, 0.1f), ActiveStudent.Value.X + GridOrigin.X + 0.05f, ActiveStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                RectangleF pieceActiveHighlight = new(ActiveStudent.Value.X + GridOrigin.X + 0.05f, ActiveStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                g.DrawRoundedRectangleF(new Pen(Color.DarkOrange, 0.1f), pieceActiveHighlight, 0.1f);
 
                 foreach (var square in PossibleMoves)
                 {
-                    g.DrawRectangle(new Pen(Color.White, 0.05f), square.X + GridOrigin.X + 0.05f, square.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                    RectangleF possibleMoveHighlight = new(square.X + GridOrigin.X + 0.05f, square.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
+                    g.DrawRoundedRectangleF(new Pen(Color.White, 0.05f), possibleMoveHighlight, 0.1f);
                 }
             }
 
