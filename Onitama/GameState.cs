@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Onitama
+﻿namespace Onitama
 {
     public class GameState
     {
@@ -82,10 +76,6 @@ namespace Onitama
 
         public void MouseUp(BoardItem item, Point point)
         {
-            if (IsGameOver && item == BoardItem.TryAgain)
-            {
-                Application.Restart();
-            }
             //deactivate Cards
             if (item == activeCardLocation)
             {
@@ -158,7 +148,7 @@ namespace Onitama
                 if (Grid[active.X, active.Y].IsMaster) BlueMaster = target;
                 BlueStudents.Remove(active);
                 BlueStudents.Add(target);
-                BlueCards = BlueCards.Append(Card.Invert(NeutralCard)).ToArray<Card>();
+                BlueCards = BlueCards.Append(NeutralCard).ToArray();
                 List<Card> c = new();
                 foreach (Card card in BlueCards)
                 {
@@ -173,7 +163,7 @@ namespace Onitama
                 if (Grid[active.X, active.Y].IsMaster) RedMaster = target;
                 RedStudents.Remove(active);
                 RedStudents.Add(target);
-                RedCards = RedCards.Append(Card.Invert(NeutralCard!)).ToArray<Card>();
+                RedCards = RedCards.Prepend(Card.Invert(NeutralCard!)).ToArray();
                 List<Card> c = new();
 
                 foreach (Card card in RedCards)

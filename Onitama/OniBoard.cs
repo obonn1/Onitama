@@ -28,14 +28,25 @@ namespace Onitama
             Visuals = new(GridOrigin)
             {
                 CurrentTeam = GameState.CurrentTeam,
-                ActiveCard = GameState.activeCardLocation,
-                ActiveStudent = GameState.ActiveSquare,
                 BlueStudents = GameState.BlueStudents,
                 RedStudents = GameState.RedStudents,
                 RedMaster = GameState.RedMaster,
                 BlueMaster = GameState.BlueMaster,
-                PossibleMoves = GameState.PossibleMoves
             };
+        }
+
+        public void Reset()
+        {
+            GameState = new GameState();
+            Visuals = new(GridOrigin)
+            {
+                CurrentTeam = GameState.CurrentTeam,
+                BlueStudents = GameState.BlueStudents,
+                RedStudents = GameState.RedStudents,
+                RedMaster = GameState.RedMaster,
+                BlueMaster = GameState.BlueMaster,
+            };
+
         }
 
         public PointF ViewToGrid(float x, float y)
@@ -142,8 +153,14 @@ namespace Onitama
         protected override void ViewMouseUp(float x, float y, MouseButtons buttons)
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
+
             if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
             {
+                if (GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
+                {
+                    Reset();
+                    return;
+                }
                 Visuals.IsGameOver = GameState.IsGameOver;
                 if (GameState.IsGameOver && location.Value.Item1 != BoardItem.TryAgain) return;
                 GameState.MouseUp(location.Value.Item1, location.Value.Item2);

@@ -5,19 +5,14 @@ using System.Linq;
 
 namespace Onitama
 {
-	public class Card : Control
+	public record Card
 	{
 		public ImmutableArray<Size> Moves { get; set; }
+		public string Name { get; set; }
 		public Card(string name, ImmutableArray<Size> moves)
 		{
 			Name = name;
 			Moves = moves;
-		}
-
-		public Card(Card card)
-		{
-			Name = card.Name;
-			Moves = card.Moves;
 		}
 
 		public void CardGrid(Graphics g, PointF location, float length)
@@ -33,14 +28,9 @@ namespace Onitama
 
 		public static Card Invert(Card card)
         {
-			ImmutableArray<Size> invertedMoves = ImmutableArray.Create<Size>(
-				new Size(card.Moves[0].Width * -1, card.Moves[0].Height),
-				new Size(card.Moves[1].Width * -1, card.Moves[1].Height));
-			if (card.Moves.Length > 2) invertedMoves = invertedMoves.Add(new Size(card.Moves[2].Width * -1, card.Moves[2].Height));
-			if (card.Moves.Length == 4) invertedMoves = invertedMoves.Add(new Size(card.Moves[3].Width * -1, card.Moves[3].Height));
-			Card inverted = card;
-			inverted.Moves = invertedMoves;
-			return inverted;
+			Card inv= card;
+            var invertedMoves = card.Moves.Select(move => new Size(-move.Width, -move.Height )).ToImmutableArray();
+			return card with { Moves = invertedMoves };
         }
 
 		public static ImmutableArray<Card> Deck { get; } = ImmutableArray.Create<Card>(

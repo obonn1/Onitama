@@ -94,7 +94,7 @@ namespace Onitama
             RedCards[1].CardGrid(g, new PointF(7.75f, 4.41f), 1.6f);
             g.DrawString(RedCards[1].Name, Font, BlackBrush, (float)(7.7f + ((1.8f - (RedCards[1].Name.Length * (Font.Size * 0.95))) / 2)), 6.18f);
             NeutralCard!.CardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
-            Card.Invert(new Card(NeutralCard)).CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
+            Card.Invert(NeutralCard).CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
             g.DrawString(NeutralCard.Name, Font, BlackBrush, (float)(3f + ((4f - (NeutralCard.Name.Length * (Font.Size * 0.9))) / 2)), 0.73f);
             if (ActiveCard.ToString()!.Contains("Blue"))
                 g.DrawRoundedRectangleF(new Pen(Color.Blue, 0.1f), (RectangleF)highlightRect!, 0.1f);
@@ -112,7 +112,7 @@ namespace Onitama
             }
                 g.DrawString("YOUR TURN", Font, BlackBrush, CurrentTeam == Team.Blue ? 0.3f : 7.5f, 1f);
             // Test gameover
-            if (!IsGameOver)
+            if (IsGameOver)
             {
                 Rectangle gameOverBanner = new(3, 2, 4, 3);
                 RectangleF playAgain = new(4.41f, 3.88f, 1.5f, 0.5f);
