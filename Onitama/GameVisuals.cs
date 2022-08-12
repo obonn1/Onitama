@@ -24,12 +24,6 @@ namespace Onitama
         public BoardItem MouseOverItem { get; set; }
         public Point MouseOverXY { get; set; }
 
-        RectangleF blueCard1BG = new(.425f, 1.88f, 1.8f, 2.25f);
-        RectangleF blueCard2BG = new(.425f, 4.36f, 1.8f, 2.25f);
-        RectangleF redCard1BG = new(7.7f, 1.88f, 1.8f, 2.25f);
-        RectangleF redCard2BG = new(7.7f, 4.36f, 1.8f, 2.25f);
-        RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
-        RectangleF? highlightRect;
 
         public GameVisuals(PointF gridOrigin)
         {
@@ -37,37 +31,37 @@ namespace Onitama
         }
 
         
-        public void DrawHover(Graphics g)
-        {
-        }
+ //       public void DrawHover(Graphics g)
+ //       {
+ //       }
         public void DrawState(Graphics g)
         {
             foreach (var piece in BlueStudents)
             {
-                RectangleF pawn = new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-                g.FillRoundedRectangleF(BlueBrush, pawn, 0.1f);
+                RectangleF pawn = new(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                g.FillRoundedRectangleF(BlueBrush, pawn, 0.4f);
             }
             foreach (var piece in RedStudents)
             {
-                RectangleF pawn = new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-                g.FillRoundedRectangleF(RedBrush, pawn, 0.1f);
+                RectangleF pawn = new(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                g.FillRoundedRectangleF(RedBrush, pawn, 0.4f);
             }
 
             RectangleF BlueMasterPiece = new(BlueMaster.X + GridOrigin.X + 0.1f, BlueMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
 
             RectangleF RedMasterPiece = new(RedMaster.X + GridOrigin.X + 0.1f, RedMaster.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
 
-            g.FillRoundedRectangleF(Brushes.DarkBlue, BlueMasterPiece, 0.1f);
-            g.FillRoundedRectangleF(Brushes.DarkRed, RedMasterPiece, 0.1f);
+            g.FillRoundedRectangleF(Brushes.DarkBlue, BlueMasterPiece, 0.4f);
+            g.FillRoundedRectangleF(Brushes.DarkRed, RedMasterPiece, 0.4f);
             if (ActiveStudent != null)
             {
-                RectangleF pieceActiveHighlight = new(ActiveStudent.Value.X + GridOrigin.X + 0.05f, ActiveStudent.Value.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
-                g.DrawRoundedRectangleF(new Pen(Color.DarkOrange, 0.1f), pieceActiveHighlight, 0.1f);
+                RectangleF pieceActiveHighlight = new(ActiveStudent.Value.X + GridOrigin.X + 0.075f, ActiveStudent.Value.Y + GridOrigin.Y + 0.075f, 0.85f, 0.85f);
+                g.DrawRoundedRectangleF(new Pen(Color.DarkOrange, 0.1f), pieceActiveHighlight, 0.4f);
 
                 foreach (var square in PossibleMoves)
                 {
-                    RectangleF possibleMoveHighlight = new(square.X + GridOrigin.X + 0.05f, square.Y + GridOrigin.Y + 0.05f, 0.9f, 0.9f);
-                    g.DrawRoundedRectangleF(new Pen(Color.White, 0.05f), possibleMoveHighlight, 0.1f);
+                    RectangleF possibleMoveHighlight = new(square.X + GridOrigin.X + 0.1f, square.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                    g.DrawRoundedRectangleF(new Pen(Color.White, 0.05f), possibleMoveHighlight, 0.4f);
                 }
             }
 
@@ -76,6 +70,8 @@ namespace Onitama
             RectangleF redCard1BG = new(7.7f, 1.88f, 1.8f, 2.25f);
             RectangleF redCard2BG = new(7.7f, 4.36f, 1.8f, 2.25f);
             RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
+            RectangleF redTurnBG = new(7.45f, 0.95f, 1.8f, .35f);
+            RectangleF blueTurnBG = new(.25f, 0.95f, 1.8f, .35f);
             RectangleF? highlightRect = ActiveCard switch
             {
                 BoardItem.BlueCard1 => blueCard1BG,
@@ -100,9 +96,21 @@ namespace Onitama
             NeutralCard!.CardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
             Card.Invert(new Card(NeutralCard)).CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
             g.DrawString(NeutralCard.Name, Font, BlackBrush, (float)(3f + ((4f - (NeutralCard.Name.Length * (Font.Size * 0.9))) / 2)), 0.73f);
-            if (ActiveCard != null) g.DrawRoundedRectangleF(new Pen(Color.White, 0.1f), (RectangleF)highlightRect!, 0.1f);
-            g.FillRoundedRectangleF(CurrentTeam == Team.Red ? DarkRedBrush : DarkBlueBrush, turnBG, 0.1f);
-            g.DrawString("YOUR TURN", Font, BlackBrush, CurrentTeam == Team.Blue ? 0.3f : 7.5f, 1f);
+            if (ActiveCard.ToString()!.Contains("Blue"))
+                g.DrawRoundedRectangleF(new Pen(Color.Blue, 0.1f), (RectangleF)highlightRect!, 0.1f);
+            if (ActiveCard.ToString()!.Contains("Red"))
+                g.DrawRoundedRectangleF(new Pen(Color.Red, 0.1f), (RectangleF)highlightRect!, 0.1f);
+            if (CurrentTeam == Team.Blue)
+            {
+                g.FillRoundedRectangleF(DarkBlueBrush, blueTurnBG, 0.02f);
+                g.DrawRoundedRectangleF(BlackPen, blueTurnBG, 0.02f);
+            }
+            else
+            {
+                g.FillRoundedRectangleF(DarkRedBrush, redTurnBG, 0.02f);
+                g.DrawRoundedRectangleF(BlackPen, redTurnBG, 0.02f);
+            }
+                g.DrawString("YOUR TURN", Font, BlackBrush, CurrentTeam == Team.Blue ? 0.3f : 7.5f, 1f);
             // Test gameover
             if (IsGameOver)
             {

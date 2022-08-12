@@ -4,7 +4,6 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
- // TODO Round pieces
  // TODO Instructions
  // TODO Start game button
  // TODO Freeze game on end and start
@@ -16,7 +15,7 @@ namespace Onitama
     internal class OniBoard : GraphicsControl
     {
         public GameState GameState { get; set; } = new GameState();
-        public Color MatColor { get; set; } = Color.Goldenrod;
+        public Color MatColor { get; set; } = Color.FromArgb(245, 191, 90);
         public override Color BackColor { get; set; } = Color.DarkGray;
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
@@ -106,8 +105,12 @@ namespace Onitama
 
             RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
             RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.08f), templeBlue, 0.1f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.08f), templeRed, 0.1f);
+            RectangleF templeBlue2 = new(GridToView(0, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
+            RectangleF templeRed2 = new(GridToView(4, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
         }
 
         protected override void VisualsDraw(Graphics g)

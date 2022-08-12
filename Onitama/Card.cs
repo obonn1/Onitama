@@ -40,7 +40,6 @@ namespace Onitama
 			if (card.Moves.Length == 4) invertedMoves = invertedMoves.Add(new Size(card.Moves[3].Width * -1, card.Moves[3].Height));
 			Card inverted = card;
 			inverted.Moves = invertedMoves;
-			inverted.IsInverted = card.IsInverted == true ? false : true;
 			return inverted;
         }
 

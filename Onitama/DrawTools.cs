@@ -15,6 +15,6 @@ namespace Onitama
         public static SolidBrush DarkBlueBrush { get;} = new(Color.DarkBlue);
         public static SolidBrush WhiteBrush { get; } = new(Color.White);
         public static SolidBrush MoccasinBrush { get; } = new(Color.Moccasin);
-        public static Pen BlackPen { get; } = new(BlackBrush, 0.3f);
+        public static Pen BlackPen { get; } = new(BlackBrush, 0.05f);
     }
 }
