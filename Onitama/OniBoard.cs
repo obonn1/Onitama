@@ -7,8 +7,6 @@ using System.Threading.Tasks;
  // TODO Instructions
  // TODO Start game button
  // TODO Freeze game on end and start
- // TODO Your Turn background
- // TODO Make card highlight colorful
 
 namespace Onitama
 {
@@ -56,7 +54,7 @@ namespace Onitama
             if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, new Point(0, 0));
             if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
             if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.RedCard2, new Point(0, 0));
-            if (((point.X - 4.41f) * (5.91f - point.X)) > 0 && (((point.Y - 3.88f) * (4.38f - point.Y)) > 0)) return (BoardItem.TryAgain, new Point(0, 0));
+            if (((point.X - 4.41f) * (5.91f - point.X)) > 0 && (((point.Y - 3.88f) * (4.38f - point.Y)) > 0) && GameState.IsGameOver) return (BoardItem.TryAgain, new Point(0, 0));
 
             for (int i = 0; i < 5; i++)
             {

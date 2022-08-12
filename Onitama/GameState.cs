@@ -173,8 +173,9 @@ namespace Onitama
                 if (Grid[active.X, active.Y].IsMaster) RedMaster = target;
                 RedStudents.Remove(active);
                 RedStudents.Add(target);
-                RedCards = RedCards.Append(NeutralCard!).ToArray<Card>();
+                RedCards = RedCards.Append(Card.Invert(NeutralCard!)).ToArray<Card>();
                 List<Card> c = new();
+
                 foreach (Card card in RedCards)
                 {
                     if (card != ActiveCard) c.Add(card);
