@@ -1,0 +1,18 @@
+﻿The two cards on your side are the ones you own, they show possible movements.
+To take your turn select a card, then select a piece and move the piece.
+
+The dark pieces are masters
+All pieces can eat pieces of the opposite color
+
+The square that your master starts in is your temple
+
+
+To WIN the game either:
+-Defeat the opposing master
+-Have your master enter the opposing temple
+
+
+Then you use a card to move, it'll switch with the neutral card in the center, so pay attention to what card you'll be getting
+and which one's you're handing to your opponent
+
+Each new game has 5 random cards out of 16, you keep the same 5 cards throughout the game

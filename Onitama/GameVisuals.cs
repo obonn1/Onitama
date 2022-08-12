@@ -112,7 +112,7 @@ namespace Onitama
             }
                 g.DrawString("YOUR TURN", Font, BlackBrush, CurrentTeam == Team.Blue ? 0.3f : 7.5f, 1f);
             // Test gameover
-            if (IsGameOver)
+            if (!IsGameOver)
             {
                 Rectangle gameOverBanner = new(3, 2, 4, 3);
                 RectangleF playAgain = new(4.41f, 3.88f, 1.5f, 0.5f);
@@ -121,8 +121,8 @@ namespace Onitama
                 g.FillRoundedRectangleF(WhiteBrush, playAgain, 0.1f);
                 g.DrawRoundedRectangleF(new Pen(Color.Black, 0.05f), gameOverBanner, 0.5f);
                 g.DrawRoundedRectangleF(new Pen(Color.Black, 0.02f), playAgain, 0.2f);
-                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.325f, FontStyle.Bold), BlackBrush, 3.1f, 2.5f);
-                g.DrawString("Play Again", new Font("Arial", 0.15f, FontStyle.Bold), BlackBrush, 4.5f, 4f);
+                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.6f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, 3.1f, 2.5f);
+                g.DrawString("Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, 4.5f, 4f);
 
             }
 

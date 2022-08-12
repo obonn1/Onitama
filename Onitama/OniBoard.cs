@@ -18,7 +18,7 @@ namespace Onitama
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
 
-        public override Font Font { get; set; } = new Font("Arial", 0.02f);
+        public override Font Font { get; set; } = new Font("Arial", 0.02f, GraphicsUnit.Pixel);
 
         public GameVisuals Visuals { get; set; }
 
