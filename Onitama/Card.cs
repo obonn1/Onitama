@@ -28,7 +28,6 @@ namespace Onitama
 
 		public static Card Invert(Card card)
         {
-			Card inv= card;
             var invertedMoves = card.Moves.Select(move => new Size(-move.Width, -move.Height )).ToImmutableArray();
 			return card with { Moves = invertedMoves };
         }
