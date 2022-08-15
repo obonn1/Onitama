@@ -61,7 +61,7 @@
 
             Grid[0, 2].IsMaster = true;
             Grid[4, 2].IsMaster = true;
-            CurrentTeam = random.Next(1) == 0 ? Team.Red : Team.Blue;
+            CurrentTeam = random.Next(2) == 0 ? Team.Red : Team.Blue;
             while (Cards.Count < 5)
             {
                 var randomCard = Card.Deck[random.Next(Card.Deck.Length)];
