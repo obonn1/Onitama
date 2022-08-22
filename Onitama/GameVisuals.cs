@@ -64,10 +64,14 @@ namespace Onitama
                 RectangleF pieceActiveHighlight = new(ActiveStudent.Value.X + GridOrigin.X + 0.075f, ActiveStudent.Value.Y + GridOrigin.Y + 0.075f, 0.85f, 0.85f);
                 g.DrawRoundedRectangleF(new Pen(Color.DarkOrange, 0.1f), pieceActiveHighlight, 0.4f);
 
-                foreach (var square in PossibleMoves)
+                if (ActiveCard != null)
                 {
-                    RectangleF possibleMoveHighlight = new(square.X + GridOrigin.X + 0.1f, square.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-                    g.DrawRoundedRectangleF(new Pen(Color.White, 0.05f), possibleMoveHighlight, 0.4f);
+
+                    foreach (var square in PossibleMoves)
+                    {
+                        RectangleF possibleMoveHighlight = new(square.X + GridOrigin.X + 0.1f, square.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
+                        g.DrawRoundedRectangleF(new Pen(Color.White, 0.05f), possibleMoveHighlight, 0.4f);
+                    }
                 }
             }
 

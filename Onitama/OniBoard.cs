@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // TODO Start game button
-// TODO Allow piece click first
 // TODO Add Surrenders
 // TODO Add Launch page
 // TODO Add New Game Button

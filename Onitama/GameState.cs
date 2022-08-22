@@ -82,14 +82,14 @@
             //deactivate Cards
             if (item == activeCardLocation)
             {
-                ResetActive();
+                activeCardLocation = null;
+                ActiveCard = null;
             }
             //activate Cards
-            else if ((item.ToString().Contains("Card")) && (activeCardLocation != item))
+            else if (item.ToString().Contains("Card"))
             {
                 if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
                 {
-                    ResetActive();
                     activeCardLocation = item;
                     ActiveCard = item switch
                     {
@@ -100,7 +100,6 @@
                 }
                 if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && CurrentTeam == Team.Red)
                 {
-                    ResetActive();
                     activeCardLocation = item;
                     ActiveCard = item switch
                     {
@@ -110,27 +109,30 @@
                     };
                 }
             }
-            //ignore square without card
-            if (ActiveCard == null && item == BoardItem.Square) return;
+            //deactivate square
+            if (ActiveSquare == point)
+            {
+                ActiveSquare = null;
+                PossibleMoves = new();
+            }
             //activate square
-            if (item == BoardItem.Square && (Grid[point.X, point.Y].Team == CurrentTeam) && ActiveSquare != point)
+            else if (item == BoardItem.Square && (Grid[point.X, point.Y].Team == CurrentTeam))
             {
                 ActiveSquare = point;
-                PossibleMoves = new();
+            }
+            //Loads possible moves
+            PossibleMoves = new();
+            if (ActiveSquare != null && ActiveCard != null)
+            {
+
                 for (var i = 0; i < 5; i++)
                     for (var j = 0; j < 5; j++)
                     {
-                        if (ActiveCard != null && ActiveCard.Moves.Contains(new Size(i - point.X, j - point.Y)) && Grid[i,j].Team != CurrentTeam)
+                        if (ActiveCard != null && ActiveCard.Moves.Contains(new Size(i - ActiveSquare.Value.X, j - ActiveSquare.Value.Y)) && Grid[i, j].Team != CurrentTeam)
                         {
                             PossibleMoves.Add(new Point(i, j));
                         }
                     }
-            }
-            //deactivate square
-            else if (ActiveSquare == point)     
-            {
-                ActiveSquare = null;
-                PossibleMoves = new();
             }
             //move
             if (ActiveSquare != null && PossibleMoves.Contains(point)) Move((Point)ActiveSquare, point);
