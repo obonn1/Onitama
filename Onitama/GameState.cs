@@ -223,7 +223,7 @@
         RedCard2,
         Square,
         TryAgain,
-        SkipTutorial,
+        Menu,
         NewGame,
         BlueSurrender,
         RedSurrender,

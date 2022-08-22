@@ -24,5 +24,8 @@ namespace Onitama
         public static Font TitleFont { get; } = new("Arial", 0.28f, FontStyle.Bold, GraphicsUnit.Pixel);
         public static Font TutorialFont { get; } = new("Arial", 0.125f, GraphicsUnit.Pixel);
         public static Font SmallFont { get; } = new("Arial", 0.075f, GraphicsUnit.Pixel);
+        public StringFormat Centered { get; } = new() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+        public StringFormat CenteredHor { get; } = new() { Alignment = StringAlignment.Center };
+        public StringFormat CenteredFar { get; } = new() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Far };
     }
 }

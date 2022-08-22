@@ -4,11 +4,10 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// TODO Implement Menu
 // TODO Start game button
 // TODO Add Surrenders
-// TODO Add Launch page
 // TODO Add New Game Button
-// TODO Center texts
 
 namespace Onitama
 {
@@ -20,6 +19,7 @@ namespace Onitama
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
         public override Font Font { get; set; } = new Font("Arial", 0.02f, GraphicsUnit.Pixel);
+        public StringFormat Centered{ get; } = new() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
         public GameVisuals Visuals { get; set; }
         public OniBoard()
         {
@@ -95,13 +95,18 @@ namespace Onitama
             RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
             RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
             RectangleF grid = new(2.5f, 1.75f, 5f, 5f);
+            RectangleF menuButton = new(0.1f, 0.1f, 0.8f, 0.275f);
             GridOrigin = new PointF(grid.X, grid.Y);
+
 
             g.DrawRectangle(pen, board.X, board.Y, board.Width, board.Height);
             g.FillRectangle(new SolidBrush(Color.DarkGreen), board);
             g.FillRoundedRectangleF(new SolidBrush(MatColor), mat, .1f);
             g.FillRectangle(new SolidBrush(Color.Olive), grid);
             g.DrawRectangle(pen, grid.X, grid.Y, grid.Width, grid.Height);
+            g.DrawRoundedRectangleF(pen, menuButton, 0.05f);
+            g.FillRoundedRectangleF(Brushes.Moccasin, menuButton, 0.05f);
+            g.DrawString("MENU", new Font("Arial", 0.2f, GraphicsUnit.Pixel), Brushes.Black, menuButton, Centered);
             for (int y = 0; y < 5; y++)
                 for (int x = 0; x < 5; x++)
                 {
@@ -175,9 +180,9 @@ namespace Onitama
                 Visuals.BlueMaster = GameState.BlueMaster;
                 Visuals.PossibleMoves = GameState.PossibleMoves;
                 Visuals.IsGameOver = GameState.IsGameOver;
-                Invalidate();
             }
             GameState.MouseDownLocation = null;
+            Invalidate();
         }
     }
 }

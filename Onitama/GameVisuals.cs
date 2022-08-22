@@ -96,16 +96,16 @@ namespace Onitama
             g.FillRoundedRectangleF(MoccasinBrush, redCard2BG, .1f);
             g.FillRoundedRectangleF(MoccasinBrush, neutralCardBG, .1f);
             BlueCards![0].CardGrid(g, new PointF(0.475f, 1.93f), 1.6f);
-            g.DrawString(BlueCards[0].Name, Font, BlackBrush, (float)(0.425f + ((1.8f - (BlueCards[0].Name.Length * (Font.Size * 0.95))) / 2)), 3.7f);
+            g.DrawString(BlueCards[0].Name, Font, BlackBrush, blueCard1BG, CenteredFar);
             BlueCards[1].CardGrid(g, new PointF(0.475f, 4.41f), 1.6f);
-            g.DrawString(BlueCards[1].Name, Font, BlackBrush, (float)(0.425f + ((1.8f - (BlueCards[1].Name.Length * (Font.Size * 0.95))) / 2)), 6.18f);
+            g.DrawString(BlueCards[1].Name, Font, BlackBrush, blueCard2BG, CenteredFar);
             RedCards![0].CardGrid(g, new PointF(7.75f, 1.93f), 1.6f);
-            g.DrawString(RedCards[0].Name, Font, BlackBrush, (float)(7.7f + ((1.8f - (RedCards[0].Name.Length * (Font.Size * 0.95))) / 2)), 3.7f);
+            g.DrawString(RedCards[0].Name, Font, BlackBrush, redCard1BG, CenteredFar);
             RedCards[1].CardGrid(g, new PointF(7.75f, 4.41f), 1.6f);
-            g.DrawString(RedCards[1].Name, Font, BlackBrush, (float)(7.7f + ((1.8f - (RedCards[1].Name.Length * (Font.Size * 0.95))) / 2)), 6.18f);
+            g.DrawString(RedCards[1].Name, Font, BlackBrush, redCard2BG, CenteredFar);
             NeutralCard!.CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
             Card.Invert(NeutralCard).CardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
-            g.DrawString(NeutralCard.Name, Font, BlackBrush, (float)(3f + ((4f - (NeutralCard.Name.Length * (Font.Size * 0.9))) / 2)), 0.73f);
+            g.DrawString(NeutralCard.Name, Font, BlackBrush, neutralCardBG, Centered);
             if (ActiveCard.ToString()!.Contains("Blue"))
                 g.DrawRoundedRectangleF(new Pen(Color.Blue, 0.1f), (RectangleF)highlightRect!, 0.1f);
             if (ActiveCard.ToString()!.Contains("Red"))
@@ -114,13 +114,14 @@ namespace Onitama
             {
                 g.FillRoundedRectangleF(DarkBlueBrush, blueTurnBG, 0.02f);
                 g.DrawRoundedRectangleF(BlackPen, blueTurnBG, 0.02f);
+                g.DrawString("YOUR TURN", Font, MoccasinBrush, blueTurnBG, Centered);
             }
             else
             {
                 g.FillRoundedRectangleF(DarkRedBrush, redTurnBG, 0.02f);
                 g.DrawRoundedRectangleF(BlackPen, redTurnBG, 0.02f);
+                g.DrawString("YOUR TURN", Font, MoccasinBrush, redTurnBG, Centered);
             }
-                g.DrawString("YOUR TURN", Font, MoccasinBrush, CurrentTeam == Team.Blue ? 0.3f : 7.5f, .975f);
             if (IsGameOver)
             {
                 Rectangle gameOverBanner = new(3, 2, 4, 3);
