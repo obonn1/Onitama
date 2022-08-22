@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// TODO Implement Menu
+﻿// TODO Implement Menu
 // TODO Start game button
 // TODO Add Surrenders
 // TODO Add New Game Button
