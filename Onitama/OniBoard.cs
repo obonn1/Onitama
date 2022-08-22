@@ -4,9 +4,14 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
- // TODO Instructions
- // TODO Start game button
- // TODO Freeze game on end and start
+// TODO Instructions
+// TODO Start game button
+// TODO Freeze game on end and start
+// TODO Allow piece click first
+// TODO Add Surrenders
+// TODO Add Launch page
+// TODO Add New Game Button
+// TODO Center texts
 
 namespace Onitama
 {
@@ -17,11 +22,8 @@ namespace Onitama
         public override Color BackColor { get; set; } = Color.DarkGray;
         public Color GridColor { get; set; } = Color.Green;
         public PointF GridOrigin { get; set; } = new PointF();
-
         public override Font Font { get; set; } = new Font("Arial", 0.02f, GraphicsUnit.Pixel);
-
         public GameVisuals Visuals { get; set; }
-
         public OniBoard()
         {
             ViewSize = new SizeF(10, 7);
@@ -49,10 +51,7 @@ namespace Onitama
 
         }
 
-        public PointF ViewToGrid(float x, float y)
-        {
-            return new PointF(x - GridOrigin.X, y - GridOrigin.Y);
-        }
+
         public PointF GridToView(float x, float y)
         {
             return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
@@ -128,6 +127,7 @@ namespace Onitama
             Visuals.RedCards = GameState.RedCards;
             Visuals.NeutralCard = GameState.NeutralCard;
             Visuals.DrawState(g);
+            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4) Visuals.DrawTutorial(g);
         }
 
         protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
@@ -154,16 +154,21 @@ namespace Onitama
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
 
-            if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
+            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
+            {
+                Visuals.TutorialStep++;
+            }
+            else if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
             {
                 if (GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
                 {
                     Reset();
+                    Visuals.TutorialStep = 0;
                     return;
                 }
                 Visuals.IsGameOver = GameState.IsGameOver;
                 if (GameState.IsGameOver && location.Value.Item1 != BoardItem.TryAgain) return;
-                GameState.MouseUp(location.Value.Item1, location.Value.Item2);
+                GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
                 Visuals.CurrentTeam = GameState.CurrentTeam;
                 Visuals.ActiveCard = GameState.activeCardLocation;
                 Visuals.ActiveStudent = GameState.ActiveSquare;

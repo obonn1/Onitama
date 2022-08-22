@@ -1,0 +1,1 @@
+dotnet publish Onitama --configuration Release --output artifacts

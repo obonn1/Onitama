@@ -42,7 +42,8 @@
             {
                 for (int j = 0; j < Grid.GetLength(1); j++)
                 {
-                    if (i == 0)
+                    if ((i == 0 && j == 2) || (i == 4 && j == 2)) Grid[i, j] = new Square();
+                    else if (i == 0)
                     {
                         Grid[i, j] = new Square(Team.Blue);
                         BlueStudents.Add(new Point(i, j));
@@ -60,7 +61,9 @@
             }
 
             Grid[0, 2].IsMaster = true;
+            Grid[0, 2].Team = Team.Blue;
             Grid[4, 2].IsMaster = true;
+            Grid[4, 2].Team = Team.Red;
             CurrentTeam = random.Next(2) == 0 ? Team.Red : Team.Blue;
             while (Cards.Count < 5)
             {
@@ -217,6 +220,10 @@
         RedCard1,
         RedCard2,
         Square,
-        TryAgain
+        TryAgain,
+        SkipTutorial,
+        NewGame,
+        BlueSurrender,
+        RedSurrender,
     }
 }

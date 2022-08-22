@@ -40,6 +40,7 @@
             gameState1.ActiveSquare = null;
             gameState1.BlueMaster = new System.Drawing.Point(0, 2);
             gameState1.BlueStudents = ((System.Collections.Generic.List<System.Drawing.Point>)(resources.GetObject("gameState1.BlueStudents")));
+            gameState1.CurrentTeam = Onitama.Team.Red;
             gameState1.GridOrigin = ((System.Drawing.PointF)(resources.GetObject("gameState1.GridOrigin")));
             gameState1.IsGameOver = false;
             gameState1.MouseDownLocation = null;
