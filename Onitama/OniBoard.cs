@@ -4,9 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// TODO Instructions
 // TODO Start game button
-// TODO Freeze game on end and start
 // TODO Allow piece click first
 // TODO Add Surrenders
 // TODO Add Launch page
