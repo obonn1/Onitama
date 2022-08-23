@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onitama", "Onitama.csproj", "{832DA6B4-3699-4A8B-93E3-2D0B59714024}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnitamaTests", "..\OnitamaTests\OnitamaTests.csproj", "{9EFBCEC5-5573-48FC-AEC4-5551F4A3B4DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnitamaTests", "..\OnitamaProject\OnitamaTests.csproj", "{5F64E597-B621-472E-89BD-041EE0F31431}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{832DA6B4-3699-4A8B-93E3-2D0B59714024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{832DA6B4-3699-4A8B-93E3-2D0B59714024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{832DA6B4-3699-4A8B-93E3-2D0B59714024}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9EFBCEC5-5573-48FC-AEC4-5551F4A3B4DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9EFBCEC5-5573-48FC-AEC4-5551F4A3B4DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9EFBCEC5-5573-48FC-AEC4-5551F4A3B4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9EFBCEC5-5573-48FC-AEC4-5551F4A3B4DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F64E597-B621-472E-89BD-041EE0F31431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F64E597-B621-472E-89BD-041EE0F31431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F64E597-B621-472E-89BD-041EE0F31431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F64E597-B621-472E-89BD-041EE0F31431}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
