@@ -30,11 +30,6 @@ namespace Onitama
             GridOrigin = gridOrigin;
         }
 
-        public void DrawLaunch (Graphics g)
-        {
-       
-        }
-
 
         public void DrawState(Graphics g)
         {
@@ -110,6 +105,7 @@ namespace Onitama
                 g.DrawRoundedRectangleF(new Pen(Color.Blue, 0.1f), (RectangleF)highlightRect!, 0.1f);
             if (ActiveCard.ToString()!.Contains("Red"))
                 g.DrawRoundedRectangleF(new Pen(Color.Red, 0.1f), (RectangleF)highlightRect!, 0.1f);
+
             if (CurrentTeam == Team.Blue)
             {
                 g.FillRoundedRectangleF(DarkBlueBrush, blueTurnBG, 0.02f);
@@ -136,8 +132,6 @@ namespace Onitama
 
             }
 
-
-
         }
 
         public void DrawTutorial(Graphics g)
@@ -145,6 +139,36 @@ namespace Onitama
             RectangleF cornerBox = new(0.15f, 0.15f, 2.7f, 1.4f);
             g.FillRoundedRectangleF(MoccasinBrush, cornerBox, 0.1f);
             g.DrawRoundedRectangleF(BlackPen, cornerBox, 0.1f);
+            //menu visuals test
+
+
+            RectangleF menu = new(3.5f, 1f, 3f, 5f);
+            RectangleF newGame = new(4f, 1.8f, 2f, 0.7f);
+            RectangleF surrenderBlue = new(4f, 2.6f, 2f, 0.7f);
+            RectangleF surrenderRed = new(4f, 3.4f, 2f, 0.7f);
+            RectangleF tutorial = new(4f, 4.2f, 2f, 0.7f);
+            RectangleF close = new(4f, 5f, 2f, 0.7f);
+            g.DrawRoundedRectangleF(BlackPen, menu, 0.1f);
+            g.FillRoundedRectangleF(MoccasinBrush, menu, 0.1f);
+            g.DrawRoundedRectangleF(BlackPen, newGame, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, newGame, 0.1f);
+            g.DrawString("New Game", Font, BlackBrush, newGame, Centered);
+            g.DrawRoundedRectangleF(BlackPen, surrenderBlue, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, surrenderBlue, 0.1f);
+            g.DrawString("Surrender Blue", Font, BlackBrush, surrenderBlue, Centered);
+            g.DrawRoundedRectangleF(BlackPen, surrenderRed, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, surrenderRed, 0.1f);
+            g.DrawString("Surrender Red", Font, BlackBrush, surrenderRed, Centered);
+            g.DrawRoundedRectangleF(BlackPen, tutorial, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, tutorial, 0.1f);
+            g.DrawString("Tutorial", Font, BlackBrush, tutorial, Centered);
+            g.DrawRoundedRectangleF(BlackPen, close, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, close, 0.1f);
+            g.DrawString("Close", Font, BlackBrush, close, Centered);
+            g.DrawString("MENU", TitleFont, BlackBrush, menu, new(Centered) { LineAlignment = StringAlignment.Near });
+
+
+            //end
             if (TutorialStep == 1)
             {
                 g.DrawString("HOW TO PLAY 1/3", TitleFont, BlackBrush, 0.2f, 0.2f);
@@ -165,6 +189,10 @@ namespace Onitama
 
 
             }
+        }
+
+        public void DrawMenu(Graphics g)
+        {
         }
     }
 }
