@@ -1,7 +1,4 @@
-﻿// TODO Implement Menu
-// TODO Start game button
-// TODO Add Surrenders
-// TODO Add New Game Button
+﻿
 
 namespace Onitama
 {
@@ -49,8 +46,21 @@ namespace Onitama
         }
         public (BoardItem, Point)? FindItem(PointF point)
         {
+
             int squareX = 7;
             int squareY = 7;
+            if (GameState.IsMenuOpen)
+            {
+                if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 1.8f) * (2.3f - point.Y)) > 0)) return (BoardItem.NewGame, new Point(0, 0));
+                if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 2.6f) * (3.1f - point.Y)) > 0)) return (BoardItem.BlueSurrender, new Point(0, 0));
+                if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 3.4f) * (3.9f - point.Y)) > 0)) return (BoardItem.RedSurrender, new Point(0, 0));
+                if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 4.2f) * (4.7f - point.Y)) > 0)) return (BoardItem.Tutorial, new Point(0, 0));
+                if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 5f) * (5.5f - point.Y)) > 0)) return (BoardItem.CloseGame, new Point(0, 0));
+                if (((point.X - 6.2f) * (6.4f - point.X)) > 0 && (((point.Y - 1.1f) * (1.3f - point.Y)) > 0)) return (BoardItem.CloseGame, new Point(0, 0));
+                if (((point.X - 3.5f) * (6.5f - point.X)) < 0 && (((point.Y - 1f) * (6f - point.Y)) < 0)) return (BoardItem.OffMenu, new Point(0, 0));
+            }
+
+            if (((point.X - 0.1f) * (0.9f - point.X)) > 0 && (((point.Y - 0.1f) * (0.375f - point.Y)) > 0)) return (BoardItem.Menu, new Point(0, 0));
             if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.BlueCard1, new Point(0, 0));
             if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0)) return (BoardItem.BlueCard2, new Point(0, 0));
             if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0)) return (BoardItem.RedCard1, new Point(0, 0));
@@ -123,6 +133,7 @@ namespace Onitama
             Visuals.RedCards = GameState.RedCards;
             Visuals.NeutralCard = GameState.NeutralCard;
             Visuals.DrawState(g);
+            if (GameState.IsMenuOpen) Visuals.DrawMenu(g);
             if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4) Visuals.DrawTutorial(g);
         }
 
@@ -150,21 +161,24 @@ namespace Onitama
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
 
-            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
+            if (GameState.TutorialStep > 0 && GameState.TutorialStep < 4)
             {
-                Visuals.TutorialStep++;
+                GameState.TutorialStep++;
+                Visuals.TutorialStep = GameState.TutorialStep;
             }
             else if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
             {
-                if (GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
+                if ((GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
+                    || (GameState.IsMenuOpen && location.Value.Item1 == BoardItem.NewGame))
                 {
                     Reset();
+                    GameState.TutorialStep = 0;
                     Visuals.TutorialStep = 0;
+                    Invalidate();
                     return;
                 }
                 Visuals.IsGameOver = GameState.IsGameOver;
-                if (GameState.IsGameOver && location.Value.Item1 != BoardItem.TryAgain) return;
-                GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
+                if (!GameState.IsGameOver) GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
                 Visuals.CurrentTeam = GameState.CurrentTeam;
                 Visuals.ActiveCard = GameState.activeCardLocation;
                 Visuals.ActiveStudent = GameState.ActiveSquare;
@@ -174,9 +188,29 @@ namespace Onitama
                 Visuals.BlueMaster = GameState.BlueMaster;
                 Visuals.PossibleMoves = GameState.PossibleMoves;
                 Visuals.IsGameOver = GameState.IsGameOver;
+                Visuals.TutorialStep = GameState.TutorialStep;
             }
             GameState.MouseDownLocation = null;
+
             Invalidate();
         }
+    }
+    public enum Team { Red, Blue }
+    public enum BoardItem
+    {
+        BlueCard1,
+        BlueCard2,
+        RedCard1,
+        RedCard2,
+        Square,
+        TryAgain,
+        Menu,
+        NewGame,
+        BlueSurrender,
+        RedSurrender,
+        CloseMenu,
+        Tutorial,
+        CloseGame,
+        OffMenu
     }
 }

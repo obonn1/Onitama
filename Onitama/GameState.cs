@@ -4,7 +4,8 @@
     {
         public Square[,] Grid { get; set; } = new Square[5, 5];
         public Card? ActiveCard { get; set; } = null;
-
+        public bool IsMenuOpen { get; set; } = false;
+        public int TutorialStep { get; set; } = 1;
         public BoardItem? activeCardLocation = null;
         public Point? ActiveSquare { get; set; }
         public Team CurrentTeam { get; set; }
@@ -79,8 +80,35 @@
 
         public void MouseUp(BoardItem item, Point point)
         {
+            if (IsGameOver) return;
+            if (IsMenuOpen)
+            {
+                if (item == BoardItem.BlueSurrender)
+                {
+                    CurrentTeam = Team.Blue;
+                    IsGameOver = true;
+                    IsMenuOpen = false;
+                }
+                if (item == BoardItem.RedSurrender)
+                {
+                    CurrentTeam = Team.Red;
+                    IsGameOver = true;
+                    IsMenuOpen = false;
+                }
+                if (item == BoardItem.Tutorial)
+                {
+                    TutorialStep = 1;
+                    IsMenuOpen = false;
+                }
+                if (item == BoardItem.CloseMenu || item == BoardItem.OffMenu)
+                {
+                    IsMenuOpen = false;
+                }
+                if (item == BoardItem.CloseGame) Application.Exit();
+            }
+            else if (item == BoardItem.Menu) IsMenuOpen = true;
             //deactivate Cards
-            if (item == activeCardLocation)
+            else if (item == activeCardLocation)
             {
                 activeCardLocation = null;
                 ActiveCard = null;
@@ -213,19 +241,5 @@
             return result;
         }
 
-    }
-    public enum Team { Red, Blue }
-    public enum BoardItem
-    {
-        BlueCard1,
-        BlueCard2,
-        RedCard1,
-        RedCard2,
-        Square,
-        TryAgain,
-        Menu,
-        NewGame,
-        BlueSurrender,
-        RedSurrender,
     }
 }

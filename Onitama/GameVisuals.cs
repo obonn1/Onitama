@@ -120,15 +120,15 @@ namespace Onitama
             }
             if (IsGameOver)
             {
-                Rectangle gameOverBanner = new(3, 2, 4, 3);
-                RectangleF playAgain = new(4.41f, 3.88f, 1.5f, 0.5f);
+                RectangleF gameOverBanner = new(3, 2.5f, 4, 2);
+                RectangleF playAgain = new(4.25f, 3.88f, 1.5f, 0.5f);
                 NeutralCard = null;
                 g.FillRoundedRectangleF(MoccasinBrush, gameOverBanner, 0.5f);
                 g.FillRoundedRectangleF(WhiteBrush, playAgain, 0.1f);
                 g.DrawRoundedRectangleF(new Pen(Color.Black, 0.05f), gameOverBanner, 0.5f);
-                g.DrawRoundedRectangleF(new Pen(Color.Black, 0.02f), playAgain, 0.2f);
-                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.6f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, 3.1f, 2.5f);
-                g.DrawString("Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, 4.5f, 4f);
+                g.DrawRoundedRectangleF(new Pen(Color.Black, 0.02f), playAgain, 0.1f);
+                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, gameOverBanner, Centered);
+                g.DrawString("Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, playAgain, Centered);
 
             }
 
@@ -139,36 +139,7 @@ namespace Onitama
             RectangleF cornerBox = new(0.15f, 0.15f, 2.7f, 1.4f);
             g.FillRoundedRectangleF(MoccasinBrush, cornerBox, 0.1f);
             g.DrawRoundedRectangleF(BlackPen, cornerBox, 0.1f);
-            //menu visuals test
 
-
-            RectangleF menu = new(3.5f, 1f, 3f, 5f);
-            RectangleF newGame = new(4f, 1.8f, 2f, 0.7f);
-            RectangleF surrenderBlue = new(4f, 2.6f, 2f, 0.7f);
-            RectangleF surrenderRed = new(4f, 3.4f, 2f, 0.7f);
-            RectangleF tutorial = new(4f, 4.2f, 2f, 0.7f);
-            RectangleF close = new(4f, 5f, 2f, 0.7f);
-            g.DrawRoundedRectangleF(BlackPen, menu, 0.1f);
-            g.FillRoundedRectangleF(MoccasinBrush, menu, 0.1f);
-            g.DrawRoundedRectangleF(BlackPen, newGame, 0.1f);
-            g.FillRoundedRectangleF(GreenBrush, newGame, 0.1f);
-            g.DrawString("New Game", Font, BlackBrush, newGame, Centered);
-            g.DrawRoundedRectangleF(BlackPen, surrenderBlue, 0.1f);
-            g.FillRoundedRectangleF(GreenBrush, surrenderBlue, 0.1f);
-            g.DrawString("Surrender Blue", Font, BlackBrush, surrenderBlue, Centered);
-            g.DrawRoundedRectangleF(BlackPen, surrenderRed, 0.1f);
-            g.FillRoundedRectangleF(GreenBrush, surrenderRed, 0.1f);
-            g.DrawString("Surrender Red", Font, BlackBrush, surrenderRed, Centered);
-            g.DrawRoundedRectangleF(BlackPen, tutorial, 0.1f);
-            g.FillRoundedRectangleF(GreenBrush, tutorial, 0.1f);
-            g.DrawString("Tutorial", Font, BlackBrush, tutorial, Centered);
-            g.DrawRoundedRectangleF(BlackPen, close, 0.1f);
-            g.FillRoundedRectangleF(GreenBrush, close, 0.1f);
-            g.DrawString("Close", Font, BlackBrush, close, Centered);
-            g.DrawString("MENU", TitleFont, BlackBrush, menu, new(Centered) { LineAlignment = StringAlignment.Near });
-
-
-            //end
             if (TutorialStep == 1)
             {
                 g.DrawString("HOW TO PLAY 1/3", TitleFont, BlackBrush, 0.2f, 0.2f);
@@ -193,6 +164,36 @@ namespace Onitama
 
         public void DrawMenu(Graphics g)
         {
+
+            RectangleF menu = new(3.5f, 1f, 3f, 5f);
+            RectangleF newGame = new(4f, 1.8f, 2f, 0.5f);
+            RectangleF surrenderBlue = new(4f, 2.6f, 2f, 0.5f);
+            RectangleF surrenderRed = new(4f, 3.4f, 2f, 0.5f);
+            RectangleF tutorial = new(4f, 4.2f, 2f, 0.5f);
+            RectangleF close = new(4f, 5f, 2f, 0.5f);
+            RectangleF closeMenu = new(6.2f, 1.1f, 0.2f, 0.2f);
+            g.DrawRoundedRectangleF(BlackPen, menu, 0.1f);
+            g.FillRoundedRectangleF(MoccasinBrush, menu, 0.1f);
+            g.DrawRoundedRectangleF(BlackPen, newGame, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, newGame, 0.1f);
+            g.DrawString("New Game", Font, BlackBrush, newGame, Centered);
+            g.DrawRoundedRectangleF(BlackPen, surrenderBlue, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, surrenderBlue, 0.1f);
+            g.DrawString("Surrender Blue", Font, BlackBrush, surrenderBlue, Centered);
+            g.DrawRoundedRectangleF(BlackPen, surrenderRed, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, surrenderRed, 0.1f);
+            g.DrawString("Surrender Red", Font, BlackBrush, surrenderRed, Centered);
+            g.DrawRoundedRectangleF(BlackPen, tutorial, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, tutorial, 0.1f);
+            g.DrawString("Tutorial", Font, BlackBrush, tutorial, Centered);
+            g.DrawRoundedRectangleF(BlackPen, close, 0.1f);
+            g.FillRoundedRectangleF(GreenBrush, close, 0.1f);
+            g.DrawString("Close Game", Font, BlackBrush, close, Centered);
+            g.DrawString("MENU", TitleFont, BlackBrush, menu, new(Centered) { LineAlignment = StringAlignment.Near });
+            g.DrawRoundedRectangleF(new Pen(BlackBrush, 0.03f), closeMenu, 0.05f);
+            g.FillRoundedRectangleF(GreenBrush, closeMenu, 0.05f);
+            g.DrawString("X", TutorialFont, BlackBrush, closeMenu, Centered);
+            
         }
     }
 }
