@@ -18,8 +18,8 @@ public abstract class GraphicsControl : Control
     /// </summary>
     public GraphicsControl()
     {
-        this.ResizeRedraw = true;
-        this.DoubleBuffered = true;
+        ResizeRedraw = true;
+        DoubleBuffered = true;
     }
 
     /// <inheritdoc/>
@@ -27,9 +27,9 @@ public abstract class GraphicsControl : Control
     {
         base.OnPaint(e);
         e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-        this.ViewScale = this.ScaleGraphics(e.Graphics, this.ViewSize.Width, this.ViewSize.Height);
-        this.ViewDraw(e.Graphics);
-        this.VisualsDraw(e.Graphics);
+        ViewScale = ScaleGraphics(e.Graphics, ViewSize.Width, ViewSize.Height);
+        ViewDraw(e.Graphics);
+        VisualsDraw(e.Graphics);
     }
 
     protected virtual void ViewDraw(Graphics g)
@@ -44,11 +44,11 @@ public abstract class GraphicsControl : Control
     {
         if (e.Button == MouseButtons.Left)
         {
-            this.IsLeftMouseDown = true;
+            IsLeftMouseDown = true;
         }
 
-        var viewLocation = this.ClientToView(e.Location);
-        this.ViewMouseDown(viewLocation.X, viewLocation.Y, e.Button);
+        PointF viewLocation = ClientToView(e.Location);
+        ViewMouseDown(viewLocation.X, viewLocation.Y, e.Button);
         base.OnMouseDown(e);
     }
 
@@ -63,11 +63,11 @@ public abstract class GraphicsControl : Control
     {
         if (e.Button == MouseButtons.Left)
         {
-            this.IsLeftMouseDown = false;
+            IsLeftMouseDown = false;
         }
 
-        var viewLocation = this.ClientToView(e.Location);
-        this.ViewMouseUp(viewLocation.X, viewLocation.Y, e.Button);
+        PointF viewLocation = ClientToView(e.Location);
+        ViewMouseUp(viewLocation.X, viewLocation.Y, e.Button);
         base.OnMouseUp(e);
     }
 
@@ -85,35 +85,35 @@ public abstract class GraphicsControl : Control
 
     protected PointF ClientToView(Point client)
     {
-        var physicalWidth = this.ClientSize.Width;
-        var physicalHeight = this.ClientSize.Height;
+        int physicalWidth = ClientSize.Width;
+        int physicalHeight = ClientSize.Height;
 
-        if (this.ViewSize.Width * physicalHeight > physicalWidth * this.ViewSize.Height)
+        if (ViewSize.Width * physicalHeight > physicalWidth * ViewSize.Height)
         {
-            this.ViewScale = physicalWidth / this.ViewSize.Width;
-            return new PointF(client.X / this.ViewScale, ((client.Y - (physicalHeight / 2f)) / this.ViewScale) + (this.ViewSize.Height / 2f));
+            ViewScale = physicalWidth / ViewSize.Width;
+            return new PointF(client.X / ViewScale, ((client.Y - (physicalHeight / 2f)) / ViewScale) + (ViewSize.Height / 2f));
         }
         else
         {
-            this.ViewScale = physicalHeight / this.ViewSize.Height;
-            return new PointF(((client.X - (physicalWidth / 2f)) / this.ViewScale) + (this.ViewSize.Width / 2f), client.Y / this.ViewScale);
+            ViewScale = physicalHeight / ViewSize.Height;
+            return new PointF(((client.X - (physicalWidth / 2f)) / ViewScale) + (ViewSize.Width / 2f), client.Y / ViewScale);
         }
     }
 
     protected PointF ViewToClient(PointF view)
     {
-        var physicalWidth = this.ClientSize.Width;
-        var physicalHeight = this.ClientSize.Height;
+        int physicalWidth = ClientSize.Width;
+        int physicalHeight = ClientSize.Height;
 
-        if (this.ViewSize.Width * physicalHeight > physicalWidth * this.ViewSize.Height)
+        if (ViewSize.Width * physicalHeight > physicalWidth * ViewSize.Height)
         {
-            this.ViewScale = physicalWidth / this.ViewSize.Width;
-            return new PointF(view.X * this.ViewScale, ((view.Y - (this.ViewSize.Height / 2f)) * this.ViewScale) + (physicalHeight / 2f));
+            ViewScale = physicalWidth / ViewSize.Width;
+            return new PointF(view.X * ViewScale, ((view.Y - (ViewSize.Height / 2f)) * ViewScale) + (physicalHeight / 2f));
         }
         else
         {
-            this.ViewScale = physicalHeight / this.ViewSize.Height;
-            return new PointF(((view.Y - (this.ViewSize.Width / 2f)) * this.ViewScale) + (physicalWidth / 2f), view.Y * this.ViewScale);
+            ViewScale = physicalHeight / ViewSize.Height;
+            return new PointF(((view.Y - (ViewSize.Width / 2f)) * ViewScale) + (physicalWidth / 2f), view.Y * ViewScale);
         }
     }
 
@@ -121,8 +121,8 @@ public abstract class GraphicsControl : Control
     {
         float scale;
 
-        var physicalWidth = this.ClientSize.Width;
-        var physicalHeight = this.ClientSize.Height;
+        int physicalWidth = ClientSize.Width;
+        int physicalHeight = ClientSize.Height;
 
         if (width * physicalHeight > physicalWidth * height)
         {

@@ -1,18 +1,20 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Immutable;
+
 namespace Onitama
 {
-    using System.Collections.Immutable;
-
     public record Card
     {
         public ImmutableArray<Size> Moves { get; set; }
+
         public string Name { get; set; }
+
         public Card(string name, ImmutableArray<Size> moves)
         {
-            this.Name = name;
-            this.Moves = moves;
+            Name = name;
+            Moves = moves;
         }
 
         public void CardGrid(Graphics g, PointF location, float length)
@@ -25,7 +27,7 @@ namespace Onitama
                     {
                         g.FillRectangle(DrawTools.BlackBrush, (float)(location.X + (.21 * x * length) + 0.05f), (float)(location.Y + (.21 * y * length) + 0.05f), length * 0.16f, length * 0.16f);
                     }
-                    else if (this.Moves.Any(s => new Point(x, y) == new Point(2 + s.Width, 2 + s.Height)))
+                    else if (Moves.Any(s => new Point(x, y) == new Point(2 + s.Width, 2 + s.Height)))
                     {
                         g.FillRectangle(new SolidBrush(Color.Gray), (float)(location.X + (.21 * x * length) + 0.05f), (float)(location.Y + (.21 * y * length) + 0.05f), length * 0.16f, length * 0.16f);
                     }
@@ -43,7 +45,7 @@ namespace Onitama
             return card with { Moves = invertedMoves };
         }
 
-        public static ImmutableArray<Card> Deck { get; } = ImmutableArray.Create<Card>(
+        public static ImmutableArray<Card> Deck { get; } = ImmutableArray.Create(
         new Card("Monkey", ImmutableArray.Create(new Size(-1, -1), new Size(-1, 1), new Size(+1, 1), new Size(+1, -1))),
         new Card("Rooster", ImmutableArray.Create(new Size(-1, -1), new Size(0, -1), new Size(0, 1), new Size(1, 1))),
         new Card("Horse", ImmutableArray.Create(new Size(-1, 0), new Size(0, -1), new Size(1, 0))),
@@ -60,6 +62,5 @@ namespace Onitama
         new Card("Elephant", ImmutableArray.Create(new Size(0, -1), new Size(0, 1), new Size(1, -1), new Size(1, 1))),
         new Card("Cobra", ImmutableArray.Create(new Size(-1, 1), new Size(0, -1), new Size(1, 1))),
         new Card("Crane", ImmutableArray.Create(new Size(-1, -1), new Size(-1, 1), new Size(1, 0))));
-
     }
 }

@@ -15,7 +15,7 @@ namespace Onitama
         /// <param name="team"></param>
         public Square(Team? team = null)
         {
-            this.Team = team;
+            Team = team;
         }
     }
 }

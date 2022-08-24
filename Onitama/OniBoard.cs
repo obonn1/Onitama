@@ -1,6 +1,5 @@
-﻿// <copyright file="OniBoard.cs" company="Omar Bonnet">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 namespace Onitama
 {
@@ -26,40 +25,40 @@ namespace Onitama
 
         public OniBoard()
         {
-            this.ViewSize = new SizeF(10, 7);
-            this.Visuals = new(this.GridOrigin)
+            ViewSize = new SizeF(10, 7);
+            Visuals = new(GridOrigin)
             {
-                CurrentTeam = this.GameState.CurrentTeam,
-                BlueStudents = this.GameState.BlueStudents,
-                RedStudents = this.GameState.RedStudents,
-                RedMaster = this.GameState.RedMaster,
-                BlueMaster = this.GameState.BlueMaster,
+                CurrentTeam = GameState.CurrentTeam,
+                BlueStudents = GameState.BlueStudents,
+                RedStudents = GameState.RedStudents,
+                RedMaster = GameState.RedMaster,
+                BlueMaster = GameState.BlueMaster,
             };
         }
 
         public void Reset()
         {
-            this.GameState = new GameState();
-            this.Visuals = new(this.GridOrigin)
+            GameState = new GameState();
+            Visuals = new(GridOrigin)
             {
-                CurrentTeam = this.GameState.CurrentTeam,
-                BlueStudents = this.GameState.BlueStudents,
-                RedStudents = this.GameState.RedStudents,
-                RedMaster = this.GameState.RedMaster,
-                BlueMaster = this.GameState.BlueMaster,
+                CurrentTeam = GameState.CurrentTeam,
+                BlueStudents = GameState.BlueStudents,
+                RedStudents = GameState.RedStudents,
+                RedMaster = GameState.RedMaster,
+                BlueMaster = GameState.BlueMaster,
             };
         }
 
         public PointF GridToView(float x, float y)
         {
-            return new PointF(x + this.GridOrigin.X, y + this.GridOrigin.Y);
+            return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
         }
 
         public (BoardItem, Point)? FindItem(PointF point)
         {
             int squareX = 7;
             int squareY = 7;
-            if (this.GameState.IsMenuOpen)
+            if (GameState.IsMenuOpen)
             {
                 if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 1.8f) * (2.3f - point.Y)) > 0))
                 {
@@ -122,14 +121,14 @@ namespace Onitama
                 return (BoardItem.RedCard2, new Point(0, 0));
             }
 
-            if (((point.X - 4.41f) * (5.91f - point.X)) > 0 && (((point.Y - 3.88f) * (4.38f - point.Y)) > 0) && this.GameState.IsGameOver)
+            if (((point.X - 4.41f) * (5.91f - point.X)) > 0 && (((point.Y - 3.88f) * (4.38f - point.Y)) > 0) && GameState.IsGameOver)
             {
                 return (BoardItem.TryAgain, new Point(0, 0));
             }
 
             for (int i = 0; i < 5; i++)
             {
-                if ((point.X > this.GridOrigin.X + i + 0.1f) && (point.X < this.GridOrigin.X + i + 0.9f))
+                if ((point.X > GridOrigin.X + i + 0.1f) && (point.X < GridOrigin.X + i + 0.9f))
                 {
                     squareX = i;
                     break;
@@ -138,7 +137,7 @@ namespace Onitama
 
             for (int i = 0; i < 5; i++)
             {
-                if ((point.Y > this.GridOrigin.Y + i + 0.1f) && (point.Y < this.GridOrigin.Y + i + 0.9f))
+                if ((point.Y > GridOrigin.Y + i + 0.1f) && (point.Y < GridOrigin.Y + i + 0.9f))
                 {
                     squareY = i;
                     break;
@@ -156,36 +155,36 @@ namespace Onitama
         /// <inheritdoc/>
         protected override void ViewDraw(Graphics g)
         {
-            this.Visuals.GridOrigin = this.GridOrigin;
-            this.Visuals.CurrentTeam = this.GameState.CurrentTeam;
-            this.GameState.GridOrigin = this.GridOrigin;
+            Visuals.GridOrigin = GridOrigin;
+            Visuals.CurrentTeam = GameState.CurrentTeam;
+            GameState.GridOrigin = GridOrigin;
             using var pen = new Pen(Color.Black, 0.05f);
             RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
             RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
             RectangleF grid = new(2.5f, 1.75f, 5f, 5f);
             RectangleF menuButton = new(0.1f, 0.1f, 0.8f, 0.275f);
-            this.GridOrigin = new PointF(grid.X, grid.Y);
+            GridOrigin = new PointF(grid.X, grid.Y);
 
             g.DrawRectangle(pen, board.X, board.Y, board.Width, board.Height);
-            g.FillRectangle(new SolidBrush(Color.DarkGreen), board);
-            g.FillRoundedRectangleF(new SolidBrush(this.MatColor), mat, .1f);
+            g.FillRectangle(new SolidBrush(Color.Green), board);
+            g.FillRoundedRectangleF(new SolidBrush(MatColor), mat, .1f);
             g.FillRectangle(new SolidBrush(Color.Olive), grid);
             g.DrawRectangle(pen, grid.X, grid.Y, grid.Width, grid.Height);
             g.DrawRoundedRectangleF(pen, menuButton, 0.05f);
             g.FillRoundedRectangleF(Brushes.Moccasin, menuButton, 0.05f);
-            g.DrawString("MENU", new Font("Arial", 0.2f, GraphicsUnit.Pixel), Brushes.Black, menuButton, this.Centered);
+            g.DrawString("MENU", new Font("Arial", 0.2f, GraphicsUnit.Pixel), Brushes.Black, menuButton, Centered);
             for (int y = 0; y < 5; y++)
             {
                 for (int x = 0; x < 5; x++)
                 {
-                    g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), this.GridToView(x, y).X + 0.1f, this.GridToView(x, y).Y + 0.1f, 0.8f, 0.8f);
+                    g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x, y).X + 0.1f, GridToView(x, y).Y + 0.1f, 0.8f, 0.8f);
                 }
             }
 
-            RectangleF templeBlue = new(this.GridToView(0, 2).X + 0.075f, this.GridToView(0, 2).Y + 0.075f, .85f, .85f);
-            RectangleF templeRed = new(this.GridToView(4, 2).X + 0.075f, this.GridToView(0, 2).Y + 0.075f, .85f, .85f);
-            RectangleF templeBlue2 = new(this.GridToView(0, 2).X + 0.07f, this.GridToView(0, 2).Y + 0.07f, .95f, .95f);
-            RectangleF templeRed2 = new(this.GridToView(4, 2).X + 0.07f, this.GridToView(0, 2).Y + 0.07f, .95f, .95f);
+            RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            RectangleF templeBlue2 = new(GridToView(0, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
+            RectangleF templeRed2 = new(GridToView(4, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
             g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
             g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
             g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
@@ -195,86 +194,86 @@ namespace Onitama
         /// <inheritdoc/>
         protected override void VisualsDraw(Graphics g)
         {
-            this.Visuals.BlueCards = this.GameState.BlueCards;
-            this.Visuals.RedCards = this.GameState.RedCards;
-            this.Visuals.NeutralCard = this.GameState.NeutralCard;
-            this.Visuals.DrawState(g);
-            if (this.GameState.IsMenuOpen)
+            Visuals.BlueCards = GameState.BlueCards;
+            Visuals.RedCards = GameState.RedCards;
+            Visuals.NeutralCard = GameState.NeutralCard;
+            Visuals.DrawState(g);
+            if (GameState.IsMenuOpen)
             {
-                this.Visuals.DrawMenu(g);
+                Visuals.DrawMenu(g);
             }
 
-            if (this.Visuals.TutorialStep > 0 && this.Visuals.TutorialStep < 4)
+            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
             {
-                this.Visuals.DrawTutorial(g);
+                Visuals.DrawTutorial(g);
             }
         }
 
         /// <inheritdoc/>
         protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
         {
-            (BoardItem, Point)? location = this.FindItem(new PointF(x, y));
+            (BoardItem, Point)? location = FindItem(new PointF(x, y));
             if (buttons == MouseButtons.Left && location is not null)
             {
-                this.Visuals.MouseOverItem = location.Value.Item1;
-                this.Visuals.MouseOverXY = location.Value.Item2;
+                Visuals.MouseOverItem = location.Value.Item1;
+                Visuals.MouseOverXY = location.Value.Item2;
             }
         }
 
         /// <inheritdoc/>
         protected override void ViewMouseDown(float x, float y, MouseButtons buttons)
         {
-            (BoardItem, Point)? location = this.FindItem(new PointF(x, y));
+            (BoardItem, Point)? location = FindItem(new PointF(x, y));
             if (buttons == MouseButtons.Left && location != null)
             {
-                this.GameState.MouseDownLocation = location;
-                this.Invalidate();
+                GameState.MouseDownLocation = location;
+                Invalidate();
             }
         }
 
         /// <inheritdoc/>
         protected override void ViewMouseUp(float x, float y, MouseButtons buttons)
         {
-            (BoardItem, Point)? location = this.FindItem(new PointF(x, y));
+            (BoardItem, Point)? location = FindItem(new PointF(x, y));
 
-            if (this.GameState.TutorialStep > 0 && this.GameState.TutorialStep < 4)
+            if (GameState.TutorialStep > 0 && GameState.TutorialStep < 4)
             {
-                this.GameState.TutorialStep++;
-                this.Visuals.TutorialStep = this.GameState.TutorialStep;
+                GameState.TutorialStep++;
+                Visuals.TutorialStep = GameState.TutorialStep;
             }
-            else if (location != null && buttons == MouseButtons.Left && location == this.GameState.MouseDownLocation)
+            else if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
             {
-                if ((this.GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
-                    || (this.GameState.IsMenuOpen && location.Value.Item1 == BoardItem.NewGame))
+                if ((GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
+                    || (GameState.IsMenuOpen && location.Value.Item1 == BoardItem.NewGame))
                 {
-                    this.Reset();
-                    this.GameState.TutorialStep = 0;
-                    this.Visuals.TutorialStep = 0;
-                    this.Invalidate();
+                    Reset();
+                    GameState.TutorialStep = 0;
+                    Visuals.TutorialStep = 0;
+                    Invalidate();
                     return;
                 }
 
-                this.Visuals.IsGameOver = this.GameState.IsGameOver;
-                if (!this.GameState.IsGameOver)
+                Visuals.IsGameOver = GameState.IsGameOver;
+                if (!GameState.IsGameOver)
                 {
-                    this.GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
+                    GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
                 }
 
-                this.Visuals.CurrentTeam = this.GameState.CurrentTeam;
-                this.Visuals.ActiveCard = this.GameState.activeCardLocation;
-                this.Visuals.ActiveStudent = this.GameState.ActiveSquare;
-                this.Visuals.BlueStudents = this.GameState.BlueStudents;
-                this.Visuals.RedStudents = this.GameState.RedStudents;
-                this.Visuals.RedMaster = this.GameState.RedMaster;
-                this.Visuals.BlueMaster = this.GameState.BlueMaster;
-                this.Visuals.PossibleMoves = this.GameState.PossibleMoves;
-                this.Visuals.IsGameOver = this.GameState.IsGameOver;
-                this.Visuals.TutorialStep = this.GameState.TutorialStep;
+                Visuals.CurrentTeam = GameState.CurrentTeam;
+                Visuals.ActiveCard = GameState.ActiveCardLocation;
+                Visuals.ActiveStudent = GameState.ActiveSquare;
+                Visuals.BlueStudents = GameState.BlueStudents;
+                Visuals.RedStudents = GameState.RedStudents;
+                Visuals.RedMaster = GameState.RedMaster;
+                Visuals.BlueMaster = GameState.BlueMaster;
+                Visuals.PossibleMoves = GameState.PossibleMoves;
+                Visuals.IsGameOver = GameState.IsGameOver;
+                Visuals.TutorialStep = GameState.TutorialStep;
             }
 
-            this.GameState.MouseDownLocation = null;
+            GameState.MouseDownLocation = null;
 
-            this.Invalidate();
+            Invalidate();
         }
     }
 

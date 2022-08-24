@@ -13,7 +13,7 @@ namespace Onitama
 
         public int TutorialStep { get; set; } = 1;
 
-        public BoardItem? activeCardLocation = null;
+        public BoardItem? ActiveCardLocation { get; set; }
 
         public Point? ActiveSquare { get; set; }
 
@@ -60,83 +60,85 @@ namespace Onitama
         /// </summary>
         public GameState()
         {
-            this.BlueStudents = new List<Point>();
-            this.RedStudents = new List<Point>();
+            BlueStudents = new List<Point>();
+            RedStudents = new List<Point>();
             Random random = new();
-            for (int i = 0; i < this.Grid.GetLength(0); i++)
+            for (int i = 0; i < Grid.GetLength(0); i++)
             {
-                for (int j = 0; j < this.Grid.GetLength(1); j++)
+                for (int j = 0; j < Grid.GetLength(1); j++)
                 {
-                    if ((i == 0 && j == 2) || (i == 4 && j == 2)) this.Grid[i, j] = new Square();
+                    if ((i == 0 && j == 2) || (i == 4 && j == 2))
+                    {
+                        Grid[i, j] = new Square();
+                    }
                     else if (i == 0)
                     {
-                        this.Grid[i, j] = new Square(Team.Blue);
-                        this.BlueStudents.Add(new Point(i, j));
+                        Grid[i, j] = new Square(Team.Blue);
+                        BlueStudents.Add(new Point(i, j));
                     }
                     else if (i == 4)
                     {
-                        this.Grid[i, j] = new Square(Team.Red);
-                        this.RedStudents.Add(new Point(i, j));
+                        Grid[i, j] = new Square(Team.Red);
+                        RedStudents.Add(new Point(i, j));
                     }
                     else
                     {
-                        this.Grid[i, j] = new Square();
+                        Grid[i, j] = new Square();
                     }
                 }
-;
             }
 
-            this.Grid[0, 2].IsMaster = true;
-            this.Grid[0, 2].Team = Team.Blue;
-            this.Grid[4, 2].IsMaster = true;
-            this.Grid[4, 2].Team = Team.Red;
-            this.CurrentTeam = random.Next(2) == 0 ? Team.Red : Team.Blue;
-            while (this.Cards.Count < 5)
+            Grid[0, 2].IsMaster = true;
+            Grid[0, 2].Team = Team.Blue;
+            Grid[4, 2].IsMaster = true;
+            Grid[4, 2].Team = Team.Red;
+            CurrentTeam = random.Next(2) == 0 ? Team.Red : Team.Blue;
+            while (Cards.Count < 5)
             {
-                var randomCard = Card.Deck[random.Next(Card.Deck.Length)];
-                if (!this.Cards.Contains(randomCard))
+                Card? randomCard = Card.Deck[random.Next(Card.Deck.Length)];
+                if (!Cards.Contains(randomCard))
                 {
-                    this.Cards.Add(randomCard);
+                    Cards.Add(randomCard);
                 }
             }
 
-            this.BlueCards = new Card[2] { this.Cards[0], this.Cards[1] };
-            this.RedCards = new Card[2] { Card.Invert(this.Cards[2]), Card.Invert(this.Cards[3]) };
-            this.NeutralCard = this.Cards[4];
+            BlueCards = new Card[2] { Cards[0], Cards[1] };
+            RedCards = new Card[2] { Card.Invert(Cards[2]), Card.Invert(Cards[3]) };
+            NeutralCard = Cards[4];
         }
 
         public void MouseUp(BoardItem item, Point point)
         {
-            if (this.IsGameOver)
+            if (IsGameOver)
             {
                 return;
             }
 
-            if (this.IsMenuOpen)
+            if (IsMenuOpen)
             {
                 if (item == BoardItem.BlueSurrender)
                 {
-                    this.CurrentTeam = Team.Blue;
-                    this.IsGameOver = true;
-                    this.IsMenuOpen = false;
+                    CurrentTeam = Team.Blue;
+                    IsGameOver = true;
+                    IsMenuOpen = false;
                 }
 
                 if (item == BoardItem.RedSurrender)
                 {
-                    this.CurrentTeam = Team.Red;
-                    this.IsGameOver = true;
-                    this.IsMenuOpen = false;
+                    CurrentTeam = Team.Red;
+                    IsGameOver = true;
+                    IsMenuOpen = false;
                 }
 
                 if (item == BoardItem.Tutorial)
                 {
-                    this.TutorialStep = 1;
-                    this.IsMenuOpen = false;
+                    TutorialStep = 1;
+                    IsMenuOpen = false;
                 }
 
                 if (item == BoardItem.CloseMenu || item == BoardItem.OffMenu)
                 {
-                    this.IsMenuOpen = false;
+                    IsMenuOpen = false;
                 }
 
                 if (item == BoardItem.CloseGame)
@@ -144,168 +146,169 @@ namespace Onitama
                     Application.Exit();
                 }
             }
-            else if (item == BoardItem.Menu) this.IsMenuOpen = true;
-            // deactivate Cards
-            else if (item == this.activeCardLocation)
+            else if (item == BoardItem.Menu)
             {
-                this.activeCardLocation = null;
-                this.ActiveCard = null;
+                IsMenuOpen = true;
+            }
+
+            // deactivate Cards
+            else if (item == ActiveCardLocation)
+            {
+                ActiveCardLocation = null;
+                ActiveCard = null;
             }
 
             // activate Cards
             else if (item.ToString().Contains("Card"))
             {
-                if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && this.CurrentTeam == Team.Blue)
+                if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
                 {
-                    this.activeCardLocation = item;
-                    this.ActiveCard = item switch
+                    ActiveCardLocation = item;
+                    ActiveCard = item switch
                     {
-                        BoardItem.BlueCard1 => this.BlueCards[0],
-                        BoardItem.BlueCard2 => this.BlueCards[1],
-                        _ => null
+                        BoardItem.BlueCard1 => BlueCards[0],
+                        BoardItem.BlueCard2 => BlueCards[1],
+                        _ => null,
                     };
                 }
 
-                if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && this.CurrentTeam == Team.Red)
+                if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && CurrentTeam == Team.Red)
                 {
-                    this.activeCardLocation = item;
-                    this.ActiveCard = item switch
+                    ActiveCardLocation = item;
+                    ActiveCard = item switch
                     {
-                        BoardItem.RedCard1 => this.RedCards[0],
-                        BoardItem.RedCard2 => this.RedCards[1],
-                        _ => null
+                        BoardItem.RedCard1 => RedCards[0],
+                        BoardItem.RedCard2 => RedCards[1],
+                        _ => null,
                     };
                 }
             }
 
             // deactivate square
-            if (this.ActiveSquare == point)
+            if (ActiveSquare == point)
             {
-                this.ActiveSquare = null;
-                this.PossibleMoves = new();
+                ActiveSquare = null;
+                PossibleMoves = new();
             }
 
             // activate square
-            else if (item == BoardItem.Square && (this.Grid[point.X, point.Y].Team == this.CurrentTeam))
+            else if (item == BoardItem.Square && (Grid[point.X, point.Y].Team == CurrentTeam))
             {
-                this.ActiveSquare = point;
+                ActiveSquare = point;
             }
 
             // Loads possible moves
-            this.PossibleMoves = new();
-            if (this.ActiveSquare != null && this.ActiveCard != null)
+            PossibleMoves = new();
+            if (ActiveSquare != null && ActiveCard != null)
             {
-
-                for (var i = 0; i < 5; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    for (var j = 0; j < 5; j++)
+                    for (int j = 0; j < 5; j++)
                     {
-                        if (this.ActiveCard != null && this.ActiveCard.Moves.Contains(new Size(i - this.ActiveSquare.Value.X, j - this.ActiveSquare.Value.Y)) && this.Grid[i, j].Team != this.CurrentTeam)
+                        if (ActiveCard != null && ActiveCard.Moves.Contains(new Size(i - ActiveSquare.Value.X, j - ActiveSquare.Value.Y)) && Grid[i, j].Team != CurrentTeam)
                         {
-                            this.PossibleMoves.Add(new Point(i, j));
+                            PossibleMoves.Add(new Point(i, j));
                         }
                     }
                 }
             }
 
             // move
-            if (this.ActiveSquare != null && this.PossibleMoves.Contains(point))
+            if (ActiveSquare != null && PossibleMoves.Contains(point))
             {
-                this.Move((Point)this.ActiveSquare, point);
+                Move((Point)ActiveSquare, point);
             }
         }
 
         public void Move(Point active, Point target)
         {
-
-            if ((this.Grid[target.X, target.Y].IsMaster == true)
-                || this.Grid[active.X, active.Y].IsMaster && (this.Grid[active.X, active.Y].Team == Team.Red && target == new Point(0, 2))
-                || this.Grid[active.X, active.Y].IsMaster && (this.Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))
+            if ((Grid[target.X, target.Y].IsMaster == true)
+                || ((Grid[active.X, active.Y].IsMaster && Grid[active.X, active.Y].Team == Team.Red && target == new Point(0, 2))
+                || (Grid[active.X, active.Y].IsMaster && (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))))
             {
-                this.IsGameOver = true;
+                IsGameOver = true;
                 return;
             }
 
-            if (this.Grid[active.X, active.Y].Team == Team.Blue)
+            if (Grid[active.X, active.Y].Team == Team.Blue)
             {
-                if (this.Grid[active.X, active.Y].IsMaster)
+                if (Grid[active.X, active.Y].IsMaster)
                 {
-                    this.BlueMaster = target;
+                    BlueMaster = target;
                 }
 
-                this.BlueStudents.Remove(active);
-                this.BlueStudents.Add(target);
-                this.BlueCards = this.BlueCards.Append(this.NeutralCard).ToArray();
+                BlueStudents.Remove(active);
+                BlueStudents.Add(target);
+                BlueCards = BlueCards.Append(NeutralCard).ToArray();
                 List<Card> c = new();
-                foreach (Card card in this.BlueCards)
+                foreach (Card card in BlueCards)
                 {
-                    if (card != this.ActiveCard)
+                    if (card != ActiveCard)
                     {
                         c.Add(card);
                     }
                 }
 
-                this.BlueCards = c.ToArray();
-                this.NeutralCard = this.ActiveCard!;
+                BlueCards = c.ToArray();
+                NeutralCard = ActiveCard!;
             }
 
-            if (this.Grid[active.X, active.Y].Team == Team.Red)
+            if (Grid[active.X, active.Y].Team == Team.Red)
             {
-
-                if (this.Grid[active.X, active.Y].IsMaster)
+                if (Grid[active.X, active.Y].IsMaster)
                 {
-                    this.RedMaster = target;
+                    RedMaster = target;
                 }
 
-                this.RedStudents.Remove(active);
-                this.RedStudents.Add(target);
-                this.RedCards = this.RedCards.Prepend(Card.Invert(this.NeutralCard!)).ToArray();
+                RedStudents.Remove(active);
+                RedStudents.Add(target);
+                RedCards = RedCards.Prepend(Card.Invert(NeutralCard!)).ToArray();
                 List<Card> c = new();
 
-                foreach (Card card in this.RedCards)
+                foreach (Card card in RedCards)
                 {
-                    if (card != this.ActiveCard)
+                    if (card != ActiveCard)
                     {
                         c.Add(card);
                     }
                 }
 
-                this.RedCards = c.ToArray();
-                this.NeutralCard = Card.Invert(this.ActiveCard!);
+                RedCards = c.ToArray();
+                NeutralCard = Card.Invert(ActiveCard!);
             }
 
-            if (this.Grid[active.X, active.Y].Team == Team.Red && this.Grid[target.X, target.Y].Team == Team.Blue)
+            if (Grid[active.X, active.Y].Team == Team.Red && Grid[target.X, target.Y].Team == Team.Blue)
             {
-                this.BlueStudents.Remove(target);
+                BlueStudents.Remove(target);
             }
 
-            if (this.Grid[active.X, active.Y].Team == Team.Blue && this.Grid[target.X, target.Y].Team == Team.Red)
+            if (Grid[active.X, active.Y].Team == Team.Blue && Grid[target.X, target.Y].Team == Team.Red)
             {
-                this.RedStudents.Remove(target);
+                RedStudents.Remove(target);
             }
 
-            this.Grid.SetValue(this.Grid[active.X, active.Y], target.X, target.Y);
-            this.Grid.SetValue(new Square(), active.X, active.Y);
-            this.CurrentTeam = this.CurrentTeam == Team.Blue ? Team.Red : Team.Blue;
-            this.ResetActive();
+            Grid.SetValue(Grid[active.X, active.Y], target.X, target.Y);
+            Grid.SetValue(new Square(), active.X, active.Y);
+            CurrentTeam = CurrentTeam == Team.Blue ? Team.Red : Team.Blue;
+            ResetActive();
         }
 
         public void ResetActive()
         {
-            this.ActiveCard = null;
-            this.ActiveSquare = null;
-            this.activeCardLocation = null;
-            this.PossibleMoves = new();
+            ActiveCard = null;
+            ActiveSquare = null;
+            ActiveCardLocation = null;
+            PossibleMoves = new();
         }
 
         public List<Point> CanMoveSquares(Point point)
         {
             List<Point> result = new();
-            for (var j = 0; j < 5; j++)
+            for (int j = 0; j < 5; j++)
             {
-                for (var i = 0; i < 5; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    if (this.ActiveCard is not null && this.ActiveCard.Moves.Contains(new Size(i - point.X, j - point.Y)))
+                    if (ActiveCard is not null && ActiveCard.Moves.Contains(new Size(i - point.X, j - point.Y)))
                     {
                         result.Add(new Point(i, j));
                     }
