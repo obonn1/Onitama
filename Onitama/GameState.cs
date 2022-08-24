@@ -9,15 +9,15 @@ namespace Onitama
 
         public Card? ActiveCard { get; set; } = null;
 
-        public bool IsMenuOpen { get; set; } = false;
-
-        public int TutorialStep { get; set; } = 1;
+        public Point? ActiveSquare { get; set; }
 
         public BoardItem? ActiveCardLocation { get; set; }
 
-        public Point? ActiveSquare { get; set; }
-
         public Team CurrentTeam { get; set; }
+
+        public bool IsMenuOpen { get; set; } = false;
+
+        public int TutorialStep { get; set; } = 1;
 
         public bool IsGameOver { get; set; }
 
@@ -49,7 +49,7 @@ namespace Onitama
 
         public PointF GridOrigin { get; set; }
 
-        public List<Point> PossibleMoves { get; private set; } = new();
+        public List<Point> PossibleMoves { get; set; } = new();
 
         public Point RedMaster { get; set; } = new Point(4, 2);
 

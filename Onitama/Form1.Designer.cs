@@ -39,12 +39,10 @@
             gameState1.ActiveCard = null;
             gameState1.ActiveSquare = null;
             gameState1.BlueMaster = new System.Drawing.Point(0, 2);
-            gameState1.BlueStudents = ((System.Collections.Generic.List<System.Drawing.Point>)(resources.GetObject("gameState1.BlueStudents")));
             gameState1.GridOrigin = ((System.Drawing.PointF)(resources.GetObject("gameState1.GridOrigin")));
             gameState1.IsGameOver = false;
             gameState1.MouseDownLocation = null;
             gameState1.RedMaster = new System.Drawing.Point(4, 2);
-            gameState1.RedStudents = ((System.Collections.Generic.List<System.Drawing.Point>)(resources.GetObject("gameState1.RedStudents")));
             this.oniBoard1.GameState = gameState1;
             this.oniBoard1.GridColor = System.Drawing.Color.Green;
             this.oniBoard1.GridOrigin = ((System.Drawing.PointF)(resources.GetObject("oniBoard1.GridOrigin")));
@@ -68,7 +66,6 @@
             this.MinimumSize = new System.Drawing.Size(264, 145);
             this.Name = "Form1";
             this.Text = "Onitama";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

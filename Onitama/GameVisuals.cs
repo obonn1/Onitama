@@ -48,8 +48,6 @@ namespace Onitama
         public void DrawState(Graphics g)
         {
             TeamBrush = CurrentTeam == Team.Blue ? DarkBlueBrush : DarkRedBrush;
-            g.DrawImage(Resources.blueMasterImg, new RectangleF(BlueMaster.X + GridOrigin.X + 0.1f - 0.25f, BlueMaster.Y + GridOrigin.Y, 1.3f, 1.3f));
-            g.DrawImage(Resources.redMasterImg, new RectangleF(RedMaster.X + GridOrigin.X + 0.1f - 0.25f, RedMaster.Y + GridOrigin.Y, 1.3f, 1.3f));
 
             foreach (Point piece in BlueStudents)
             {
@@ -61,6 +59,8 @@ namespace Onitama
                 g.DrawImage(Resources.redStudentImg, new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f));
             }
 
+            g.DrawImage(Resources.blueMasterImg, new RectangleF(BlueMaster.X + GridOrigin.X + 0.1f - 0.25f, BlueMaster.Y + GridOrigin.Y, 1.3f, 1.3f));
+            g.DrawImage(Resources.redMasterImg, new RectangleF(RedMaster.X + GridOrigin.X + 0.1f - 0.25f, RedMaster.Y + GridOrigin.Y, 1.3f, 1.3f));
             if (ActiveStudent != null)
             {
                 g.DrawRoundedRectangleF(new Pen(Color.DarkOrange, 0.1f), new(ActiveStudent.Value.X + GridOrigin.X + 0.075f, ActiveStudent.Value.Y + GridOrigin.Y + 0.075f, 0.85f, 0.85f), 0.4f);
@@ -80,8 +80,6 @@ namespace Onitama
                 { BlueCards[1].Name, new(.425f, 4.36f, 1.8f, 2.25f) },
                 { RedCards![0].Name, new(7.7f, 1.88f, 1.8f, 2.25f) },
                 { RedCards![1].Name, new(7.7f, 4.36f, 1.8f, 2.25f) },
-                { "tutorial", new(4f, 4.2f, 2f, 0.5f) },
-                { "close", new(4f, 5f, 2f, 0.5f) },
             };
 
             foreach (KeyValuePair<string, RectangleF> card in cardRects)
@@ -170,6 +168,14 @@ namespace Onitama
             RectangleF menu = new(3.5f, 1f, 3f, 5f);
             RectangleF closeMenu = new(6.2f, 1.1f, 0.2f, 0.2f);
 
+            g.DrawRoundedRectangleF(BlackPen, menu, CornerRadius);
+            g.FillRoundedRectangleF(MoccasinBrush, menu, CornerRadius);
+            g.DrawString("MENU", TitleFont, BlackBrush, menu, new(Centered) { LineAlignment = StringAlignment.Near });
+
+            g.DrawRoundedRectangleF(new Pen(BlackBrush, 0.03f), closeMenu, 0.05f);
+            g.FillRoundedRectangleF(GreenBrush, closeMenu, 0.05f);
+            g.DrawString("X", TutorialFont, BlackBrush, closeMenu, Centered);
+
             Dictionary<string, RectangleF> menuButtons = new()
             {
                 { "newGame", new(4f, 1.8f, 2f, 0.5f) },
@@ -179,20 +185,12 @@ namespace Onitama
                 { "close", new(4f, 5f, 2f, 0.5f) },
             };
 
-            foreach (var button in menuButtons)
+            foreach (KeyValuePair<string, RectangleF> button in menuButtons)
             {
                 g.DrawRoundedRectangleF(BlackPen, button.Value, CornerRadius);
                 g.FillRoundedRectangleF(GreenBrush, button.Value, CornerRadius);
                 g.DrawString(button.Key, Font, BlackBrush, button.Value, Centered);
             }
-
-            g.DrawRoundedRectangleF(BlackPen, menu, CornerRadius);
-            g.FillRoundedRectangleF(MoccasinBrush, menu, CornerRadius);
-            g.DrawString("MENU", TitleFont, BlackBrush, menu, new(Centered) { LineAlignment = StringAlignment.Near });
-
-            g.DrawRoundedRectangleF(new Pen(BlackBrush, 0.03f), closeMenu, 0.05f);
-            g.FillRoundedRectangleF(GreenBrush, closeMenu, 0.05f);
-            g.DrawString("X", TutorialFont, BlackBrush, closeMenu, Centered);
         }
     }
 }
