@@ -178,11 +178,11 @@ namespace Onitama
 
             Dictionary<string, RectangleF> menuButtons = new()
             {
-                { "newGame", new(4f, 1.8f, 2f, 0.5f) },
-                { "surrenderBlue", new(4f, 2.6f, 2f, 0.5f) },
-                { "surrenderRed", new(4f, 3.4f, 2f, 0.5f) },
-                { "tutorial", new(4f, 4.2f, 2f, 0.5f) },
-                { "close", new(4f, 5f, 2f, 0.5f) },
+                { "New Game", new(4f, 1.8f, 2f, 0.5f) },
+                { "Surrender Blue", new(4f, 2.6f, 2f, 0.5f) },
+                { "Surrender Red", new(4f, 3.4f, 2f, 0.5f) },
+                { "Tutorial", new(4f, 4.2f, 2f, 0.5f) },
+                { "Close Game", new(4f, 5f, 2f, 0.5f) },
             };
 
             foreach (KeyValuePair<string, RectangleF> button in menuButtons)

@@ -87,7 +87,7 @@ namespace Onitama
 
                 if (((point.X - 6.2f) * (6.4f - point.X)) > 0 && (((point.Y - 1.1f) * (1.3f - point.Y)) > 0))
                 {
-                    return (BoardItem.CloseGame, new Point(0, 0));
+                    return (BoardItem.CloseMenu, new Point(0, 0));
                 }
 
                 if (((point.X - 3.5f) * (6.5f - point.X)) < 0 && (((point.Y - 1f) * (6f - point.Y)) < 0))
