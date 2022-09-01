@@ -1,7 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-namespace Onitama
+﻿namespace Onitama
 {
     public abstract class DrawTools
     {
@@ -34,11 +31,5 @@ namespace Onitama
         public static Font TutorialFont { get; } = new("Arial", 0.125f, GraphicsUnit.Pixel);
 
         public static Font SmallFont { get; } = new("Arial", 0.075f, GraphicsUnit.Pixel);
-
-        public StringFormat Centered { get; } = new() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-
-        public StringFormat CenteredHor { get; } = new() { Alignment = StringAlignment.Center };
-
-        public StringFormat CenteredFar { get; } = new() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Far };
     }
 }

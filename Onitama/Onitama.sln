@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onitama", "Onitama.csproj", "{832DA6B4-3699-4A8B-93E3-2D0B59714024}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnitamaTests", "..\OnitamaProject\OnitamaTests.csproj", "{5F64E597-B621-472E-89BD-041EE0F31431}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onitama.Tests", "..\OnitamaProject\Onitama.Tests.csproj", "{5F64E597-B621-472E-89BD-041EE0F31431}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FA8319D-F982-4CA4-A741-E64D3C17E6B4}"
 	ProjectSection(SolutionItems) = preProject

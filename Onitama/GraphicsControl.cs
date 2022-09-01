@@ -1,7 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-namespace Onitama;
+﻿namespace Onitama;
 
 public abstract class GraphicsControl : Control
 {
@@ -11,29 +8,20 @@ public abstract class GraphicsControl : Control
 
     protected bool IsLeftMouseDown { get; private set; }
 
-    protected PointF MouseView { get; private set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GraphicsControl"/> class.
-    /// </summary>
     public GraphicsControl()
     {
         ResizeRedraw = true;
         DoubleBuffered = true;
     }
 
-    /// <inheritdoc/>
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
+        e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
         e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+        e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
         ViewScale = ScaleGraphics(e.Graphics, ViewSize.Width, ViewSize.Height);
-        ViewDraw(e.Graphics);
         VisualsDraw(e.Graphics);
-    }
-
-    protected virtual void ViewDraw(Graphics g)
-    {
     }
 
     protected virtual void VisualsDraw(Graphics g)
@@ -50,13 +38,6 @@ public abstract class GraphicsControl : Control
         PointF viewLocation = ClientToView(e.Location);
         ViewMouseDown(viewLocation.X, viewLocation.Y, e.Button);
         base.OnMouseDown(e);
-    }
-
-    protected override void OnMouseMove(MouseEventArgs e)
-    {
-        // MouseView = ClientToView(e.Location);
-        // ViewMouseMove(MouseView.X, MouseView.Y, e.Button);
-        // base.OnMouseMove(e);
     }
 
     protected override void OnMouseUp(MouseEventArgs e)

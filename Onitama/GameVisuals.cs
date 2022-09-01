@@ -1,7 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-namespace Onitama
+﻿namespace Onitama
 {
     public class GameVisuals : DrawTools
     {
@@ -85,7 +82,7 @@ namespace Onitama
             foreach (KeyValuePair<string, RectangleF> card in cardRects)
             {
                 g.FillRoundedRectangleF(MoccasinBrush, card.Value, CornerRadius);
-                g.DrawString(card.Key, Font, BlackBrush, card.Value, CenteredFar);
+                g.DrawString(card.Key, Font, BlackBrush, card.Value, StringFormats.CenterBottom);
             }
 
             RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
@@ -101,7 +98,7 @@ namespace Onitama
             };
 
             g.FillRoundedRectangleF(MoccasinBrush, neutralCardBG, .1f);
-            g.DrawString(NeutralCard!.Name, Font, BlackBrush, neutralCardBG, Centered);
+            g.DrawString(NeutralCard!.Name, Font, BlackBrush, neutralCardBG, StringFormats.Center);
 
             BlueCards![0].CardGrid(g, new PointF(0.475f, 1.93f), 1.6f);
             BlueCards[1].CardGrid(g, new PointF(0.475f, 4.41f), 1.6f);
@@ -112,7 +109,7 @@ namespace Onitama
 
             g.FillRoundedRectangleF(TeamBrush, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, 0.02f);
             g.DrawRoundedRectangleF(BlackPen, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, 0.02f);
-            g.DrawString("YOUR TURN", Font, MoccasinBrush, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, Centered);
+            g.DrawString("YOUR TURN", Font, MoccasinBrush, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, StringFormats.Center);
 
             if (ActiveCard.ToString()!.Contains("Blue"))
             {
@@ -133,8 +130,8 @@ namespace Onitama
                 g.FillRoundedRectangleF(WhiteBrush, playAgain, 0.1f);
                 g.DrawRoundedRectangleF(new Pen(Color.Black, 0.05f), gameOverBanner, 0.5f);
                 g.DrawRoundedRectangleF(new Pen(Color.Black, 0.02f), playAgain, 0.1f);
-                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, gameOverBanner, Centered);
-                g.DrawString("Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, playAgain, Centered);
+                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, gameOverBanner, StringFormats.Center);
+                g.DrawString("Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, playAgain, StringFormats.Center);
             }
         }
 
@@ -143,53 +140,49 @@ namespace Onitama
             RectangleF cornerBox = new(0.15f, 0.15f, 2.7f, 1.4f);
             g.FillRoundedRectangleF(MoccasinBrush, cornerBox, 0.1f);
             g.DrawRoundedRectangleF(BlackPen, cornerBox, 0.1f);
+            g.DrawString($"HOW TO PLAY {TutorialStep}/3", TitleFont, BlackBrush, 0.2f, 0.2f);
 
             if (TutorialStep == 1)
             {
-                g.DrawString("HOW TO PLAY 1/3", TitleFont, BlackBrush, 0.2f, 0.2f);
                 g.DrawString("Each team has five pieces, four Students \nand one Master \n \nAll pieces can defeat an \nopposing piece by moving into their spot", TutorialFont, BlackBrush, 0.25f, 0.6f);
             }
             else if (TutorialStep == 2)
             {
-                g.DrawString("HOW TO PLAY 2/3", TitleFont, BlackBrush, 0.2f, 0.2f);
                 g.DrawString("The cards on your side of the board show \npossible piece movement. \n\nChoose a card, then a piece to move. \n\nAfter moving, the card used will switch with\nthe neutral card on top.", TutorialFont, BlackBrush, 0.25f, 0.5f);
             }
             else if (TutorialStep == 3)
             {
-                g.DrawString("HOW TO PLAY 3/3", TitleFont, BlackBrush, 0.2f, 0.2f);
                 g.DrawString("To win: \nDefeat the opposing Master \n\nor \n\nMove your Master into the opposing Temple", TutorialFont, BlackBrush, 0.25f, 0.5f);
                 g.DrawRectangle(HighlightPen, GridOrigin.X + 0.07f, GridOrigin.Y + 2.07f, .85f, .85f);
                 g.DrawRectangle(HighlightPen, GridOrigin.X + 4.07f, GridOrigin.Y + 2.07f, .85f, .85f);
             }
         }
 
+        public void DrawButton(Graphics g, MenuButton button)
+        {
+            g.DrawRoundedRectangleF(BlackPen, button.Bounds, button.CornerRadius);
+            g.FillRoundedRectangleF(GreenBrush , button.Bounds, button.CornerRadius);
+            g.DrawString(button.Text, button.Font, BlackBrush, button.Bounds, StringFormats.Center);
+        }
+
         public void DrawMenu(Graphics g)
         {
-            RectangleF menu = new(3.5f, 1f, 3f, 5f);
-            RectangleF closeMenu = new(6.2f, 1.1f, 0.2f, 0.2f);
+            g.FillRoundedRectangleF(MoccasinBrush, new(3.5f, 1f, 3f, 5f), CornerRadius);
+            g.DrawRoundedRectangleF(BlackPen, new(3.5f, 1f, 3f, 5f), CornerRadius);
+            g.DrawString("MENU", TitleFont, BlackBrush, new RectangleF(3.5f, 1f, 3f, 5f), StringFormats.CenterTop);
 
-            g.DrawRoundedRectangleF(BlackPen, menu, CornerRadius);
-            g.FillRoundedRectangleF(MoccasinBrush, menu, CornerRadius);
-            g.DrawString("MENU", TitleFont, BlackBrush, menu, new(Centered) { LineAlignment = StringAlignment.Near });
-
-            g.DrawRoundedRectangleF(new Pen(BlackBrush, 0.03f), closeMenu, 0.05f);
-            g.FillRoundedRectangleF(GreenBrush, closeMenu, 0.05f);
-            g.DrawString("X", TutorialFont, BlackBrush, closeMenu, Centered);
-
-            Dictionary<string, RectangleF> menuButtons = new()
-            {
-                { "New Game", new(4f, 1.8f, 2f, 0.5f) },
-                { "Surrender Blue", new(4f, 2.6f, 2f, 0.5f) },
-                { "Surrender Red", new(4f, 3.4f, 2f, 0.5f) },
-                { "Tutorial", new(4f, 4.2f, 2f, 0.5f) },
-                { "Close Game", new(4f, 5f, 2f, 0.5f) },
+            MenuButton[] menuButtons = new MenuButton[] {
+                new MenuButton("New Game", new(4f, 1.8f, 2f, 0.5f), Font),
+                new MenuButton("Surrender Blue", new(4f, 2.6f, 2f, 0.5f), Font),
+                new MenuButton("Surrender Red", new(4f, 3.4f, 2f, 0.5f), Font),
+                new MenuButton("Tutorial", new(4f, 4.2f, 2f, 0.5f), Font),
+                new MenuButton("Close Game", new(4f, 5f, 2f, 0.5f), Font),
+                new MenuButton("X", new(6.2f, 1.1f, 0.2f, 0.2f), TutorialFont),
             };
 
-            foreach (KeyValuePair<string, RectangleF> button in menuButtons)
+            foreach (var button in menuButtons)
             {
-                g.DrawRoundedRectangleF(BlackPen, button.Value, CornerRadius);
-                g.FillRoundedRectangleF(GreenBrush, button.Value, CornerRadius);
-                g.DrawString(button.Key, Font, BlackBrush, button.Value, Centered);
+                    DrawButton(g, button);
             }
         }
     }

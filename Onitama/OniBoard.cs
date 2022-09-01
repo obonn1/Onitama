@@ -1,7 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-namespace Onitama
+﻿namespace Onitama
 {
     internal class OniBoard : GraphicsControl
     {
@@ -9,17 +6,11 @@ namespace Onitama
 
         public Color MatColor { get; set; } = Color.FromArgb(245, 191, 90);
 
-        /// <inheritdoc/>
-        public override Color BackColor { get; set; } = Color.DarkGray;
-
         public Color GridColor { get; set; } = Color.Green;
 
         public PointF GridOrigin { get; set; }
 
-        /// <inheritdoc/>
         public override Font Font { get; set; } = new Font("Arial", 0.02f, GraphicsUnit.Pixel);
-
-        public StringFormat Centered { get; } = new() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
 
         public GameVisuals Visuals { get; set; }
 
@@ -34,6 +25,7 @@ namespace Onitama
                 RedMaster = GameState.RedMaster,
                 BlueMaster = GameState.BlueMaster,
             };
+            BackColor = Color.DarkGray;
         }
 
         public void Reset()
@@ -52,6 +44,24 @@ namespace Onitama
         public PointF GridToView(float x, float y)
         {
             return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
+        }
+
+        protected override void VisualsDraw(Graphics g)
+        {
+            Visuals.BlueCards = GameState.BlueCards;
+            Visuals.RedCards = GameState.RedCards;
+            Visuals.NeutralCard = GameState.NeutralCard;
+            DrawBoard(g);
+            Visuals.DrawState(g);
+            if (GameState.IsMenuOpen)
+            {
+                Visuals.DrawMenu(g);
+            }
+
+            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
+            {
+                Visuals.DrawTutorial(g);
+            }
         }
 
         public (BoardItem, Point)? FindItem(PointF point)
@@ -152,64 +162,6 @@ namespace Onitama
             return null;
         }
 
-        /// <inheritdoc/>
-        protected override void ViewDraw(Graphics g)
-        {
-            Visuals.GridOrigin = GridOrigin;
-            Visuals.CurrentTeam = GameState.CurrentTeam;
-            GameState.GridOrigin = GridOrigin;
-            using var pen = new Pen(Color.Black, 0.05f);
-            RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
-            RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
-            RectangleF grid = new(2.5f, 1.75f, 5f, 5f);
-            RectangleF menuButton = new(0.1f, 0.1f, 0.8f, 0.275f);
-            GridOrigin = new PointF(grid.X, grid.Y);
-
-            g.DrawRectangle(pen, board.X, board.Y, board.Width, board.Height);
-            g.FillRectangle(new SolidBrush(Color.Green), board);
-            g.FillRoundedRectangleF(new SolidBrush(MatColor), mat, .1f);
-            g.FillRectangle(new SolidBrush(Color.Olive), grid);
-            g.DrawRectangle(pen, grid.X, grid.Y, grid.Width, grid.Height);
-            g.DrawRoundedRectangleF(pen, menuButton, 0.05f);
-            g.FillRoundedRectangleF(Brushes.Moccasin, menuButton, 0.05f);
-            g.DrawString("MENU", new Font("Arial", 0.2f, GraphicsUnit.Pixel), Brushes.Black, menuButton, Centered);
-            for (int y = 0; y < 5; y++)
-            {
-                for (int x = 0; x < 5; x++)
-                {
-                    g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x, y).X + 0.1f, GridToView(x, y).Y + 0.1f, 0.8f, 0.8f);
-                }
-            }
-
-            RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
-            RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
-            RectangleF templeBlue2 = new(GridToView(0, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
-            RectangleF templeRed2 = new(GridToView(4, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
-            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
-        }
-
-        /// <inheritdoc/>
-        protected override void VisualsDraw(Graphics g)
-        {
-            Visuals.BlueCards = GameState.BlueCards;
-            Visuals.RedCards = GameState.RedCards;
-            Visuals.NeutralCard = GameState.NeutralCard;
-            Visuals.DrawState(g);
-            if (GameState.IsMenuOpen)
-            {
-                Visuals.DrawMenu(g);
-            }
-
-            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
-            {
-                Visuals.DrawTutorial(g);
-            }
-        }
-
-        /// <inheritdoc/>
         protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
@@ -220,7 +172,6 @@ namespace Onitama
             }
         }
 
-        /// <inheritdoc/>
         protected override void ViewMouseDown(float x, float y, MouseButtons buttons)
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
@@ -231,7 +182,6 @@ namespace Onitama
             }
         }
 
-        /// <inheritdoc/>
         protected override void ViewMouseUp(float x, float y, MouseButtons buttons)
         {
             (BoardItem, Point)? location = FindItem(new PointF(x, y));
@@ -274,6 +224,44 @@ namespace Onitama
             GameState.MouseDownLocation = null;
 
             Invalidate();
+        }
+
+        private void DrawBoard(Graphics g)
+        {
+            Visuals.GridOrigin = GridOrigin;
+            Visuals.CurrentTeam = GameState.CurrentTeam;
+            GameState.GridOrigin = GridOrigin;
+            using var pen = new Pen(Color.Black, 0.05f);
+            RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
+            RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
+            RectangleF grid = new(2.5f, 1.75f, 5f, 5f);
+            RectangleF menuButton = new(0.1f, 0.1f, 0.8f, 0.275f);
+            GridOrigin = new PointF(grid.X, grid.Y);
+
+            g.DrawRectangle(pen, board.X, board.Y, board.Width, board.Height);
+            g.FillRectangle(new SolidBrush(Color.Green), board);
+            g.FillRoundedRectangleF(new SolidBrush(MatColor), mat, .1f);
+            g.FillRectangle(new SolidBrush(Color.Olive), grid);
+            g.DrawRectangle(pen, grid.X, grid.Y, grid.Width, grid.Height);
+            g.DrawRoundedRectangleF(pen, menuButton, 0.05f);
+            g.FillRoundedRectangleF(Brushes.Moccasin, menuButton, 0.05f);
+            g.DrawString("MENU", new Font("Arial", 0.2f, GraphicsUnit.Pixel), Brushes.Black, menuButton, StringFormats.Center);
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x, y).X + 0.1f, GridToView(x, y).Y + 0.1f, 0.8f, 0.8f);
+                }
+            }
+
+            RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            RectangleF templeBlue2 = new(GridToView(0, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
+            RectangleF templeRed2 = new(GridToView(4, 2).X + 0.07f, GridToView(0, 2).Y + 0.07f, .95f, .95f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.04f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.04f), templeRed, 0.1f);
         }
     }
 
