@@ -156,7 +156,8 @@ csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 csharp_style_inlined_variable_declaration = true:suggestion
 
 # Null checking preferences
-csharp_style_throw_expression = true:suggestion
+csharp_style_
+_expression = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
 # Other features
@@ -223,6 +224,9 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 
 # CA1824: Mark assemblies with NeutralResourcesLanguageAttribute
 dotnet_diagnostic.CA1824.severity = none
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = silent
 
 [*.{cpp,h,in}]
 curly_bracket_next_line = true

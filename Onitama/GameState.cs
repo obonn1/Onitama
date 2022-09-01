@@ -44,8 +44,6 @@
 
         public (BoardItem, Point)? MouseDownLocation { get; set; }
 
-        public PointF GridOrigin { get; set; }
-
         public List<Point> PossibleMoves { get; set; } = new();
 
         public Point RedMaster { get; set; } = new Point(4, 2);

@@ -11,6 +11,7 @@
     <SelfContained>false</SelfContained>
     <DebugType>embedded</DebugType>
     <EmbedAllSources>true</EmbedAllSources>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

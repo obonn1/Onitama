@@ -16,7 +16,7 @@
 
         public static SolidBrush MoccasinBrush { get; } = new(Color.Moccasin);
 
-        public static SolidBrush GreenBrush { get; } = new(Color.FromArgb(245, 191, 90));
+        public static SolidBrush MatBrush { get; } = new(Color.FromArgb(245, 191, 90));
 
         public static Pen BlackPen { get; } = new(BlackBrush, 0.05f);
 
@@ -35,7 +35,7 @@
         public static void DrawButton(Graphics g, MenuButton button)
         {
             g.DrawRoundedRectangleF(BlackPen, button.Bounds, button.CornerRadius);
-            g.FillRoundedRectangleF(GreenBrush, button.Bounds, button.CornerRadius);
+            g.FillRoundedRectangleF(MatBrush, button.Bounds, button.CornerRadius);
             g.DrawString(button.Text, button.Font, BlackBrush, button.Bounds, StringFormats.Center);
         }
     }

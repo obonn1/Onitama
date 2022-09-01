@@ -39,16 +39,13 @@
             gameState1.ActiveCard = null;
             gameState1.ActiveSquare = null;
             gameState1.BlueMaster = new System.Drawing.Point(0, 2);
-            gameState1.GridOrigin = ((System.Drawing.PointF)(resources.GetObject("gameState1.GridOrigin")));
             gameState1.IsGameOver = false;
             gameState1.MouseDownLocation = null;
             gameState1.RedMaster = new System.Drawing.Point(4, 2);
             this.oniBoard1.GameState = gameState1;
             this.oniBoard1.GridColor = System.Drawing.Color.Green;
-            this.oniBoard1.GridOrigin = ((System.Drawing.PointF)(resources.GetObject("oniBoard1.GridOrigin")));
             this.oniBoard1.Location = new System.Drawing.Point(0, 0);
             this.oniBoard1.Margin = new System.Windows.Forms.Padding(0);
-            this.oniBoard1.MatColor = System.Drawing.Color.Orange;
             this.oniBoard1.MinimumSize = new System.Drawing.Size(262, 225);
             this.oniBoard1.Name = "oniBoard1";
             this.oniBoard1.Size = new System.Drawing.Size(1031, 658);

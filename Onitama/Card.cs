@@ -14,7 +14,7 @@ namespace Onitama
             Moves = moves;
         }
 
-        public void CardGrid(Graphics g, PointF location, float length)
+        public void DrawCardGrid(Graphics g, PointF location, float length)
         {
             for (int y = 0; y < 5; y++)
             {

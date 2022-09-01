@@ -1,8 +1,20 @@
-﻿namespace Onitama
+﻿using System.Collections.Immutable;
+
+namespace Onitama
 {
     public class GameVisuals : DrawTools
     {
-        public GameVisuals(PointF gridOrigin) => GridOrigin = gridOrigin;
+        public static float CornerRadius { get; } = 0.1f;
+
+        public static Font Font { get; set; } = new("Arial", 0.275f, GraphicsUnit.Pixel);
+
+        public PointF GridOrigin { get; } = new(2.5f, 1.75f);
+
+        public int TutorialStep { get; set; } = 1;
+
+        public GameVisuals()
+        {
+        }
 
         public List<Point> BlueStudents { get; set; } = new();
 
@@ -14,13 +26,11 @@
 
         public Point RedMaster { get; set; }
 
-        public PointF GridOrigin { get; set; }
-
         public Point MouseOverXY { get; set; }
 
         public Point? ActiveStudent { get; set; }
 
-        public BoardItem? ActiveCard { get; set; }
+        public Card? ActiveCard { get; set; }
 
         public BoardItem MouseOverItem { get; set; }
 
@@ -28,24 +38,43 @@
 
         public Card[]? RedCards { get; set; }
 
-        public Font Font { get; set; } = new("Arial", 0.275f, GraphicsUnit.Pixel);
-
         public Card? NeutralCard { get; set; }
 
         public Team CurrentTeam { get; set; }
 
+        public bool IsMenuOpen { get; set; }
+
         public bool IsGameOver { get; set; }
 
-        public int TutorialStep { get; set; } = 1;
+        private static RectangleF blueCard1Bounds = new(.425f, 1.88f, 1.8f, 2.25f);
+        private static RectangleF blueCard2Bounds = new(.425f, 4.36f, 1.8f, 2.25f);
+        private static RectangleF redCard1Bounds = new(7.7f, 1.88f, 1.8f, 2.25f);
+        private static RectangleF redCard2Bounds = new(7.7f, 4.36f, 1.8f, 2.25f);
 
-        public float CornerRadius { get; } = 0.1f;
+        public void DrawGame(Graphics g)
+        {
+            DrawBoard(g);
 
-        public Brush TeamBrush { get; private set; } = DarkBlueBrush;
+            DrawState(g);
+
+            if (TutorialStep > 0 && TutorialStep < 4)
+            {
+                DrawTutorial(g);
+            }
+
+            if (IsGameOver)
+            {
+                DrawGameOver(g);
+            }
+
+            if (IsMenuOpen)
+            {
+                DrawMenu(g);
+            }
+        }
 
         public void DrawState(Graphics g)
         {
-            TeamBrush = CurrentTeam == Team.Blue ? DarkBlueBrush : DarkRedBrush;
-
             foreach (Point piece in BlueStudents)
             {
                 g.DrawImage(Resources.blueStudentImg, new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f));
@@ -71,114 +100,141 @@
                 }
             }
 
-            Dictionary<string, RectangleF> cardRects = new()
+            Card?[] cards = new Card[4]
             {
-                { BlueCards![0].Name, new(.425f, 1.88f, 1.8f, 2.25f) },
-                { BlueCards[1].Name, new(.425f, 4.36f, 1.8f, 2.25f) },
-                { RedCards![0].Name, new(7.7f, 1.88f, 1.8f, 2.25f) },
-                { RedCards![1].Name, new(7.7f, 4.36f, 1.8f, 2.25f) },
+                BlueCards![0],
+                BlueCards[1],
+                RedCards![0],
+                RedCards[1],
             };
 
-            foreach (KeyValuePair<string, RectangleF> card in cardRects)
+            foreach (var card in cards)
             {
-                g.FillRoundedRectangleF(MoccasinBrush, card.Value, CornerRadius);
-                g.DrawString(card.Key, Font, BlackBrush, card.Value, StringFormats.CenterBottom);
+                if (card is null)
+                {
+                    break;
+                }
+
+                bool isActive = ActiveCard == card;
+                Team team = Array.IndexOf(cards, card) < 2 ? Team.Blue : Team.Red;
+                RectangleF location = Array.IndexOf(cards, card) switch
+                {
+                    0 => blueCard1Bounds,
+                    1 => blueCard2Bounds,
+                    2 => redCard1Bounds,
+                    3 => redCard2Bounds,
+                    _ => throw new Exception(),
+                };
+                DrawCard(g, card, location, isActive, team);
             }
 
             RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
+            DrawRoundedTextBox(g, NeutralCard!.Name, Font, neutralCardBG, null, MoccasinBrush, BlackBrush, CornerRadius, StringFormats.Center);
+
+            NeutralCard!.DrawCardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
+            Card.Invert(NeutralCard).DrawCardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
+
             RectangleF redTurnBG = new(7.45f, 0.95f, 1.8f, .35f);
             RectangleF blueTurnBG = new(.25f, 0.95f, 1.8f, .35f);
-            RectangleF? highlightRect = ActiveCard switch
-            {
-                BoardItem.BlueCard1 => cardRects[BlueCards[0].Name],
-                BoardItem.BlueCard2 => cardRects[BlueCards[1].Name],
-                BoardItem.RedCard1 => cardRects[RedCards[0].Name],
-                BoardItem.RedCard2 => cardRects[RedCards[1].Name],
-                _ => null,
-            };
+            Brush teamBrush = CurrentTeam == Team.Blue ? DarkBlueBrush : DarkRedBrush;
 
-            g.FillRoundedRectangleF(MoccasinBrush, neutralCardBG, .1f);
-            g.DrawString(NeutralCard!.Name, Font, BlackBrush, neutralCardBG, StringFormats.Center);
-
-            BlueCards![0].CardGrid(g, new PointF(0.475f, 1.93f), 1.6f);
-            BlueCards[1].CardGrid(g, new PointF(0.475f, 4.41f), 1.6f);
-            RedCards![0].CardGrid(g, new PointF(7.75f, 1.93f), 1.6f);
-            RedCards[1].CardGrid(g, new PointF(7.75f, 4.41f), 1.6f);
-            NeutralCard!.CardGrid(g, new PointF(3.025f, 0.175f), 1.25f);
-            Card.Invert(NeutralCard).CardGrid(g, new PointF(5.625f, 0.175f), 1.25f);
-
-            g.FillRoundedRectangleF(TeamBrush, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, 0.02f);
-            g.DrawRoundedRectangleF(BlackPen, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, 0.02f);
-            g.DrawString("YOUR TURN", Font, MoccasinBrush, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, StringFormats.Center);
-
-            if (ActiveCard.ToString()!.Contains("Blue"))
-            {
-                g.DrawRoundedRectangleF(new Pen(Color.Blue, 0.1f), (RectangleF)highlightRect!, CornerRadius);
-            }
-
-            if (ActiveCard.ToString()!.Contains("Red"))
-            {
-                g.DrawRoundedRectangleF(new Pen(Color.Red, 0.1f), (RectangleF)highlightRect!, CornerRadius);
-            }
-
-            if (IsGameOver)
-            {
-                RectangleF gameOverBanner = new(3, 2.5f, 4, 2);
-                RectangleF playAgain = new(4.25f, 3.88f, 1.5f, 0.5f);
-                NeutralCard = null;
-                g.FillRoundedRectangleF(MoccasinBrush, gameOverBanner, 0.5f);
-                g.FillRoundedRectangleF(WhiteBrush, playAgain, 0.1f);
-                g.DrawRoundedRectangleF(new Pen(Color.Black, 0.05f), gameOverBanner, 0.5f);
-                g.DrawRoundedRectangleF(new Pen(Color.Black, 0.02f), playAgain, 0.1f);
-                g.DrawString($"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, gameOverBanner, StringFormats.Center);
-                g.DrawString("Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), BlackBrush, playAgain, StringFormats.Center);
-            }
+            DrawRoundedTextBox(g, "YOUR TURN", Font, CurrentTeam == Team.Blue ? blueTurnBG : redTurnBG, BlackPen, teamBrush, MoccasinBrush, 0.02f, StringFormats.Center);
         }
 
-        public void DrawTutorial(Graphics g)
+        private void DrawBoard(Graphics g)
+        {
+            RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
+            RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
+            RectangleF grid = new(2.5f, 1.75f, 5f, 5f);
+            RectangleF menuButton = new(0.1f, 0.1f, 0.6f, 0.225f);
+
+            DrawRoundedBox(g, board, new SolidBrush(Color.Green), BlackPen, 0);
+            g.FillRoundedRectangleF(MatBrush, mat, .1f);
+            DrawRoundedBox(g, grid, new SolidBrush(Color.Olive), BlackPen, 0);
+            DrawRoundedTextBox(g, "MENU", TutorialFont, menuButton, BlackPen, MoccasinBrush, BlackBrush, 0.05f, StringFormats.Center);
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    g.DrawRectangle(new Pen(Color.DarkOliveGreen, 0.03f), GridToView(x, y).X + 0.1f, GridToView(x, y).Y + 0.1f, 0.8f, 0.8f);
+                }
+            }
+
+            RectangleF templeBlue = new(GridToView(0, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            RectangleF templeRed = new(GridToView(4, 2).X + 0.075f, GridToView(0, 2).Y + 0.075f, .85f, .85f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkBlue, 0.075f), templeBlue, 0.1f);
+            g.DrawRoundedRectangleF(new Pen(Color.DarkRed, 0.075f), templeRed, 0.1f);
+        }
+
+        private void DrawGameOver(Graphics g)
+        {
+            RectangleF gameOverBanner = new(3, 2.5f, 4, 2);
+            RectangleF playAgain = new(4.25f, 3.88f, 1.5f, 0.5f);
+            DrawRoundedTextBox(g, $"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), gameOverBanner, new Pen(Color.Black, 0.05f), MoccasinBrush, BlackBrush, 0.5f, StringFormats.Center);
+            DrawRoundedTextBox(g, "Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), playAgain, new Pen(Color.Black, 0.02f), WhiteBrush, BlackBrush, 0.1f, StringFormats.Center);
+        }
+
+        private void DrawTutorial(Graphics g)
         {
             RectangleF cornerBox = new(0.15f, 0.15f, 2.7f, 1.4f);
-            g.FillRoundedRectangleF(MoccasinBrush, cornerBox, 0.1f);
-            g.DrawRoundedRectangleF(BlackPen, cornerBox, 0.1f);
-            g.DrawString($"HOW TO PLAY {TutorialStep}/3", TitleFont, BlackBrush, 0.2f, 0.2f);
+            RectangleF instructionsBox = new(0.15f, 0.5f, 2.7f, 1f);
+            DrawRoundedTextBox(g, $"HOW TO PLAY {TutorialStep}/3", TitleFont, cornerBox, BlackPen, MoccasinBrush, BlackBrush, CornerRadius, StringFormats.CenterTop);
 
-            if (TutorialStep == 1)
+            switch (TutorialStep)
             {
-                g.DrawString("Each team has five pieces, four Students \nand one Master \n \nAll pieces can defeat an \nopposing piece by moving into their spot", TutorialFont, BlackBrush, 0.25f, 0.6f);
+                case 1:
+                    g.DrawString(
+                        """
+                        Each team has five pieces, four Students 
+                        and one Master 
+                         
+                        All pieces can defeat an 
+                        opposing piece by moving into their spot
+                        """,
+                        TutorialFont,
+                        BlackBrush,
+                        instructionsBox,
+                        StringFormats.CenterTop);
+                    break;
+                case 2:
+                    g.DrawString(
+                        """
+                        The cards on your side of the board show 
+                        possible piece movement. 
+
+                        Choose a card, then a piece to move. 
+
+                        After moving, the card used will switch with
+                        the neutral card on top.
+                        """,
+                        TutorialFont,
+                        BlackBrush,
+                        instructionsBox,
+                        StringFormats.CenterTop);
+                    break;
+                case 3:
+                    g.DrawString(
+                        """
+                        To win: 
+                        Defeat the opposing Master 
+
+                        or 
+
+                        Move your Master into the opposing Temple
+                        """,
+                        TutorialFont,
+                        BlackBrush,
+                        instructionsBox,
+                        StringFormats.CenterTop);
+                    g.DrawRectangle(HighlightPen, GridOrigin.X + 0.07f, GridOrigin.Y + 2.07f, .85f, .85f);
+                    g.DrawRectangle(HighlightPen, GridOrigin.X + 4.07f, GridOrigin.Y + 2.07f, .85f, .85f);
+                    break;
             }
-            else if (TutorialStep == 2)
-            {
-                g.DrawString("The cards on your side of the board show \npossible piece movement. \n\nChoose a card, then a piece to move. \n\nAfter moving, the card used will switch with\nthe neutral card on top.", TutorialFont, BlackBrush, 0.25f, 0.5f);
-            }
-            else if (TutorialStep == 3)
-            {
-                g.DrawString("To win: \nDefeat the opposing Master \n\nor \n\nMove your Master into the opposing Temple", TutorialFont, BlackBrush, 0.25f, 0.5f);
-                g.DrawRectangle(HighlightPen, GridOrigin.X + 0.07f, GridOrigin.Y + 2.07f, .85f, .85f);
-                g.DrawRectangle(HighlightPen, GridOrigin.X + 4.07f, GridOrigin.Y + 2.07f, .85f, .85f);
-            }
         }
 
-        public static void DrawRoundedBox(Graphics g, RectangleF bounds, Brush backgroundColor, Pen borderColor, float cornerRadius)
+        private static void DrawMenu(Graphics g)
         {
-            g.DrawRoundedRectangleF(borderColor, bounds, cornerRadius);
-            g.FillRoundedRectangleF(backgroundColor, bounds, cornerRadius);
-        }
-
-        public static void DrawRoundedTextBox(Graphics g, string text, Font font, RectangleF bounds, Brush backgroundColor, Brush textColor, Pen borderColor, float cornerRadius, StringFormat stringFormat)
-        {
-            DrawRoundedBox(g, bounds, backgroundColor, borderColor, cornerRadius);
-            g.DrawString(text, font, textColor, bounds, stringFormat);
-        }
-
-        public static void DrawMenuButton(Graphics g, MenuButton button)
-        {
-            DrawRoundedTextBox(g, button.Text, button.Font, button.Bounds, GreenBrush, BlackBrush, BlackPen, button.CornerRadius, StringFormats.Center);
-        }
-
-
-        public void DrawMenu(Graphics g)
-        {
-            DrawRoundedTextBox(g, "MENU", TitleFont, new RectangleF(3.5f, 1f, 3f, 5f), MoccasinBrush, BlackBrush, BlackPen, CornerRadius, StringFormats.CenterTop);
+            DrawRoundedTextBox(g, "MENU", TitleFont, new RectangleF(3.5f, 1f, 3f, 5f), BlackPen, MoccasinBrush, BlackBrush,  CornerRadius, StringFormats.CenterTop);
 
             MenuButton[] menuButtons = new MenuButton[]
             {
@@ -194,6 +250,39 @@
             {
                 DrawMenuButton(g, button);
             }
+        }
+
+        private static void DrawCard(Graphics g, Card card, RectangleF location, bool isActive, Team team)
+        {
+            Pen borderPen = team == Team.Blue ? new Pen(Color.Blue, 0.1f) : new Pen(Color.Red, 0.1f);
+            DrawRoundedTextBox(g, card.Name, Font, location, isActive ? borderPen : null, MoccasinBrush, BlackBrush, CornerRadius, StringFormats.CenterBottom);
+            card.DrawCardGrid(g, new(location.X + 0.05f, location.Y + 0.05f), 1.6f);
+        }
+
+        private static void DrawRoundedBox(Graphics g, RectangleF bounds, Brush backgroundBrush, Pen? borderPen, float cornerRadius)
+        {
+            if (borderPen is not null)
+            {
+            g.DrawRoundedRectangleF(borderPen, bounds, cornerRadius);
+            }
+
+            g.FillRoundedRectangleF(backgroundBrush, bounds, cornerRadius);
+        }
+
+        private static void DrawRoundedTextBox(Graphics g, string text, Font font, RectangleF bounds, Pen? borderPen, Brush backgroundBrush, Brush textBrush, float cornerRadius, StringFormat stringFormat)
+        {
+            DrawRoundedBox(g, bounds, backgroundBrush, borderPen, cornerRadius);
+            g.DrawString(text, font, textBrush, bounds, stringFormat);
+        }
+
+        private static void DrawMenuButton(Graphics g, MenuButton button)
+        {
+            DrawRoundedTextBox(g, button.Text, button.Font, button.Bounds, BlackPen, MatBrush, BlackBrush, button.CornerRadius, StringFormats.Center);
+        }
+
+        private PointF GridToView(float x, float y)
+        {
+            return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
         }
     }
 }
