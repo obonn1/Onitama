@@ -158,20 +158,30 @@
             }
         }
 
-        public void DrawButton(Graphics g, MenuButton button)
+        public static void DrawRoundedBox(Graphics g, RectangleF bounds, Brush backgroundColor, Pen borderColor, float cornerRadius)
         {
-            g.DrawRoundedRectangleF(BlackPen, button.Bounds, button.CornerRadius);
-            g.FillRoundedRectangleF(GreenBrush , button.Bounds, button.CornerRadius);
-            g.DrawString(button.Text, button.Font, BlackBrush, button.Bounds, StringFormats.Center);
+            g.DrawRoundedRectangleF(borderColor, bounds, cornerRadius);
+            g.FillRoundedRectangleF(backgroundColor, bounds, cornerRadius);
         }
+
+        public static void DrawRoundedTextBox(Graphics g, string text, Font font, RectangleF bounds, Brush backgroundColor, Brush textColor, Pen borderColor, float cornerRadius, StringFormat stringFormat)
+        {
+            DrawRoundedBox(g, bounds, backgroundColor, borderColor, cornerRadius);
+            g.DrawString(text, font, textColor, bounds, stringFormat);
+        }
+
+        public static void DrawMenuButton(Graphics g, MenuButton button)
+        {
+            DrawRoundedTextBox(g, button.Text, button.Font, button.Bounds, GreenBrush, BlackBrush, BlackPen, button.CornerRadius, StringFormats.Center);
+        }
+
 
         public void DrawMenu(Graphics g)
         {
-            g.FillRoundedRectangleF(MoccasinBrush, new(3.5f, 1f, 3f, 5f), CornerRadius);
-            g.DrawRoundedRectangleF(BlackPen, new(3.5f, 1f, 3f, 5f), CornerRadius);
-            g.DrawString("MENU", TitleFont, BlackBrush, new RectangleF(3.5f, 1f, 3f, 5f), StringFormats.CenterTop);
+            DrawRoundedTextBox(g, "MENU", TitleFont, new RectangleF(3.5f, 1f, 3f, 5f), MoccasinBrush, BlackBrush, BlackPen, CornerRadius, StringFormats.CenterTop);
 
-            MenuButton[] menuButtons = new MenuButton[] {
+            MenuButton[] menuButtons = new MenuButton[]
+            {
                 new MenuButton("New Game", new(4f, 1.8f, 2f, 0.5f), Font),
                 new MenuButton("Surrender Blue", new(4f, 2.6f, 2f, 0.5f), Font),
                 new MenuButton("Surrender Red", new(4f, 3.4f, 2f, 0.5f), Font),
@@ -182,7 +192,7 @@
 
             foreach (var button in menuButtons)
             {
-                    DrawButton(g, button);
+                DrawMenuButton(g, button);
             }
         }
     }

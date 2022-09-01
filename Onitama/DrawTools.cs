@@ -31,5 +31,12 @@
         public static Font TutorialFont { get; } = new("Arial", 0.125f, GraphicsUnit.Pixel);
 
         public static Font SmallFont { get; } = new("Arial", 0.075f, GraphicsUnit.Pixel);
+
+        public static void DrawButton(Graphics g, MenuButton button)
+        {
+            g.DrawRoundedRectangleF(BlackPen, button.Bounds, button.CornerRadius);
+            g.FillRoundedRectangleF(GreenBrush, button.Bounds, button.CornerRadius);
+            g.DrawString(button.Text, button.Font, BlackBrush, button.Bounds, StringFormats.Center);
+        }
     }
 }

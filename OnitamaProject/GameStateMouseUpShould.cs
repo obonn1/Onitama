@@ -1,5 +1,3 @@
-using Onitama;
-
 namespace OnitamaTests
 {
     public class GameStateMouseUpShould
@@ -22,8 +20,8 @@ namespace OnitamaTests
 
         public void MouseUpWhenIsGameOverShouldDoNothing(BoardItem value)
         {
-            GameState? result = new GameState() { IsGameOver = true };
-            GameState? candidate = result;
+            var result = new GameState() { IsGameOver = true };
+            var candidate = result;
             candidate.MouseUp(value, new System.Drawing.Point(0, 0));
             Assert.Equal(result, candidate);
         }
@@ -31,7 +29,7 @@ namespace OnitamaTests
         [Fact]
         public void MouseUpOnCurrentTeamCardShouldActivate()
         {
-            GameState? candidate = new GameState() { TutorialStep = 0, CurrentTeam = Team.Blue };
+            var candidate = new GameState() { TutorialStep = 0, CurrentTeam = Team.Blue };
             candidate.MouseUp(BoardItem.BlueCard2, new System.Drawing.Point(0, 0));
             Assert.True(candidate.ActiveCard == candidate.BlueCards[1]);
         }

@@ -46,24 +46,6 @@
             return new PointF(x + GridOrigin.X, y + GridOrigin.Y);
         }
 
-        protected override void VisualsDraw(Graphics g)
-        {
-            Visuals.BlueCards = GameState.BlueCards;
-            Visuals.RedCards = GameState.RedCards;
-            Visuals.NeutralCard = GameState.NeutralCard;
-            DrawBoard(g);
-            Visuals.DrawState(g);
-            if (GameState.IsMenuOpen)
-            {
-                Visuals.DrawMenu(g);
-            }
-
-            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
-            {
-                Visuals.DrawTutorial(g);
-            }
-        }
-
         public (BoardItem, Point)? FindItem(PointF point)
         {
             int squareX = 7;
@@ -160,6 +142,24 @@
             }
 
             return null;
+        }
+
+        protected override void VisualsDraw(Graphics g)
+        {
+            Visuals.BlueCards = GameState.BlueCards;
+            Visuals.RedCards = GameState.RedCards;
+            Visuals.NeutralCard = GameState.NeutralCard;
+            DrawBoard(g);
+            Visuals.DrawState(g);
+            if (GameState.IsMenuOpen)
+            {
+                Visuals.DrawMenu(g);
+            }
+
+            if (Visuals.TutorialStep > 0 && Visuals.TutorialStep < 4)
+            {
+                Visuals.DrawTutorial(g);
+            }
         }
 
         protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
