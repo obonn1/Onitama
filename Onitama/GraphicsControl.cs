@@ -1,4 +1,4 @@
-﻿namespace Onitama;
+namespace Onitama;
 
 public abstract class GraphicsControl : Control
 {
@@ -35,7 +35,7 @@ public abstract class GraphicsControl : Control
             IsLeftMouseDown = true;
         }
 
-        PointF viewLocation = ClientToView(e.Location);
+        var viewLocation = ClientToView(e.Location);
         ViewMouseDown(viewLocation.X, viewLocation.Y, e.Button);
         base.OnMouseDown(e);
     }
@@ -47,7 +47,7 @@ public abstract class GraphicsControl : Control
             IsLeftMouseDown = false;
         }
 
-        PointF viewLocation = ClientToView(e.Location);
+        var viewLocation = ClientToView(e.Location);
         ViewMouseUp(viewLocation.X, viewLocation.Y, e.Button);
         base.OnMouseUp(e);
     }
@@ -66,8 +66,8 @@ public abstract class GraphicsControl : Control
 
     protected PointF ClientToView(Point client)
     {
-        int physicalWidth = ClientSize.Width;
-        int physicalHeight = ClientSize.Height;
+        var physicalWidth = ClientSize.Width;
+        var physicalHeight = ClientSize.Height;
 
         if (ViewSize.Width * physicalHeight > physicalWidth * ViewSize.Height)
         {
@@ -83,8 +83,8 @@ public abstract class GraphicsControl : Control
 
     protected PointF ViewToClient(PointF view)
     {
-        int physicalWidth = ClientSize.Width;
-        int physicalHeight = ClientSize.Height;
+        var physicalWidth = ClientSize.Width;
+        var physicalHeight = ClientSize.Height;
 
         if (ViewSize.Width * physicalHeight > physicalWidth * ViewSize.Height)
         {
@@ -102,8 +102,8 @@ public abstract class GraphicsControl : Control
     {
         float scale;
 
-        int physicalWidth = ClientSize.Width;
-        int physicalHeight = ClientSize.Height;
+        var physicalWidth = ClientSize.Width;
+        var physicalHeight = ClientSize.Height;
 
         if (width * physicalHeight > physicalWidth * height)
         {
