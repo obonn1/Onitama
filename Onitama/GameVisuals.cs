@@ -183,12 +183,12 @@ public class GameVisuals : DrawTools
             case 1:
                 g.DrawString(
                     """
-                        Each team has five pieces, four Students 
-                        and one Master 
+                    Each team has five pieces, four Students 
+                    and one Master 
                          
-                        All pieces can defeat an 
-                        opposing piece by moving into their spot
-                        """,
+                    All pieces can defeat an 
+                    opposing piece by moving into their spot
+                    """,
                     TutorialFont,
                     BlackBrush,
                     instructionsBox,
@@ -197,14 +197,14 @@ public class GameVisuals : DrawTools
             case 2:
                 g.DrawString(
                     """
-                        The cards on your side of the board show 
-                        possible piece movement. 
+                    The cards on your side of the board show 
+                    possible piece movement. 
 
-                        Choose a card, then a piece to move. 
+                    Choose a card, then a piece to move. 
 
-                        After moving, the card used will switch with
-                        the neutral card on top.
-                        """,
+                    After moving, the card used will switch with
+                    the neutral card on top.
+                    """,
                     TutorialFont,
                     BlackBrush,
                     instructionsBox,
@@ -213,13 +213,13 @@ public class GameVisuals : DrawTools
             case 3:
                 g.DrawString(
                     """
-                        To win: 
-                        Defeat the opposing Master 
+                    To win: 
+                    Defeat the opposing Master 
 
-                        or 
+                    or 
 
-                        Move your Master into the opposing Temple
-                        """,
+                    Move your Master into the opposing Temple
+                    """,
                     TutorialFont,
                     BlackBrush,
                     instructionsBox,
