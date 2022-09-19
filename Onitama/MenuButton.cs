@@ -1,4 +1,4 @@
-﻿namespace Onitama;
+namespace Onitama;
 
 public sealed record MenuButton(
     string Text,

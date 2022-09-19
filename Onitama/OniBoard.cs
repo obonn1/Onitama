@@ -41,7 +41,7 @@ internal class OniBoard : GraphicsControl
     {
         var squareX = 7;
         var squareY = 7;
-        if (GameState.IsMenuOpen)
+        if (GameState.ActiveWindow == ActiveWindow.Menu)
         {
             if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 1.8f) * (2.3f - point.Y)) > 0))
             {
@@ -137,6 +137,11 @@ internal class OniBoard : GraphicsControl
 
     protected override void VisualsDraw(Graphics g)
     {
+        if (0 < GameState.TutorialStep && GameState.TutorialStep < 4)
+        {
+            GameState.ActiveWindow = ActiveWindow.Tutorial;
+        }
+        Visuals.ActiveWindow = GameState.ActiveWindow;
         Visuals.BlueCards = GameState.BlueCards;
         Visuals.RedCards = GameState.RedCards;
         Visuals.NeutralCard = GameState.NeutralCard;
@@ -232,4 +237,12 @@ public enum BoardItem
     Tutorial,
     CloseGame,
     OffMenu,
+}
+
+public enum ActiveWindow
+{
+    Board,
+    Menu,
+    Tutorial,
+    GameOver,
 }

@@ -14,6 +14,8 @@ public class GameState
 
     public bool IsMenuOpen { get; set; } = false;
 
+    public ActiveWindow ActiveWindow { get; set; }
+
     public int TutorialStep { get; set; } = 1;
 
     public bool IsGameOver { get; set; }
@@ -106,31 +108,31 @@ public class GameState
             return;
         }
 
-        if (IsMenuOpen)
+        if (ActiveWindow == ActiveWindow.Menu)
         {
             if (item == BoardItem.BlueSurrender)
             {
                 CurrentTeam = Team.Blue;
                 IsGameOver = true;
-                IsMenuOpen = false;
+                ActiveWindow = ActiveWindow.Board;
             }
 
             if (item == BoardItem.RedSurrender)
             {
                 CurrentTeam = Team.Red;
                 IsGameOver = true;
-                IsMenuOpen = false;
+                ActiveWindow = ActiveWindow.Board;
             }
 
             if (item == BoardItem.Tutorial)
             {
                 TutorialStep = 1;
-                IsMenuOpen = false;
+                ActiveWindow = ActiveWindow.Board;
             }
 
             if (item == BoardItem.CloseMenu || item == BoardItem.OffMenu)
             {
-                IsMenuOpen = false;
+                ActiveWindow = ActiveWindow.Board;
             }
 
             if (item == BoardItem.CloseGame)
@@ -140,7 +142,7 @@ public class GameState
         }
         else if (item == BoardItem.Menu)
         {
-            IsMenuOpen = true;
+            ActiveWindow = ActiveWindow.Menu;
         }
 
         // deactivate Cards

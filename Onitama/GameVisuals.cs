@@ -43,35 +43,57 @@ public class GameVisuals : DrawTools
     public bool IsMenuOpen { get; set; }
 
     public bool IsGameOver { get; set; }
+    public ActiveWindow ActiveWindow { get; set; }
 
-    public List<RectangleF> DrawnInteractives { get; set; }
+    public List<InteractiveRectangle> Buttons { get; set; } = new()
+    {
+        new("BlueCard1", blueCard1Bounds),
+        new("BlueCard2", blueCard2Bounds),
+        new("RedCard1", redCard1Bounds),
+        new("RedCard2", redCard2Bounds),
+        new("MenuButton", menuButton),
+        new("PlayAgain", playAgain),
+    };
+
+    public List<MenuButton> MenuButtons { get; set; } = new()
+    {
+        new MenuButton("New Game", new(4f, 1.8f, 2f, 0.5f), Font),
+        new MenuButton("Surrender Blue", new(4f, 2.6f, 2f, 0.5f), Font),
+        new MenuButton("Surrender Red", new(4f, 3.4f, 2f, 0.5f), Font),
+        new MenuButton("Tutorial", new(4f, 4.2f, 2f, 0.5f), Font),
+        new MenuButton("Close Game", new(4f, 5f, 2f, 0.5f), Font),
+        new MenuButton("X", new(6.2f, 1.1f, 0.2f, 0.2f), TutorialFont),
+    };
 
     private static RectangleF blueCard1Bounds = new(.425f, 1.88f, 1.8f, 2.25f);
     private static RectangleF blueCard2Bounds = new(.425f, 4.36f, 1.8f, 2.25f);
     private static RectangleF redCard1Bounds = new(7.7f, 1.88f, 1.8f, 2.25f);
     private static RectangleF redCard2Bounds = new(7.7f, 4.36f, 1.8f, 2.25f);
+    private static RectangleF menuButton = new(0.1f, 0.1f, 0.6f, 0.225f);
+    private static RectangleF playAgain = new(4.25f, 3.88f, 1.5f, 0.5f);
+
+
 
     public void DrawGame(Graphics g)
     {
-        DrawnInteractives.Clear();
-
         DrawBoard(g);
-
         DrawState(g);
 
-        if (TutorialStep > 0 && TutorialStep < 4)
+        switch (ActiveWindow)
         {
-            DrawTutorial(g);
-        }
-
-        if (IsGameOver)
-        {
-            DrawGameOver(g);
-        }
-
-        if (IsMenuOpen)
-        {
-            DrawMenu(g);
+            case ActiveWindow.Board:
+                break;
+            case ActiveWindow.Tutorial:
+                DrawTutorial(g);
+                break;
+            case ActiveWindow.GameOver:
+                DrawGameOver(g);
+                break;
+            case ActiveWindow.Menu:
+                DrawMenu(g);
+                break;
+            default:
+                break;
         }
     }
 
@@ -80,7 +102,6 @@ public class GameVisuals : DrawTools
         RectangleF board = new(0.05f, 0.05f, 9.9f, 6.9f);
         RectangleF mat = new(0.15f, 1.65f, 9.7f, 5.2f);
         RectangleF grid = new(2.5f, 1.75f, 5f, 5f);
-        RectangleF menuButton = new(0.1f, 0.1f, 0.6f, 0.225f);
 
         DrawRoundedBox(g, board, new SolidBrush(Color.Green), BlackPen, 0);
         g.FillRoundedRectangleF(MatBrush, mat, .1f);
@@ -106,7 +127,6 @@ public class GameVisuals : DrawTools
         {
             var place = new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
             g.DrawImage(Resources.blueStudentImg, place);
-
         }
 
         foreach (var piece in RedStudents)
@@ -155,7 +175,6 @@ public class GameVisuals : DrawTools
                 _ => throw new Exception(),
             };
             DrawCard(g, card, location, isActive, team);
-            DrawnInteractives.Add(location);
         }
 
         RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
@@ -232,30 +251,18 @@ public class GameVisuals : DrawTools
     private void DrawGameOver(Graphics g)
     {
         RectangleF gameOverBanner = new(3, 2.5f, 4, 2);
-        RectangleF playAgain = new(4.25f, 3.88f, 1.5f, 0.5f);
         DrawRoundedTextBox(g, $"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), gameOverBanner, new Pen(Color.Black, 0.05f), MoccasinBrush, BlackBrush, 0.5f, StringFormats.Center);
         DrawRoundedTextBox(g, "Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), playAgain, new Pen(Color.Black, 0.02f), WhiteBrush, BlackBrush, 0.1f, StringFormats.Center);
-        DrawnInteractives.Add(playAgain);
     }
 
     private void DrawMenu(Graphics g)
     {
         DrawRoundedTextBox(g, "MENU", TitleFont, new RectangleF(3.5f, 1f, 3f, 5f), BlackPen, MoccasinBrush, BlackBrush,  CornerRadius, StringFormats.CenterTop);
 
-        var menuButtons = new MenuButton[]
-        {
-            new MenuButton("New Game", new(4f, 1.8f, 2f, 0.5f), Font),
-            new MenuButton("Surrender Blue", new(4f, 2.6f, 2f, 0.5f), Font),
-            new MenuButton("Surrender Red", new(4f, 3.4f, 2f, 0.5f), Font),
-            new MenuButton("Tutorial", new(4f, 4.2f, 2f, 0.5f), Font),
-            new MenuButton("Close Game", new(4f, 5f, 2f, 0.5f), Font),
-            new MenuButton("X", new(6.2f, 1.1f, 0.2f, 0.2f), TutorialFont),
-        };
 
-        foreach (var button in menuButtons)
+        foreach (var button in MenuButtons)
         {
             DrawMenuButton(g, button);
-            DrawnInteractives.Add(button.Bounds);
         }
     }
 
