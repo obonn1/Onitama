@@ -8,19 +8,19 @@ namespace OnitamaTests
         [InlineData(BoardItem.RedCard1)]
         [InlineData(BoardItem.RedCard2)]
         [InlineData(BoardItem.OffMenu)]
-        [InlineData(BoardItem.Menu)]
+        [InlineData(BoardItem.OpenMenu)]
         [InlineData(BoardItem.CloseMenu)]
         [InlineData(BoardItem.BlueSurrender)]
         [InlineData(BoardItem.RedSurrender)]
         [InlineData(BoardItem.CloseGame)]
         [InlineData(BoardItem.Square)]
-        [InlineData(BoardItem.TryAgain)]
+        [InlineData(BoardItem.PlayAgain)]
         [InlineData(BoardItem.Tutorial)]
         [InlineData(BoardItem.NewGame)]
 
         public void MouseUpWhenIsGameOverShouldDoNothing(BoardItem value)
         {
-            var result = new GameState() { IsGameOver = true };
+            var result = new GameState() { ActiveWindow = ActiveWindow.GameOver };
             var candidate = result;
             candidate.MouseUp(value, new System.Drawing.Point(0, 0));
             Assert.Equal(result, candidate);

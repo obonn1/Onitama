@@ -43,70 +43,34 @@ internal class OniBoard : GraphicsControl
         var squareY = 7;
         if (GameState.ActiveWindow == ActiveWindow.Menu)
         {
-            if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 1.8f) * (2.3f - point.Y)) > 0))
+            foreach (var button in Visuals.MenuButtons)
             {
-                return (BoardItem.NewGame, new Point(0, 0));
+                if (button.Bounds.Contains(point))
+                {
+                    return (button.Item, new Point(10, 10));
+                }
             }
-
-            if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 2.6f) * (3.1f - point.Y)) > 0))
+            if (!GameVisuals.MenuBox.Contains(point))
             {
-                return (BoardItem.BlueSurrender, new Point(0, 0));
-            }
-
-            if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 3.4f) * (3.9f - point.Y)) > 0))
-            {
-                return (BoardItem.RedSurrender, new Point(0, 0));
-            }
-
-            if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 4.2f) * (4.7f - point.Y)) > 0))
-            {
-                return (BoardItem.Tutorial, new Point(0, 0));
-            }
-
-            if (((point.X - 4f) * (6f - point.X)) > 0 && (((point.Y - 5f) * (5.5f - point.Y)) > 0))
-            {
-                return (BoardItem.CloseGame, new Point(0, 0));
-            }
-
-            if (((point.X - 6.2f) * (6.4f - point.X)) > 0 && (((point.Y - 1.1f) * (1.3f - point.Y)) > 0))
-            {
-                return (BoardItem.CloseMenu, new Point(0, 0));
-            }
-
-            if (((point.X - 3.5f) * (6.5f - point.X)) < 0 && (((point.Y - 1f) * (6f - point.Y)) < 0))
-            {
-                return (BoardItem.OffMenu, new Point(0, 0));
+                return (BoardItem.OffMenu, new Point(10, 10));
             }
         }
-
-        if (((point.X - 0.1f) * (0.9f - point.X)) > 0 && (((point.Y - 0.1f) * (0.375f - point.Y)) > 0))
+        else if (GameState.ActiveWindow == ActiveWindow.Board)
         {
-            return (BoardItem.Menu, new Point(0, 0));
+            foreach (var button in Visuals.BoardButtons)
+            {
+                if (button.Bounds.Contains(point))
+                {
+                    return (button.Item, new Point(10, 10));
+                }
+            }
         }
-
-        if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0))
+        else if (GameState.ActiveWindow == ActiveWindow.GameOver)
         {
-            return (BoardItem.BlueCard1, new Point(0, 0));
-        }
-
-        if (((point.X - 0.425f) * (2.225f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0))
-        {
-            return (BoardItem.BlueCard2, new Point(0, 0));
-        }
-
-        if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 1.88f) * (4.13f - point.Y)) > 0))
-        {
-            return (BoardItem.RedCard1, new Point(0, 0));
-        }
-
-        if (((point.X - 7.7f) * (9.5f - point.X)) > 0 && (((point.Y - 4.36f) * (6.61f - point.Y)) > 0))
-        {
-            return (BoardItem.RedCard2, new Point(0, 0));
-        }
-
-        if (((point.X - 4.41f) * (5.91f - point.X)) > 0 && (((point.Y - 3.88f) * (4.38f - point.Y)) > 0) && GameState.IsGameOver)
-        {
-            return (BoardItem.TryAgain, new Point(0, 0));
+            if (GameVisuals.PlayAgain.Contains(point))
+            {
+                return (BoardItem.PlayAgain, new Point(10, 10));
+            }
         }
 
         for (var i = 0; i < 5; i++)
@@ -145,19 +109,12 @@ internal class OniBoard : GraphicsControl
         Visuals.BlueCards = GameState.BlueCards;
         Visuals.RedCards = GameState.RedCards;
         Visuals.NeutralCard = GameState.NeutralCard;
-        Visuals.IsMenuOpen = GameState.IsMenuOpen;
         Visuals.CurrentTeam = GameState.CurrentTeam;
         Visuals.DrawGame(g);
     }
 
     protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
     {
-        var location = FindItem(new PointF(x, y));
-        if (buttons == MouseButtons.Left && location is not null)
-        {
-            Visuals.MouseOverItem = location.Value.Item1;
-            Visuals.MouseOverXY = location.Value.Item2;
-        }
     }
 
     protected override void ViewMouseDown(float x, float y, MouseButtons buttons)
@@ -174,15 +131,10 @@ internal class OniBoard : GraphicsControl
     {
         var location = FindItem(new PointF(x, y));
 
-        if (GameState.TutorialStep > 0 && GameState.TutorialStep < 4)
+        if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
         {
-            GameState.TutorialStep++;
-            Visuals.TutorialStep = GameState.TutorialStep;
-        }
-        else if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
-        {
-            if ((GameState.IsGameOver && location.Value.Item1 == BoardItem.TryAgain)
-                || (GameState.IsMenuOpen && location.Value.Item1 == BoardItem.NewGame))
+            if ((GameState.ActiveWindow == ActiveWindow.GameOver && location.Value.Item1 == BoardItem.PlayAgain)
+                || (GameState.ActiveWindow == ActiveWindow.Menu && location.Value.Item1 == BoardItem.NewGame))
             {
                 Reset();
                 GameState.TutorialStep = 0;
@@ -191,8 +143,8 @@ internal class OniBoard : GraphicsControl
                 return;
             }
 
-            Visuals.IsGameOver = GameState.IsGameOver;
-            if (!GameState.IsGameOver)
+            Visuals.ActiveWindow = GameState.ActiveWindow;
+            if (GameState.ActiveWindow != ActiveWindow.GameOver)
             {
                 GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
             }
@@ -205,7 +157,7 @@ internal class OniBoard : GraphicsControl
             Visuals.RedMaster = GameState.RedMaster;
             Visuals.BlueMaster = GameState.BlueMaster;
             Visuals.PossibleMoves = GameState.PossibleMoves;
-            Visuals.IsGameOver = GameState.IsGameOver;
+            Visuals.ActiveWindow = GameState.ActiveWindow;
             Visuals.TutorialStep = GameState.TutorialStep;
         }
 
@@ -228,8 +180,8 @@ public enum BoardItem
     RedCard1,
     RedCard2,
     Square,
-    TryAgain,
-    Menu,
+    PlayAgain,
+    OpenMenu,
     NewGame,
     BlueSurrender,
     RedSurrender,

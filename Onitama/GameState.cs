@@ -18,8 +18,6 @@ public class GameState
 
     public int TutorialStep { get; set; } = 1;
 
-    public bool IsGameOver { get; set; }
-
     public List<Card> Cards { get; set; } = new List<Card>(5);
 
     public Card[] BlueCards { get; set; }
@@ -51,6 +49,7 @@ public class GameState
     public Point RedMaster { get; set; } = new Point(4, 2);
 
     public Point BlueMaster { get; set; } = new Point(0, 2);
+    public bool CloseGame { get; internal set; }
 
     public GameState()
     {
@@ -103,44 +102,42 @@ public class GameState
 
     public void MouseUp(BoardItem item, Point point)
     {
-        if (IsGameOver)
+        if (ActiveWindow == ActiveWindow.Tutorial)
         {
-            return;
-        }
-
-        if (ActiveWindow == ActiveWindow.Menu)
-        {
-            if (item == BoardItem.BlueSurrender)
-            {
-                CurrentTeam = Team.Blue;
-                IsGameOver = true;
-                ActiveWindow = ActiveWindow.Board;
-            }
-
-            if (item == BoardItem.RedSurrender)
-            {
-                CurrentTeam = Team.Red;
-                IsGameOver = true;
-                ActiveWindow = ActiveWindow.Board;
-            }
-
-            if (item == BoardItem.Tutorial)
-            {
-                TutorialStep = 1;
-                ActiveWindow = ActiveWindow.Board;
-            }
-
-            if (item == BoardItem.CloseMenu || item == BoardItem.OffMenu)
+            TutorialStep++;
+            if (TutorialStep == 4)
             {
                 ActiveWindow = ActiveWindow.Board;
-            }
-
-            if (item == BoardItem.CloseGame)
-            {
-                Application.Exit();
             }
         }
-        else if (item == BoardItem.Menu)
+        else if (ActiveWindow == ActiveWindow.Menu)
+        {
+            switch (item)
+            {
+                case BoardItem.BlueSurrender:
+                    CurrentTeam = Team.Red;
+                    ActiveWindow = ActiveWindow.GameOver;
+                    break;
+                case BoardItem.RedSurrender:
+                    CurrentTeam = Team.Blue;
+                    ActiveWindow = ActiveWindow.GameOver;
+                    break;
+                case BoardItem.Tutorial:
+                    TutorialStep = 1;
+                    ActiveWindow = ActiveWindow.Tutorial;
+                    break;
+                case BoardItem.CloseGame:
+                    CloseGame = true;
+                    break;
+                case BoardItem.CloseMenu:
+                    ActiveWindow = ActiveWindow.Board;
+                    break;
+                case BoardItem.OffMenu:
+                    ActiveWindow = ActiveWindow.Board;
+                    break;
+            }
+        }
+        else if (item == BoardItem.OpenMenu)
         {
             ActiveWindow = ActiveWindow.Menu;
         }
@@ -220,7 +217,7 @@ public class GameState
             || ((Grid[active.X, active.Y].IsMaster && Grid[active.X, active.Y].Team == Team.Red && target == new Point(0, 2))
             || (Grid[active.X, active.Y].IsMaster && (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))))
         {
-            IsGameOver = true;
+            ActiveWindow = ActiveWindow.GameOver;
             return;
         }
 

@@ -1,4 +1,4 @@
-﻿<root>
+<root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -64,17 +64,20 @@
         bGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tTeXN0ZW0uRHJhd2luZy5Qb2ludCwgU3lzdGVtLkRyYXdp
         bmcsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3
         ZjExZDUwYTNhXV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgQAABZTeXN0ZW0uRHJhd2luZy5Qb2lu
-        dFtdAgAAAAgICQMAAAAFAAAABQAAAAcDAAAAAAEAAAAIAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
+        dFtdAgAAAAgICQMAAAAEAAAABAAAAAcDAAAAAAEAAAAEAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
         AAAF/P///xRTeXN0ZW0uRHJhd2luZy5Qb2ludAIAAAABeAF5AAAICAIAAAAAAAAAAAAAAAH7/////P//
-        /wAAAAABAAAAAfr////8////AAAAAAIAAAAB+f////z///8AAAAAAwAAAAH4/////P///wAAAAAEAAAA
-        Aff////8////AAAAAAAAAAAB9v////z///8AAAAAAAAAAAH1/////P///wAAAAAAAAAACw==
+        /wAAAAABAAAAAfr////8////AAAAAAMAAAAB+f////z///8AAAAABAAAAAs=
 </value>
   </data>
-  <data name="gameState1.GridOrigin" mimetype="application/x-microsoft.net.object.binary.base64">
+  <data name="gameState1.PossibleMoves" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABVTeXN0ZW0uRHJh
-        d2luZy5Qb2ludEYCAAAAAXgBeQAACwsCAAAAAAAgQAAA4D8L
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EEAQAAAIwBU3lzdGVtLkNv
+        bGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tTeXN0ZW0uRHJhd2luZy5Qb2ludCwgU3lzdGVtLkRyYXdp
+        bmcsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3
+        ZjExZDUwYTNhXV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgQAABZTeXN0ZW0uRHJhd2luZy5Qb2lu
+        dFtdAgAAAAgICQMAAAAAAAAAAAAAAAcDAAAAAAEAAAAAAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
+        AAAL
 </value>
   </data>
   <data name="gameState1.RedStudents" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -84,17 +87,44 @@
         bGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tTeXN0ZW0uRHJhd2luZy5Qb2ludCwgU3lzdGVtLkRyYXdp
         bmcsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3
         ZjExZDUwYTNhXV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgQAABZTeXN0ZW0uRHJhd2luZy5Qb2lu
-        dFtdAgAAAAgICQMAAAAFAAAABQAAAAcDAAAAAAEAAAAIAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
+        dFtdAgAAAAgICQMAAAAEAAAABAAAAAcDAAAAAAEAAAAEAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
         AAAF/P///xRTeXN0ZW0uRHJhd2luZy5Qb2ludAIAAAABeAF5AAAICAIAAAAEAAAAAAAAAAH7/////P//
-        /wQAAAABAAAAAfr////8////BAAAAAIAAAAB+f////z///8EAAAAAwAAAAH4/////P///wQAAAAEAAAA
-        Aff////8////AAAAAAAAAAAB9v////z///8AAAAAAAAAAAH1/////P///wAAAAAAAAAACw==
+        /wQAAAABAAAAAfr////8////BAAAAAMAAAAB+f////z///8EAAAABAAAAAs=
 </value>
   </data>
-  <data name="oniBoard1.GridOrigin" mimetype="application/x-microsoft.net.object.binary.base64">
+  <data name="gameVisuals1.BlueStudents" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABVTeXN0ZW0uRHJh
-        d2luZy5Qb2ludEYCAAAAAXgBeQAACwsCAAAAAAAgQAAA4D8L
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EEAQAAAIwBU3lzdGVtLkNv
+        bGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tTeXN0ZW0uRHJhd2luZy5Qb2ludCwgU3lzdGVtLkRyYXdp
+        bmcsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3
+        ZjExZDUwYTNhXV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgQAABZTeXN0ZW0uRHJhd2luZy5Qb2lu
+        dFtdAgAAAAgICQMAAAAEAAAABAAAAAcDAAAAAAEAAAAEAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
+        AAAF/P///xRTeXN0ZW0uRHJhd2luZy5Qb2ludAIAAAABeAF5AAAICAIAAAAAAAAAAAAAAAH7/////P//
+        /wAAAAABAAAAAfr////8////AAAAAAMAAAAB+f////z///8AAAAABAAAAAs=
+</value>
+  </data>
+  <data name="gameVisuals1.PossibleMoves" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EEAQAAAIwBU3lzdGVtLkNv
+        bGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tTeXN0ZW0uRHJhd2luZy5Qb2ludCwgU3lzdGVtLkRyYXdp
+        bmcsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3
+        ZjExZDUwYTNhXV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgQAABZTeXN0ZW0uRHJhd2luZy5Qb2lu
+        dFtdAgAAAAgICQMAAAAAAAAAAAAAAAcDAAAAAAEAAAAAAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
+        AAAL
+</value>
+  </data>
+  <data name="gameVisuals1.RedStudents" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EEAQAAAIwBU3lzdGVtLkNv
+        bGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tTeXN0ZW0uRHJhd2luZy5Qb2ludCwgU3lzdGVtLkRyYXdp
+        bmcsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3
+        ZjExZDUwYTNhXV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgQAABZTeXN0ZW0uRHJhd2luZy5Qb2lu
+        dFtdAgAAAAgICQMAAAAEAAAABAAAAAcDAAAAAAEAAAAEAAAABBRTeXN0ZW0uRHJhd2luZy5Qb2ludAIA
+        AAAF/P///xRTeXN0ZW0uRHJhd2luZy5Qb2ludAIAAAABeAF5AAAICAIAAAAEAAAAAAAAAAH7/////P//
+        /wQAAAABAAAAAfr////8////BAAAAAMAAAAB+f////z///8EAAAABAAAAAs=
 </value>
   </data>
 </root>

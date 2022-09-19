@@ -12,6 +12,14 @@ public class GameVisuals : DrawTools
 
     public GameVisuals()
     {
+        BoardButtons = new()
+    {
+        new(BoardItem.BlueCard1, blueCard1Bounds),
+        new(BoardItem.BlueCard2, blueCard2Bounds),
+        new(BoardItem.RedCard1, redCard1Bounds),
+        new(BoardItem.RedCard2, redCard2Bounds),
+        new(BoardItem.OpenMenu, menuButton),
+    };
     }
 
     public List<Point> BlueStudents { get; set; } = new();
@@ -41,28 +49,21 @@ public class GameVisuals : DrawTools
     public Team CurrentTeam { get; set; }
 
     public bool IsMenuOpen { get; set; }
-
-    public bool IsGameOver { get; set; }
     public ActiveWindow ActiveWindow { get; set; }
 
-    public List<InteractiveRectangle> Buttons { get; set; } = new()
-    {
-        new("BlueCard1", blueCard1Bounds),
-        new("BlueCard2", blueCard2Bounds),
-        new("RedCard1", redCard1Bounds),
-        new("RedCard2", redCard2Bounds),
-        new("MenuButton", menuButton),
-        new("PlayAgain", playAgain),
-    };
+    public static RectangleF PlayAgain { get; } = new(4.25f, 3.88f, 1.5f, 0.5f);
+    public static RectangleF MenuBox { get; } = new(3.5f, 1f, 3f, 5f);
 
-    public List<MenuButton> MenuButtons { get; set; } = new()
+    public List<(BoardItem Item, RectangleF Bounds)> BoardButtons { get; }
+
+    public List<MenuButton> MenuButtons { get; } = new()
     {
-        new MenuButton("New Game", new(4f, 1.8f, 2f, 0.5f), Font),
-        new MenuButton("Surrender Blue", new(4f, 2.6f, 2f, 0.5f), Font),
-        new MenuButton("Surrender Red", new(4f, 3.4f, 2f, 0.5f), Font),
-        new MenuButton("Tutorial", new(4f, 4.2f, 2f, 0.5f), Font),
-        new MenuButton("Close Game", new(4f, 5f, 2f, 0.5f), Font),
-        new MenuButton("X", new(6.2f, 1.1f, 0.2f, 0.2f), TutorialFont),
+        new MenuButton("New Game", new(4f, 1.8f, 2f, 0.5f), Font, BoardItem.NewGame),
+        new MenuButton("Surrender Blue", new(4f, 2.6f, 2f, 0.5f), Font, BoardItem.BlueSurrender),
+        new MenuButton("Surrender Red", new(4f, 3.4f, 2f, 0.5f), Font, BoardItem.RedSurrender),
+        new MenuButton("Tutorial", new(4f, 4.2f, 2f, 0.5f), Font, BoardItem.Tutorial),
+        new MenuButton("Close Game", new(4f, 5f, 2f, 0.5f), Font, BoardItem.CloseGame),
+        new MenuButton("X", new(6.2f, 1.1f, 0.2f, 0.2f), TutorialFont, BoardItem.CloseMenu),
     };
 
     private static RectangleF blueCard1Bounds = new(.425f, 1.88f, 1.8f, 2.25f);
@@ -70,9 +71,6 @@ public class GameVisuals : DrawTools
     private static RectangleF redCard1Bounds = new(7.7f, 1.88f, 1.8f, 2.25f);
     private static RectangleF redCard2Bounds = new(7.7f, 4.36f, 1.8f, 2.25f);
     private static RectangleF menuButton = new(0.1f, 0.1f, 0.6f, 0.225f);
-    private static RectangleF playAgain = new(4.25f, 3.88f, 1.5f, 0.5f);
-
-
 
     public void DrawGame(Graphics g)
     {
@@ -252,12 +250,12 @@ public class GameVisuals : DrawTools
     {
         RectangleF gameOverBanner = new(3, 2.5f, 4, 2);
         DrawRoundedTextBox(g, $"{CurrentTeam.ToString().ToUpper()} WINS!!!", new Font("Arial", 0.5f, FontStyle.Bold, GraphicsUnit.Pixel), gameOverBanner, new Pen(Color.Black, 0.05f), MoccasinBrush, BlackBrush, 0.5f, StringFormats.Center);
-        DrawRoundedTextBox(g, "Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), playAgain, new Pen(Color.Black, 0.02f), WhiteBrush, BlackBrush, 0.1f, StringFormats.Center);
+        DrawRoundedTextBox(g, "Play Again", new Font("Arial", 0.225f, FontStyle.Bold, GraphicsUnit.Pixel), PlayAgain, new Pen(Color.Black, 0.02f), WhiteBrush, BlackBrush, 0.1f, StringFormats.Center);
     }
 
     private void DrawMenu(Graphics g)
     {
-        DrawRoundedTextBox(g, "MENU", TitleFont, new RectangleF(3.5f, 1f, 3f, 5f), BlackPen, MoccasinBrush, BlackBrush,  CornerRadius, StringFormats.CenterTop);
+        DrawRoundedTextBox(g, "MENU", TitleFont, MenuBox, BlackPen, MoccasinBrush, BlackBrush, CornerRadius, StringFormats.CenterTop);
 
 
         foreach (var button in MenuButtons)
@@ -277,7 +275,7 @@ public class GameVisuals : DrawTools
     {
         if (borderPen is not null)
         {
-        g.DrawRoundedRectangleF(borderPen, bounds, cornerRadius);
+            g.DrawRoundedRectangleF(borderPen, bounds, cornerRadius);
         }
 
         g.FillRoundedRectangleF(backgroundBrush, bounds, cornerRadius);
