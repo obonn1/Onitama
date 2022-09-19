@@ -38,35 +38,13 @@ internal static class RectExtension
 
     public static void DrawRoundedRectangleF(this Graphics graphics, Pen pen, RectangleF bounds, float cornerRadius)
     {
-        if (graphics == null)
-        {
-            throw new ArgumentNullException(nameof(graphics));
-        }
-
-        if (pen == null)
-        {
-            throw new ArgumentNullException(nameof(pen));
-        }
-
         using var path = RoundedRectF(bounds, cornerRadius);
         graphics.DrawPath(pen, path);
     }
 
     public static void FillRoundedRectangleF(this Graphics graphics, Brush brush, RectangleF bounds, float cornerRadius)
     {
-        if (graphics == null)
-        {
-            throw new ArgumentNullException(nameof(graphics));
-        }
-
-        if (brush == null)
-        {
-            throw new ArgumentNullException(nameof(brush));
-        }
-
-        using (var path = RoundedRectF(bounds, cornerRadius))
-        {
-            graphics.FillPath(brush, path);
-        }
+        using var path = RoundedRectF(bounds, cornerRadius);
+        graphics.FillPath(brush, path);
     }
 }
