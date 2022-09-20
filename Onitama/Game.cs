@@ -1,6 +1,6 @@
 namespace Onitama;
 
-public class GameState
+public class Game
 {
     public Square[,] Grid { get; set; } = new Square[5, 5];
 
@@ -14,11 +14,9 @@ public class GameState
 
     public bool IsMenuOpen { get; set; } = false;
 
-    public ActiveWindow ActiveWindow { get; set; }
+    public Screens ActiveScreen { get; set; }
 
     public int TutorialStep { get; set; }
-
-    public List<Card> Cards { get; set; } = new List<Card>(5);
 
     public Card[]? BlueCards { get; set; }
 
@@ -26,21 +24,9 @@ public class GameState
 
     public Card? NeutralCard { get; set; }
 
-    public List<Point> BlueStudents { get; set; } = new List<Point>()
-    {
-        new Point(0, 0),
-        new Point(0, 1),
-        new Point(0, 3),
-        new Point(0, 4),
-    };
+    public List<Point> BlueStudents { get; set; } = new();
 
-    public List<Point> RedStudents { get; set; } = new List<Point>()
-    {
-        new Point(4, 0),
-        new Point(4, 1),
-        new Point(4, 3),
-        new Point(4, 4),
-    };
+    public List<Point> RedStudents { get; set; } = new();
 
     public (BoardItem, Point)? MouseDownLocation { get; set; }
 
@@ -51,18 +37,41 @@ public class GameState
     public Point BlueMaster { get; set; } = new Point(0, 2);
     public bool CloseGame { get; internal set; }
 
-    public GameState()
+    public Game()
     {
-        NewState(1);
+        NewGame(1);
     }
-    private void NewState(int tutorialStep)
+    private void NewGame(int tutorialStep)
     {
         TutorialStep = tutorialStep;
+        Random random = new();
+        CurrentTeam = random.Next(2) == 0 ? Team.Red : Team.Blue;
+        ActiveScreen = Screens.Board;
+        ResetPieces();
+        ResetCards(random);
+    }
+
+    private void ResetCards(Random random)
+    {
+        var cards = new List<Card>(5);
+        while (cards.Count < 5)
+        {
+            var randomCard = Card.Deck[random.Next(Card.Deck.Length)];
+            if (!cards.Contains(randomCard))
+            {
+                cards.Add(randomCard);
+            }
+        }
+        BlueCards = new Card[2] { cards[0], cards[1] };
+        RedCards = new Card[2] { Card.Invert(cards[2]), Card.Invert(cards[3]) };
+        NeutralCard = cards[4];
+    }
+
+    private void ResetPieces()
+    {
         BlueStudents = new List<Point>();
         RedStudents = new List<Point>();
         Grid = new Square[5, 5];
-        Cards = new List<Card>(5);
-        Random random = new();
         for (var i = 0; i < Grid.GetLength(0); i++)
         {
             for (var j = 0; j < Grid.GetLength(1); j++)
@@ -87,46 +96,32 @@ public class GameState
                 }
             }
         }
-
-        Grid[0, 2].IsMaster = true;
-        Grid[0, 2].Team = Team.Blue;
-        Grid[4, 2].IsMaster = true;
-        Grid[4, 2].Team = Team.Red;
-        CurrentTeam = random.Next(2) == 0 ? Team.Red : Team.Blue;
-        while (Cards.Count < 5)
-        {
-            var randomCard = Card.Deck[random.Next(Card.Deck.Length)];
-            if (!Cards.Contains(randomCard))
-            {
-                Cards.Add(randomCard);
-            }
-        }
-
-        BlueCards = new Card[2] { Cards[0], Cards[1] };
-        RedCards = new Card[2] { Card.Invert(Cards[2]), Card.Invert(Cards[3]) };
-        NeutralCard = Cards[4];
+        Grid[0, 2] = new() { IsMaster = true, Team = Team.Blue };
+        BlueMaster = new Point(0, 2);
+        Grid[4, 2] = new() { IsMaster = true, Team = Team.Red };
+        RedMaster = new Point(4, 2);
     }
 
-    public void MouseUp(BoardItem item, Point point)
+    public void MouseUp(BoardItem? item, Point point)
     {
-        switch (ActiveWindow)
+        switch (ActiveScreen)
         {
-            case ActiveWindow.Tutorial: MouseUpDuringTutorial();
+            case Screens.Tutorial: MouseUpDuringTutorial();
                 break;
-            case ActiveWindow.Board: MouseUpDuringBoard(item, point);
+            case Screens.Board: MouseUpDuringBoard(item, point);
                 break;
-            case ActiveWindow.Menu: MouseUpDuringMenuOpen(item);
+            case Screens.Menu: MouseUpDuringMenuOpen(item);
                 break;
-            case ActiveWindow.GameOver: MouseUpDuringGameOver(item);
+            case Screens.GameOver: MouseUpDuringGameOver(item);
                 break;
         }
     }
 
-    private void MouseUpDuringBoard(BoardItem item, Point point)
+    private void MouseUpDuringBoard(BoardItem? item, Point point)
     {
         if (item == BoardItem.OpenMenu)
         {
-            ActiveWindow = ActiveWindow.Menu;
+            ActiveScreen = Screens.Menu;
         }
         // deactivate Cards
         if (item == ActiveCardLocation)
@@ -194,33 +189,33 @@ public class GameState
         }
     }
 
-    private void MouseUpDuringMenuOpen(BoardItem item)
+    private void MouseUpDuringMenuOpen(BoardItem? item)
     {
         switch (item)
         {
             case BoardItem.BlueSurrender:
                 CurrentTeam = Team.Red;
-                ActiveWindow = ActiveWindow.GameOver;
+                ActiveScreen = Screens.GameOver;
                 break;
             case BoardItem.RedSurrender:
                 CurrentTeam = Team.Blue;
-                ActiveWindow = ActiveWindow.GameOver;
+                ActiveScreen = Screens.GameOver;
                 break;
             case BoardItem.Tutorial:
                 TutorialStep = 1;
-                ActiveWindow = ActiveWindow.Tutorial;
+                ActiveScreen = Screens.Tutorial;
                 break;
             case BoardItem.CloseGame:
                 CloseGame = true;
                 break;
             case BoardItem.CloseMenu:
-                ActiveWindow = ActiveWindow.Board;
+                ActiveScreen = Screens.Board;
                 break;
             case BoardItem.OffMenu:
-                ActiveWindow = ActiveWindow.Board;
+                ActiveScreen = Screens.Board;
                 break;
             case BoardItem.NewGame:
-                NewState(0);
+                NewGame(0);
                 break;
         }
     }
@@ -230,15 +225,15 @@ public class GameState
         TutorialStep++;
         if (TutorialStep == 4)
         {
-            ActiveWindow = ActiveWindow.Board;
+            ActiveScreen = Screens.Board;
         }
     }
 
-    private void MouseUpDuringGameOver(BoardItem item)
+    private void MouseUpDuringGameOver(BoardItem? item)
     {
         if (item == BoardItem.PlayAgain)
         {
-            NewState(0);
+            NewGame(0);
         }
     }
 
@@ -248,7 +243,7 @@ public class GameState
             || ((Grid[active.X, active.Y].IsMaster && Grid[active.X, active.Y].Team == Team.Red && target == new Point(0, 2))
             || (Grid[active.X, active.Y].IsMaster && (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))))
         {
-            ActiveWindow = ActiveWindow.GameOver;
+            ActiveScreen = Screens.GameOver;
             return;
         }
 

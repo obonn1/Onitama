@@ -20,7 +20,7 @@ namespace OnitamaTests
 
         public void MouseUpWhenIsGameOverShouldDoNothing(BoardItem value)
         {
-            var result = new GameState() { ActiveWindow = ActiveWindow.GameOver };
+            var result = new Game() { ActiveScreen = Screens.GameOver };
             var candidate = result;
             candidate.MouseUp(value, new System.Drawing.Point(0, 0));
             Assert.Equal(result, candidate);
@@ -29,7 +29,7 @@ namespace OnitamaTests
         [Fact]
         public void MouseUpOnCurrentTeamCardShouldActivate()
         {
-            var candidate = new GameState() { TutorialStep = 0, CurrentTeam = Team.Blue };
+            var candidate = new Game() { TutorialStep = 0, CurrentTeam = Team.Blue };
             candidate.MouseUp(BoardItem.BlueCard2, new System.Drawing.Point(0, 0));
             Assert.True(candidate.ActiveCard == candidate.BlueCards![1]);
         }

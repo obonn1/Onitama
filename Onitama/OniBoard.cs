@@ -2,9 +2,11 @@ namespace Onitama;
 
 internal class OniBoard : GraphicsControl
 {
-    public GameState GameState { get; set; } = new GameState();
+    public Game Game { get; set; } = new Game();
 
     public Color GridColor { get; set; } = Color.Green;
+
+    public override Color BackColor { get; set; } = Color.DarkGray;
 
     public override Font Font { get; set; } = new Font("Arial", 0.02f, GraphicsUnit.Pixel);
 
@@ -13,22 +15,14 @@ internal class OniBoard : GraphicsControl
     public OniBoard()
     {
         ViewSize = new SizeF(10, 7);
-        Visuals = new()
-        {
-            CurrentTeam = GameState.CurrentTeam,
-            BlueStudents = GameState.BlueStudents,
-            RedStudents = GameState.RedStudents,
-            RedMaster = GameState.RedMaster,
-            BlueMaster = GameState.BlueMaster,
-        };
-        BackColor = Color.DarkGray;
+        Visuals = new(Game);
     }
 
     public (BoardItem Item, Point Point)? FindItem(PointF point)
     {
         var squareX = 7;
         var squareY = 7;
-        if (GameState.ActiveWindow == ActiveWindow.Menu)
+        if (Game.ActiveScreen == Screens.Menu)
         {
             foreach (var button in Visuals.MenuButtons)
             {
@@ -42,7 +36,7 @@ internal class OniBoard : GraphicsControl
                 return (BoardItem.OffMenu, new Point(10, 10));
             }
         }
-        else if (GameState.ActiveWindow == ActiveWindow.Board)
+        else if (Game.ActiveScreen == Screens.Board)
         {
             foreach (var button in Visuals.BoardButtons)
             {
@@ -52,7 +46,7 @@ internal class OniBoard : GraphicsControl
                 }
             }
         }
-        else if (GameState.ActiveWindow == ActiveWindow.GameOver)
+        else if (Game.ActiveScreen == Screens.GameOver)
         {
             if (GameVisuals.PlayAgain.Contains(point))
             {
@@ -88,16 +82,11 @@ internal class OniBoard : GraphicsControl
 
     protected override void VisualsDraw(Graphics g)
     {
-        if (0 < GameState.TutorialStep && GameState.TutorialStep < 4)
+        if (0 < Game.TutorialStep && Game.TutorialStep < 4)
         {
-            GameState.ActiveWindow = ActiveWindow.Tutorial;
+            Game.ActiveScreen = Screens.Tutorial;
         }
-        Visuals.ActiveWindow = GameState.ActiveWindow;
-        Visuals.BlueCards = GameState.BlueCards;
-        Visuals.RedCards = GameState.RedCards;
-        Visuals.NeutralCard = GameState.NeutralCard;
-        Visuals.CurrentTeam = GameState.CurrentTeam;
-        Visuals.DrawGame(g);
+        Visuals.DrawGame(g, Game);
     }
 
     protected override void ViewMouseMove(float x, float y, MouseButtons buttons)
@@ -109,7 +98,7 @@ internal class OniBoard : GraphicsControl
         var location = FindItem(new PointF(x, y));
         if (buttons == MouseButtons.Left && location != null)
         {
-            GameState.MouseDownLocation = location;
+            Game.MouseDownLocation = location;
             Invalidate();
         }
     }
@@ -118,28 +107,13 @@ internal class OniBoard : GraphicsControl
     {
         var location = FindItem(new PointF(x, y));
 
-        if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
+        if (location is null) Game.MouseUp(null, new Point(0,0));
+        if (location is not null && buttons == MouseButtons.Left && location == Game.MouseDownLocation)
         {
-            Visuals.ActiveWindow = GameState.ActiveWindow;
-            GameState.MouseUp(location.Value.Item, location.Value.Point);
-            CopyPropertiesToVisuals();
+            Game.MouseUp(location!.Value.Item, location.Value.Point);
         }
-        GameState.MouseDownLocation = null;
+        Game.MouseDownLocation = null;
         Invalidate();
-    }
-
-    private void CopyPropertiesToVisuals()
-    {
-        Visuals.CurrentTeam = GameState.CurrentTeam;
-        Visuals.ActiveCard = GameState.ActiveCard;
-        Visuals.ActiveStudent = GameState.ActiveSquare;
-        Visuals.BlueStudents = GameState.BlueStudents;
-        Visuals.RedStudents = GameState.RedStudents;
-        Visuals.RedMaster = GameState.RedMaster;
-        Visuals.BlueMaster = GameState.BlueMaster;
-        Visuals.PossibleMoves = GameState.PossibleMoves;
-        Visuals.ActiveWindow = GameState.ActiveWindow;
-        Visuals.TutorialStep = GameState.TutorialStep;
     }
 }
 
@@ -167,7 +141,7 @@ public enum BoardItem
     OffMenu,
 }
 
-public enum ActiveWindow
+public enum Screens
 {
     Board,
     Menu,

@@ -10,8 +10,13 @@ public class GameVisuals : DrawTools
 
     public int TutorialStep { get; set; } = 1;
 
-    public GameVisuals()
+    public GameVisuals(Game game)
     {
+        CurrentTeam = game.CurrentTeam;
+        BlueStudents = game.BlueStudents;
+        RedStudents = game.RedStudents;
+        RedMaster = game.RedMaster;
+        BlueMaster = game.BlueMaster;
         BoardButtons = new()
     {
         new(BoardItem.BlueCard1, blueCard1Bounds),
@@ -32,13 +37,9 @@ public class GameVisuals : DrawTools
 
     public Point RedMaster { get; set; }
 
-    public Point MouseOverXY { get; set; }
-
     public Point? ActiveStudent { get; set; }
 
     public Card? ActiveCard { get; set; }
-
-    public BoardItem MouseOverItem { get; set; }
 
     public Card[]? BlueCards { get; set; }
 
@@ -49,7 +50,8 @@ public class GameVisuals : DrawTools
     public Team CurrentTeam { get; set; }
 
     public bool IsMenuOpen { get; set; }
-    public ActiveWindow ActiveWindow { get; set; }
+
+    public Screens ActiveScreen { get; set; }
 
     public static RectangleF PlayAgain { get; } = new(4.25f, 3.88f, 1.5f, 0.5f);
     public static RectangleF MenuBox { get; } = new(3.5f, 1f, 3f, 5f);
@@ -72,22 +74,32 @@ public class GameVisuals : DrawTools
     private static RectangleF redCard2Bounds = new(7.7f, 4.36f, 1.8f, 2.25f);
     private static RectangleF menuButton = new(0.1f, 0.1f, 0.6f, 0.225f);
 
-    public void DrawGame(Graphics g)
+    public void DrawGame(Graphics g, Game game)
     {
+        ActiveScreen = game.ActiveScreen;
+        BlueCards = game.BlueCards;
+        RedCards = game.RedCards;
+        NeutralCard = game.NeutralCard;
+        CurrentTeam = game.CurrentTeam;
+        ActiveCard = game.ActiveCard;
+        ActiveStudent = game.ActiveSquare;
+        BlueStudents = game.BlueStudents;
+        RedStudents = game.RedStudents;
+        RedMaster = game.RedMaster;
+        BlueMaster = game.BlueMaster;
+        PossibleMoves = game.PossibleMoves;
+        TutorialStep = game.TutorialStep;
         DrawBoard(g);
         DrawState(g);
-
-        switch (ActiveWindow)
+        switch (ActiveScreen)
         {
-            case ActiveWindow.Board:
-                break;
-            case ActiveWindow.Tutorial:
+            case Screens.Tutorial:
                 DrawTutorial(g);
                 break;
-            case ActiveWindow.GameOver:
+            case Screens.GameOver:
                 DrawGameOver(g);
                 break;
-            case ActiveWindow.Menu:
+            case Screens.Menu:
                 DrawMenu(g);
                 break;
             default:
@@ -123,13 +135,12 @@ public class GameVisuals : DrawTools
     {
         foreach (var piece in BlueStudents)
         {
-            var place = new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f);
-            g.DrawImage(Resources.blueStudentImg, place);
+            DrawStudent(g, piece, Team.Blue, GridOrigin);
         }
 
         foreach (var piece in RedStudents)
         {
-            g.DrawImage(Resources.redStudentImg, new RectangleF(piece.X + GridOrigin.X + 0.1f, piece.Y + GridOrigin.Y + 0.1f, 0.8f, 0.8f));
+            DrawStudent(g, piece, Team.Red, GridOrigin);
         }
 
         g.DrawImage(Resources.blueMasterImg, new RectangleF(BlueMaster.X + GridOrigin.X + 0.1f - 0.25f, BlueMaster.Y + GridOrigin.Y, 1.3f, 1.3f));
@@ -162,7 +173,6 @@ public class GameVisuals : DrawTools
                 break;
             }
 
-            var isActive = ActiveCard == card;
             var team = Array.IndexOf(cards, card) < 2 ? Team.Blue : Team.Red;
             var location = Array.IndexOf(cards, card) switch
             {
@@ -172,7 +182,7 @@ public class GameVisuals : DrawTools
                 3 => redCard2Bounds,
                 _ => throw new Exception(),
             };
-            DrawCard(g, card, location, isActive, team);
+            DrawCard(g, card, location, ActiveCard == card, team);
         }
 
         RectangleF neutralCardBG = new(3f, 0.15f, 4f, 1.4f);
@@ -269,6 +279,19 @@ public class GameVisuals : DrawTools
         var borderPen = team == Team.Blue ? new Pen(Color.Blue, 0.1f) : new Pen(Color.Red, 0.1f);
         DrawRoundedTextBox(g, card.Name, Font, location, isActive ? borderPen : null, MoccasinBrush, BlackBrush, CornerRadius, StringFormats.CenterBottom);
         card.DrawCardGrid(g, new(location.X + 0.05f, location.Y + 0.05f), 1.6f);
+    }
+
+    private static void DrawStudent(Graphics g, Point pieceLocation, Team team,  PointF gridOrigin)
+    {
+        var place = new RectangleF(pieceLocation.X + gridOrigin.X + 0.1f, pieceLocation.Y + gridOrigin.Y + 0.1f, 0.8f, 0.8f);
+        if (team == Team.Blue)
+        {
+            g.DrawImage(Resources.blueStudentImg, place);
+        }
+        else
+        {
+            g.DrawImage(Resources.redStudentImg, place);
+        }
     }
 
     private static void DrawRoundedBox(Graphics g, RectangleF bounds, Brush backgroundBrush, Pen? borderPen, float cornerRadius)

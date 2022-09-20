@@ -20,6 +20,9 @@ public partial class Form1 : Form
 
     private void OniBoard1_Paint(object sender, PaintEventArgs e)
     {
-        if (oniBoard1.GameState.CloseGame) Close();
+        if (oniBoard1.Game.CloseGame)
+        {
+            Close();
+        }
     }
 }
