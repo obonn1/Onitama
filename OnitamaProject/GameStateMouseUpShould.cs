@@ -31,7 +31,7 @@ namespace OnitamaTests
         {
             var candidate = new GameState() { TutorialStep = 0, CurrentTeam = Team.Blue };
             candidate.MouseUp(BoardItem.BlueCard2, new System.Drawing.Point(0, 0));
-            Assert.True(candidate.ActiveCard == candidate.BlueCards[1]);
+            Assert.True(candidate.ActiveCard == candidate.BlueCards![1]);
         }
     }
 }

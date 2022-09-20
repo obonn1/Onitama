@@ -16,15 +16,15 @@ public class GameState
 
     public ActiveWindow ActiveWindow { get; set; }
 
-    public int TutorialStep { get; set; } = 1;
+    public int TutorialStep { get; set; }
 
     public List<Card> Cards { get; set; } = new List<Card>(5);
 
-    public Card[] BlueCards { get; set; }
+    public Card[]? BlueCards { get; set; }
 
-    public Card[] RedCards { get; set; }
+    public Card[]? RedCards { get; set; }
 
-    public Card NeutralCard { get; set; }
+    public Card? NeutralCard { get; set; }
 
     public List<Point> BlueStudents { get; set; } = new List<Point>()
     {
@@ -53,8 +53,15 @@ public class GameState
 
     public GameState()
     {
+        NewState(1);
+    }
+    private void NewState(int tutorialStep)
+    {
+        TutorialStep = tutorialStep;
         BlueStudents = new List<Point>();
         RedStudents = new List<Point>();
+        Grid = new Square[5, 5];
+        Cards = new List<Card>(5);
         Random random = new();
         for (var i = 0; i < Grid.GetLength(0); i++)
         {
@@ -102,78 +109,54 @@ public class GameState
 
     public void MouseUp(BoardItem item, Point point)
     {
-        if (ActiveWindow == ActiveWindow.Tutorial)
+        switch (ActiveWindow)
         {
-            TutorialStep++;
-            if (TutorialStep == 4)
-            {
-                ActiveWindow = ActiveWindow.Board;
-            }
+            case ActiveWindow.Tutorial: MouseUpDuringTutorial();
+                break;
+            case ActiveWindow.Board: MouseUpDuringBoard(item, point);
+                break;
+            case ActiveWindow.Menu: MouseUpDuringMenuOpen(item);
+                break;
+            case ActiveWindow.GameOver: MouseUpDuringGameOver(item);
+                break;
         }
-        else if (ActiveWindow == ActiveWindow.Menu)
-        {
-            switch (item)
-            {
-                case BoardItem.BlueSurrender:
-                    CurrentTeam = Team.Red;
-                    ActiveWindow = ActiveWindow.GameOver;
-                    break;
-                case BoardItem.RedSurrender:
-                    CurrentTeam = Team.Blue;
-                    ActiveWindow = ActiveWindow.GameOver;
-                    break;
-                case BoardItem.Tutorial:
-                    TutorialStep = 1;
-                    ActiveWindow = ActiveWindow.Tutorial;
-                    break;
-                case BoardItem.CloseGame:
-                    CloseGame = true;
-                    break;
-                case BoardItem.CloseMenu:
-                    ActiveWindow = ActiveWindow.Board;
-                    break;
-                case BoardItem.OffMenu:
-                    ActiveWindow = ActiveWindow.Board;
-                    break;
-            }
-        }
-        else if (item == BoardItem.OpenMenu)
+    }
+
+    private void MouseUpDuringBoard(BoardItem item, Point point)
+    {
+        if (item == BoardItem.OpenMenu)
         {
             ActiveWindow = ActiveWindow.Menu;
         }
-
         // deactivate Cards
-        else if (item == ActiveCardLocation)
-        {
-            ActiveCardLocation = null;
-            ActiveCard = null;
-        }
+        if (item == ActiveCardLocation)
+                {
+                    ActiveCardLocation = null;
+                    ActiveCard = null;
+                }
 
         // activate Cards
-        else if (item.ToString().Contains("Card"))
-        {
-            if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
-            {
-                ActiveCardLocation = item;
-                ActiveCard = item switch
-                {
-                    BoardItem.BlueCard1 => BlueCards[0],
-                    BoardItem.BlueCard2 => BlueCards[1],
-                    _ => null,
-                };
-            }
+        if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
+                    {
+                        ActiveCardLocation = item;
+                        ActiveCard = item switch
+                        {
+                            BoardItem.BlueCard1 => BlueCards![0],
+                            BoardItem.BlueCard2 => BlueCards![1],
+                            _ => null,
+                        };
+                    }
 
-            if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && CurrentTeam == Team.Red)
-            {
-                ActiveCardLocation = item;
-                ActiveCard = item switch
-                {
-                    BoardItem.RedCard1 => RedCards[0],
-                    BoardItem.RedCard2 => RedCards[1],
-                    _ => null,
-                };
-            }
-        }
+        if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && CurrentTeam == Team.Red)
+                    {
+                        ActiveCardLocation = item;
+                        ActiveCard = item switch
+                        {
+                            BoardItem.RedCard1 => RedCards![0],
+                            BoardItem.RedCard2 => RedCards![1],
+                            _ => null,
+                        };
+                    }
 
         // deactivate square
         if (ActiveSquare == point)
@@ -183,7 +166,7 @@ public class GameState
         }
 
         // activate square
-        else if (item == BoardItem.Square && (Grid[point.X, point.Y].Team == CurrentTeam))
+        if (item == BoardItem.Square && (Grid[point.X, point.Y].Team == CurrentTeam))
         {
             ActiveSquare = point;
         }
@@ -211,6 +194,54 @@ public class GameState
         }
     }
 
+    private void MouseUpDuringMenuOpen(BoardItem item)
+    {
+        switch (item)
+        {
+            case BoardItem.BlueSurrender:
+                CurrentTeam = Team.Red;
+                ActiveWindow = ActiveWindow.GameOver;
+                break;
+            case BoardItem.RedSurrender:
+                CurrentTeam = Team.Blue;
+                ActiveWindow = ActiveWindow.GameOver;
+                break;
+            case BoardItem.Tutorial:
+                TutorialStep = 1;
+                ActiveWindow = ActiveWindow.Tutorial;
+                break;
+            case BoardItem.CloseGame:
+                CloseGame = true;
+                break;
+            case BoardItem.CloseMenu:
+                ActiveWindow = ActiveWindow.Board;
+                break;
+            case BoardItem.OffMenu:
+                ActiveWindow = ActiveWindow.Board;
+                break;
+            case BoardItem.NewGame:
+                NewState(0);
+                break;
+        }
+    }
+
+    private void MouseUpDuringTutorial()
+    {
+        TutorialStep++;
+        if (TutorialStep == 4)
+        {
+            ActiveWindow = ActiveWindow.Board;
+        }
+    }
+
+    private void MouseUpDuringGameOver(BoardItem item)
+    {
+        if (item == BoardItem.PlayAgain)
+        {
+            NewState(0);
+        }
+    }
+
     public void Move(Point active, Point target)
     {
         if ((Grid[target.X, target.Y].IsMaster == true)
@@ -230,7 +261,7 @@ public class GameState
 
             BlueStudents.Remove(active);
             BlueStudents.Add(target);
-            BlueCards = BlueCards.Append(NeutralCard).ToArray();
+            BlueCards = BlueCards!.Append(NeutralCard!).ToArray();
             List<Card> c = new();
             foreach (var card in BlueCards)
             {
@@ -253,7 +284,7 @@ public class GameState
 
             RedStudents.Remove(active);
             RedStudents.Add(target);
-            RedCards = RedCards.Prepend(Card.Invert(NeutralCard!)).ToArray();
+            RedCards = RedCards!.Prepend(Card.Invert(NeutralCard!)).ToArray();
             List<Card> c = new();
 
             foreach (var card in RedCards)

@@ -12,6 +12,8 @@
     <PlatformTarget>x64</PlatformTarget>
 
     <UserSecretsId>8dbe2c09-8ce5-45d8-b9d1-48569f94c9db</UserSecretsId>
+
+    <Configurations>Debug;Release;idk</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +23,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0-rc.1.22426.10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0-preview-20220726-02" />
-    <PackageReference Include="ReportGenerator" Version="5.1.10" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

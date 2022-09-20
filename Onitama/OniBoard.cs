@@ -24,19 +24,6 @@ internal class OniBoard : GraphicsControl
         BackColor = Color.DarkGray;
     }
 
-    public void Reset()
-    {
-        GameState = new GameState();
-        Visuals = new()
-        {
-            CurrentTeam = GameState.CurrentTeam,
-            BlueStudents = GameState.BlueStudents,
-            RedStudents = GameState.RedStudents,
-            RedMaster = GameState.RedMaster,
-            BlueMaster = GameState.BlueMaster,
-        };
-    }
-
     public (BoardItem Item, Point Point)? FindItem(PointF point)
     {
         var squareX = 7;
@@ -133,37 +120,26 @@ internal class OniBoard : GraphicsControl
 
         if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
         {
-            if ((GameState.ActiveWindow == ActiveWindow.GameOver && location.Value.Item == BoardItem.PlayAgain)
-                || (GameState.ActiveWindow == ActiveWindow.Menu && location.Value.Item == BoardItem.NewGame))
-            {
-                Reset();
-                GameState.TutorialStep = 0;
-                Visuals.TutorialStep = 0;
-                Invalidate();
-                return;
-            }
-
             Visuals.ActiveWindow = GameState.ActiveWindow;
-            if (GameState.ActiveWindow != ActiveWindow.GameOver)
-            {
-                GameState.MouseUp(location.Value.Item, location.Value.Point);
-            }
-
-            Visuals.CurrentTeam = GameState.CurrentTeam;
-            Visuals.ActiveCard = GameState.ActiveCard;
-            Visuals.ActiveStudent = GameState.ActiveSquare;
-            Visuals.BlueStudents = GameState.BlueStudents;
-            Visuals.RedStudents = GameState.RedStudents;
-            Visuals.RedMaster = GameState.RedMaster;
-            Visuals.BlueMaster = GameState.BlueMaster;
-            Visuals.PossibleMoves = GameState.PossibleMoves;
-            Visuals.ActiveWindow = GameState.ActiveWindow;
-            Visuals.TutorialStep = GameState.TutorialStep;
+            GameState.MouseUp(location.Value.Item, location.Value.Point);
+            CopyPropertiesToVisuals();
         }
-
         GameState.MouseDownLocation = null;
-
         Invalidate();
+    }
+
+    private void CopyPropertiesToVisuals()
+    {
+        Visuals.CurrentTeam = GameState.CurrentTeam;
+        Visuals.ActiveCard = GameState.ActiveCard;
+        Visuals.ActiveStudent = GameState.ActiveSquare;
+        Visuals.BlueStudents = GameState.BlueStudents;
+        Visuals.RedStudents = GameState.RedStudents;
+        Visuals.RedMaster = GameState.RedMaster;
+        Visuals.BlueMaster = GameState.BlueMaster;
+        Visuals.PossibleMoves = GameState.PossibleMoves;
+        Visuals.ActiveWindow = GameState.ActiveWindow;
+        Visuals.TutorialStep = GameState.TutorialStep;
     }
 }
 
