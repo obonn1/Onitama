@@ -37,7 +37,7 @@ internal class OniBoard : GraphicsControl
         };
     }
 
-    public (BoardItem, Point)? FindItem(PointF point)
+    public (BoardItem Item, Point Point)? FindItem(PointF point)
     {
         var squareX = 7;
         var squareY = 7;
@@ -133,8 +133,8 @@ internal class OniBoard : GraphicsControl
 
         if (location != null && buttons == MouseButtons.Left && location == GameState.MouseDownLocation)
         {
-            if ((GameState.ActiveWindow == ActiveWindow.GameOver && location.Value.Item1 == BoardItem.PlayAgain)
-                || (GameState.ActiveWindow == ActiveWindow.Menu && location.Value.Item1 == BoardItem.NewGame))
+            if ((GameState.ActiveWindow == ActiveWindow.GameOver && location.Value.Item == BoardItem.PlayAgain)
+                || (GameState.ActiveWindow == ActiveWindow.Menu && location.Value.Item == BoardItem.NewGame))
             {
                 Reset();
                 GameState.TutorialStep = 0;
@@ -146,7 +146,7 @@ internal class OniBoard : GraphicsControl
             Visuals.ActiveWindow = GameState.ActiveWindow;
             if (GameState.ActiveWindow != ActiveWindow.GameOver)
             {
-                GameState.MouseUp(location!.Value.Item1, location.Value.Item2);
+                GameState.MouseUp(location.Value.Item, location.Value.Point);
             }
 
             Visuals.CurrentTeam = GameState.CurrentTeam;
