@@ -281,7 +281,7 @@ public class GameVisuals : DrawTools
         card.DrawCardGrid(g, new(location.X + 0.05f, location.Y + 0.05f), 1.6f);
     }
 
-    private static void DrawStudent(Graphics g, Point pieceLocation, Team team,  PointF gridOrigin)
+    private static void DrawStudent(Graphics g, Point pieceLocation, Team team, PointF gridOrigin)
     {
         var place = new RectangleF(pieceLocation.X + gridOrigin.X + 0.1f, pieceLocation.Y + gridOrigin.Y + 0.1f, 0.8f, 0.8f);
         if (team == Team.Blue)

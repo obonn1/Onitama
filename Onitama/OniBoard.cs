@@ -107,7 +107,7 @@ internal class OniBoard : GraphicsControl
     {
         var location = FindItem(new PointF(x, y));
 
-        if (location is null) Game.MouseUp(null, new Point(0,0));
+        if (location is null) Game.MouseUp(null, new Point(0, 0));
         if (location is not null && buttons == MouseButtons.Left && location == Game.MouseDownLocation)
         {
             Game.MouseUp(location!.Value.Item, location.Value.Point);

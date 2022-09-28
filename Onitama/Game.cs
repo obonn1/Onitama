@@ -69,6 +69,7 @@ public class Game
 
     private void ResetPieces()
     {
+        ResetActive();
         BlueStudents = new List<Point>();
         RedStudents = new List<Point>();
         Grid = new Square[5, 5];
@@ -106,13 +107,17 @@ public class Game
     {
         switch (ActiveScreen)
         {
-            case Screens.Tutorial: MouseUpDuringTutorial();
+            case Screens.Tutorial:
+                MouseUpDuringTutorial();
                 break;
-            case Screens.Board: MouseUpDuringBoard(item, point);
+            case Screens.Board:
+                MouseUpDuringBoard(item, point);
                 break;
-            case Screens.Menu: MouseUpDuringMenuOpen(item);
+            case Screens.Menu:
+                MouseUpDuringMenuOpen(item);
                 break;
-            case Screens.GameOver: MouseUpDuringGameOver(item);
+            case Screens.GameOver:
+                MouseUpDuringGameOver(item);
                 break;
         }
     }
@@ -125,39 +130,41 @@ public class Game
         }
         // deactivate Cards
         if (item == ActiveCardLocation)
-                {
-                    ActiveCardLocation = null;
-                    ActiveCard = null;
-                }
+        {
+            ActiveCardLocation = null;
+            ActiveCard = null;
+            return;
+        }
 
         // activate Cards
         if ((item == BoardItem.BlueCard1 || item == BoardItem.BlueCard2) && CurrentTeam == Team.Blue)
-                    {
-                        ActiveCardLocation = item;
-                        ActiveCard = item switch
-                        {
-                            BoardItem.BlueCard1 => BlueCards![0],
-                            BoardItem.BlueCard2 => BlueCards![1],
-                            _ => null,
-                        };
-                    }
+        {
+            ActiveCardLocation = item;
+            ActiveCard = item switch
+            {
+                BoardItem.BlueCard1 => BlueCards![0],
+                BoardItem.BlueCard2 => BlueCards![1],
+                _ => null,
+            };
+        }
 
         if ((item == BoardItem.RedCard1 || item == BoardItem.RedCard2) && CurrentTeam == Team.Red)
-                    {
-                        ActiveCardLocation = item;
-                        ActiveCard = item switch
-                        {
-                            BoardItem.RedCard1 => RedCards![0],
-                            BoardItem.RedCard2 => RedCards![1],
-                            _ => null,
-                        };
-                    }
+        {
+            ActiveCardLocation = item;
+            ActiveCard = item switch
+            {
+                BoardItem.RedCard1 => RedCards![0],
+                BoardItem.RedCard2 => RedCards![1],
+                _ => null,
+            };
+        }
 
         // deactivate square
         if (ActiveSquare == point)
         {
             ActiveSquare = null;
             PossibleMoves = new();
+            return;
         }
 
         // activate square
@@ -244,6 +251,7 @@ public class Game
             || (Grid[active.X, active.Y].IsMaster && (Grid[active.X, active.Y].Team == Team.Blue && target == new Point(4, 2)))))
         {
             ActiveScreen = Screens.GameOver;
+            ResetActive();
             return;
         }
 
