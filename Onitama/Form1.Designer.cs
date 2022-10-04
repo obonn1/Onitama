@@ -72,8 +72,6 @@ namespace Onitama
             gameVisuals1.RedStudents = ((System.Collections.Generic.List<System.Drawing.Point>)(resources.GetObject("gameVisuals1.RedStudents")));
             gameVisuals1.TutorialStep = 1;
             this.oniBoard1.Visuals = gameVisuals1;
-            this.oniBoard1.Click += new System.EventHandler(this.OniBoard1_Click);
-            this.oniBoard1.Paint += new System.Windows.Forms.PaintEventHandler(this.OniBoard1_Paint);
             // 
             // Form1
             // 

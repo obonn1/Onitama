@@ -35,7 +35,8 @@ public class Game
     public Point RedMaster { get; set; } = new Point(4, 2);
 
     public Point BlueMaster { get; set; } = new Point(0, 2);
-    public bool CloseGame { get; internal set; }
+
+    public event EventHandler? GameClosed;
 
     public Game()
     {
@@ -213,7 +214,7 @@ public class Game
                 ActiveScreen = Screens.Tutorial;
                 break;
             case BoardItem.CloseGame:
-                CloseGame = true;
+                GameClosed?.Invoke(this, EventArgs.Empty);
                 break;
             case BoardItem.CloseMenu:
                 ActiveScreen = Screens.Board;
