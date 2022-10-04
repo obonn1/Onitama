@@ -1,7 +1,10 @@
+using System.ComponentModel;
+
 namespace Onitama;
 
 internal class OniBoard : GraphicsControl
 {
+    [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Game Game { get; set; } = new Game();
 
     public Color GridColor { get; set; } = Color.Green;
