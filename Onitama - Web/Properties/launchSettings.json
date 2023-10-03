@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Onitama": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51420;http://localhost:51421"
+    }
+  }
+}
